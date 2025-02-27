@@ -11978,3 +11978,175 @@ textarea.form-control {
   margin-left: 40px;
   gap: 20px;
 }
+
+/*  */
+/* Event Article Styling */
+.main-content {
+  margin-top: 40px;
+}
+.event-article {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.event-figure {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.event-figure img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.event-figure figcaption {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ffbe33;
+  color: white;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+/* Event Countdown */
+.event-countown {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #ffbe33;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.1em;
+}
+
+/* Event Details */
+.article-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.event-details p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Schedule Section */
+.event-schedule {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.schedule-item {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-item span {
+  font-size: 20px;
+  color: #ffbe33;
+}
+
+/* Register Button */
+.custom-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #ffbe33;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.custom-btn:hover {
+  background: #e09e2b;
+}
+
+/* Accordion */
+.accordion-button {
+  background: #ffbe33;
+  color: white;
+  font-weight: bold;
+}
+
+.accordion-button:hover {
+  background: #e09e2b;
+}
+
+/* Sidebar Styling */
+.sidebar .widget {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.widget-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.search-form2 input {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-form2 button {
+  background: #ffbe33;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.search-form2 button:hover {
+  background: #e09e2b;
+}
+
+/* Newsletter */
+.newsletter-entry input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.newsletter-entry button {
+  width: 100%;
+}
+
+/* Tags */
+.tagcloud a {
+  display: inline-block;
+  background: #ffbe33;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 3px;
+  text-decoration: none;
+}
+
+.tagcloud a:hover {
+  background: #e09e2b;
+}
