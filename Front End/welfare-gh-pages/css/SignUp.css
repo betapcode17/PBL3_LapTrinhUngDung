@@ -15,6 +15,8 @@ body {
 
 .wrapper {
     width: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,7 +24,7 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-.loginContainer {
+.SignUpContainer {
     position: relative;
     width: 450px;
     backdrop-filter: blur(15px);     /*tạo hiệu ứng mờ cho background*/
@@ -33,7 +35,7 @@ body {
     box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.2);
 }
 
-.loginContainer h1 {
+.SignUpContainer h1 {
     position: absolute;
     top: 0;
     left: 50%;
@@ -84,6 +86,15 @@ body {
     font-size: 16px;
     padding-inline: 20px;   /*khoảng cách giữa chữ và viền*/
     outline: none;  /*loại bỏ viền khi click vào input*/
+}
+
+.genderBox {
+    font-size: 16px;
+    color: #c6c3c3;
+}
+
+.genderBox input {
+    margin-left: 10px; /* Khoảng cách giữa các input */
 }
 
 form div a {
