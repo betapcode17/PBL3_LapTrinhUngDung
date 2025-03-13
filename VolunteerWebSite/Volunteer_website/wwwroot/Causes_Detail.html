@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="css/jquery.timepicker.css" />
-
+    <link rel="stylesheet" href="css/Search.css" />
     <link rel="stylesheet" href="css/flaticon.css" />
     <link rel="stylesheet" href="css/icomoon.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -194,7 +194,7 @@
 
     <div
       class="hero-wrap"
-      style="background-image: url('images/bg_7.jpg')"
+      style="background-image: url('images/Banner.jpg')"
       data-stellar-background-ratio="0.5"
     >
       <div class="overlay"></div>
@@ -207,19 +207,19 @@
             class="col-md-7 ftco-animate text-center"
             data-scrollax=" properties: { translateY: '70%' }"
           >
-            <h1
-              class="mb-4"
+            <p
+              class="breadcrumbs"
               data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"
             >
-              Giving to Receive
-            </h1>
-            <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-              <a
-                href="https://vimeo.com/45830194"
-                class="btn btn-white btn-outline-white px-4 py-3 mt-4 popup-vimeo"
-                ><span class="icon-play mr-2"></span>Watch Video</a
-              >
+              <span class="mr-2"><a href="index.html">Home</a></span>
+              <span>Cause Detail</span>
             </p>
+            <h1
+              class="mb-3 bread"
+              data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"
+            >
+              Cause Detail
+            </h1>
           </div>
         </div>
       </div>
@@ -315,7 +315,7 @@
                 Đã đạt:
                 <span class="fw-bold text-danger float-end">2.750.000đ</span>
               </p>
-              <p class="mb-2">
+              <p class="mb-2 donation-info">
                 <i class="fa-solid fa-user"></i>
                 <span class="fw-bold text-dark float-end">15 lượt ủng hộ</span>
               </p>
@@ -423,7 +423,7 @@
                       required
                     />
                   </div>
-                  <button type="submit" class="btn btn-danger w-100">
+                  <button type="submit" class="btn btn-primary w-100">
                     Ủng hộ
                   </button>
                 </form>
@@ -478,18 +478,18 @@
               </div>
               <div class="col-md-6">
                 <div class="org-card">
-                  <h6 class="text-muted">Thông tin tổ chức gây quỹ</h6>
-                  <div class="row align-items-center">
-                    <div class="col-md-3 text-center">
-                      <img
-                        src="./images/person_7.jpg"
-                        alt="Quỹ Từ tâm Đắk Lắk"
-                        width="60"
-                        class="rounded-circle"
-                      />
-                    </div>
+                  <h6 class="text-dark">Thông tin tổ chức gây quỹ</h6>
+                  <div class="row align-items-center justify-content-center">
                     <div class="col-md-9">
-                      <h5 class="text-danger">Quỹ Từ tâm Đắk Lắk</h5>
+                      <div class="org_name">
+                        <img
+                          src="./images/person_7.jpg"
+                          alt="Quỹ Từ tâm Đắk Lắk"
+                          width="60"
+                          class="rounded-circle"
+                        />
+                        <h5>Quỹ Từ tâm Đắk Lắk</h5>
+                      </div>
                       <p class="text-muted">
                         “Quỹ Từ tâm Đắk Lắk hỗ trợ các nạn nhân bị thiên tai,
                         hỏa hoạn và các đối tượng khó khăn. Lorem ipsum dolor
@@ -518,12 +518,16 @@
             </div>
           </div>
           <div id="donors" class="tab-pane fade">
-            <h5>Danh sách ủng hộ</h5>
-            <input
-              type="text"
-              class="form-control search-bar"
-              placeholder="Nhập tên người ủng hộ"
-            />
+            <div class="search-container">
+              <div class="search-box">
+                <div class="search-input">
+                  <input type="text" placeholder="Search" />
+                  <button class="search-button">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
             <table class="table donor-table">
               <thead>
                 <tr>

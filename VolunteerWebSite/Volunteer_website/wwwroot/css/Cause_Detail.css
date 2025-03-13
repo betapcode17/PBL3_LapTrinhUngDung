@@ -257,9 +257,8 @@ h4 {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
-
 .modal-title {
-  color: #dc3545;
+  color: #ff9800; /* Màu cam */
   font-size: 18px;
   font-weight: bold;
 }
@@ -288,16 +287,16 @@ h4 {
 }
 
 .form-control:focus {
-  border-color: #dc3545;
-  box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+  border-color: #ff9800; /* Màu cam */
+  box-shadow: 0 0 5px #ff9800; /* Màu cam */
 }
 
 input[type="checkbox"] {
-  accent-color: #dc3545;
+  accent-color: #ff9800; /* Màu cam */
 }
 
 .btn-primary {
-  background-color: #dc3545;
+  background-color: #ff9800; /* Màu cam */
   border: none;
   padding: 10px 16px;
   font-size: 16px;
@@ -306,5 +305,19 @@ input[type="checkbox"] {
 }
 
 .btn-primary:hover {
-  background-color: #c82333;
+  background-color: #ff5722; /* Màu cam đậm */
+}
+.donation-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.org_name {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 20px auto;
+}
+.text-dark {
+  font-weight: 200px;
 }
