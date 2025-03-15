@@ -110,3 +110,12 @@
   font-weight: bold; /* In đậm */
   font-size: 14px;
 }
+.btn-custom {
+  border-radius: 25px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+.btn-custom:hover {
+  transform: scale(1.05);
+}
