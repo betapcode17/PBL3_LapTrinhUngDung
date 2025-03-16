@@ -1,9 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@await Html.PartialAsync("Navbar")
 <div class="hero-wrap"
-     style="background-image: url('images/bg_7.jpg')"
+     style="background-image: url('@Url.Content("~/images/bg_7.jpg")')"
      data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
@@ -653,3 +653,4 @@
         </div>
     </div>
 </section>
+@await Html.PartialAsync("Footer")
