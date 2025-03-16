@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="css/aos.css" />
 
     <link rel="stylesheet" href="css/ionicons.min.css" />
-
+    <link rel="stylesheet" href="css/Event_Detail.css" />
     <link rel="stylesheet" href="css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="css/jquery.timepicker.css" />
     <link rel="stylesheet" href="css/Search.css" />
@@ -298,11 +298,22 @@
                 />
                 <span class="text-danger fw-bold">Quỹ Từ tâm Đắk Lắk</span>
               </div>
-              <p class="mb-2">
-                Mục tiêu:
-                <span class="fw-bold text-dark float-end">20.000.000đ</span>
+              <p>
+                <i class="fas fa-calendar-alt date-icon"></i>
+                <strong>Start Date:</strong> 20/03/2025
               </p>
-              <div class="progress">
+              <p>
+                <i class="fas fa-calendar-check date-icon"></i>
+                <strong>End Date:</strong> 25/03/2025
+              </p>
+              <p></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span
+                  ><i class="fas fa-users text-primary"></i> 2,000 người tối
+                  đa</span
+                >
+              </div>
+              <div class="progress mb-2">
                 <div
                   class="progress-bar"
                   role="progressbar"
@@ -312,19 +323,11 @@
                   aria-valuemax="100"
                 ></div>
               </div>
-              <p class="mt-2 mb-3">
-                Đã đạt:
-                <span class="fw-bold text-danger float-end">2.750.000đ</span>
-              </p>
-              <p class="mb-2 donation-info">
-                <i class="fa-solid fa-user"></i>
-                <span class="fw-bold text-dark float-end">15 lượt ủng hộ</span>
-              </p>
-              <div class="input-group my-3">
-                <span class="input-group-text">VND</span>
-                <input type="text" class="form-control" value="20.000" />
-              </div>
-              <button class="btn btn-primary w-100">Ủng hộ ngay</button>
+              <span
+                ><i class="fas fa-user-check text-success"></i> 275 người đã
+                tham gia</span
+              >
+              <button class="btn btn-primary w-100">Tham gia ngay</button>
             </div>
           </div>
         </div>
@@ -354,8 +357,7 @@
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <label for="name" class="form-label"
-                        >Họ tên người ủng hộ
-                        <span class="text-danger">*</span></label
+                        >Họ tên <span class="text-danger">*</span></label
                       >
                       <input
                         type="text"
@@ -407,25 +409,11 @@
                       name="mark_name_anonymous"
                       id="mark_name_anonymous"
                     />
-                    <label class="form-check-label" for="mark_name_anonymous"
-                      >Tôi muốn ủng hộ ẩn danh</label
                     >
                   </div>
-                  <div class="mb-3">
-                    <label for="total_money" class="form-label"
-                      >Số tiền ủng hộ</label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="total_money"
-                      placeholder="50.000"
-                      value="50000"
-                      required
-                    />
-                  </div>
+
                   <button type="submit" class="btn btn-primary w-100">
-                    Ủng hộ
+                    Tham gia
                   </button>
                 </form>
               </div>
@@ -440,7 +428,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#donors"
-              >Danh sách ủng hộ</a
+              >Danh sách tham gia</a
             >
           </li>
         </ul>
@@ -532,30 +520,25 @@
             <table class="table donor-table">
               <thead>
                 <tr>
-                  <th>Người ủng hộ</th>
-                  <th>Số tiền</th>
+                  <th>Người tham gia</th>
                   <th>Thời gian</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Nguyễn Văn A</td>
-                  <td>100.000đ</td>
                   <td>10:30 - 05/03/2025</td>
                 </tr>
                 <tr>
                   <td>Trần Thị B</td>
-                  <td>200.000đ</td>
                   <td>11:45 - 04/03/2025</td>
                 </tr>
                 <tr>
                   <td>Lê Văn C</td>
-                  <td>50.000đ</td>
                   <td>14:20 - 03/03/2025</td>
                 </tr>
                 <tr>
                   <td>Nguyễn Thị D</td>
-                  <td>500.000đ</td>
                   <td>09:15 - 03/03/2025</td>
                 </tr>
               </tbody>
