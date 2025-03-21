@@ -238,6 +238,9 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("user_name");
+            entity.Property(e => e.is_active) // Thêm dòng này
+       .HasColumnName("is_active")
+       .HasDefaultValue(true); // Nếu mặc định là true
         });
 
         modelBuilder.Entity<Volunteer>(entity =>

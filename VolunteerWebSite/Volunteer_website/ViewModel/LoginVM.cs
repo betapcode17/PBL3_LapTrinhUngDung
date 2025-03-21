@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Volunteer_website.ViewModel
 {
     public class LoginVM
     {
         [Required(ErrorMessage ="Username cannot be blank.")]
-        public string Name { get; set; }
+        public string UserName { get; set; }
         [Required(ErrorMessage = "Password cannot be blank.")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

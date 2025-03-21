@@ -14,4 +14,5 @@ public partial class User
     public int Role { get; set; }
 
     public string RandomKey { get; set; }
+    public bool is_active { get; set; } = true; 
 }

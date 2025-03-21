@@ -25,26 +25,26 @@
                 @Html.AntiForgeryToken()
 
                 <div class="inputBox">
-                    <input asp-for="@Model.Name" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.Name" class="inputLabel">Name</label>
+                    <input asp-for="@Model.Name" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.Name" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.Email" type="email" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.Email" class="inputLabel">Email</label>
+                    <input asp-for="@Model.Email" type="email" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.Email" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.PhoneNumber" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.PhoneNumber" class="inputLabel">Phone</label>
+                    <input asp-for="@Model.PhoneNumber" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.Address" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.Address" class="inputLabel">Address</label>
+                    <input asp-for="@Model.Address" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.Address" class="text-danger"></span>
                 </div>
 
@@ -60,26 +60,26 @@
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.DateOfBirth" type="date" class="inputField" required />
                     <label for="@Model.DateOfBirth" class="inputLabel">Date of Birth</label>
+                    <input asp-for="@Model.DateOfBirth" type="date" class="inputField" required />
                     <span asp-validation-for="@Model.DateOfBirth" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.UserName" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.UserName" class="inputLabel">Username</label>
+                    <input asp-for="@Model.UserName" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.UserName" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.Password" type="password" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.Password" class="inputLabel">Password</label>
+                    <input asp-for="@Model.Password" type="password" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.Password" class="text-danger"></span>
                 </div>
 
                 <div class="inputBox">
-                    <input asp-for="@Model.ConfirmPassword" type="password" class="inputField" placeholder=" " required />
                     <label asp-for="@Model.ConfirmPassword" class="inputLabel">Confirm Password</label>
+                    <input asp-for="@Model.ConfirmPassword" type="password" class="inputField" placeholder=" " required />
                     <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
                 </div>
 

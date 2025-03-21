@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Overpass", Arial, sans-serif;
+}
+
+body {
+  background-image: url("../images/bg_2.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.loginContainer {
+  position: relative;
+  width: 450px;
+  backdrop-filter: blur(15px);
+  border: 2px solid #cdcdcd;
+  border-radius: 15px;
+  padding: 7.5em 2.5em 4em;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loginContainer h1 {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 60px;
+  border-radius: 0 0 20px 20px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+.inputLabel {
+  font-size: 16px;
+  top: 50%;
+  left: 20px;
+  color: #c6c3c3;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.inputField {
+  width: 100%;
+  height: 55px;
+  padding: 5px 20px;
+  background: transparent;
+  border: 2px solid #c6c3c3;
+  border-radius: 15px;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+}
+
+form div a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.btn-login {
+  width: 100% !important;
+  height: 50px !important;
+  border-radius: 15px !important;
+  background: #ececec !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: 0.2s !important;
+  display: block !important;
+  margin-top: 10px !important;
+  text-align: center !important;
+}
+
+.btn-login:hover {
+  background: #ffffff !important;
+}
+
+.custom-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-check-label {
+  color: #ffffff;
+}

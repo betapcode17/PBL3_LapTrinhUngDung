@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace Volunteer_website.ViewModel
 {
@@ -23,6 +24,7 @@ namespace Volunteer_website.ViewModel
 
         [Required(ErrorMessage = "Date of Birth is required.")]
         [DataType(DataType.Date)]
+        [Column(TypeName = "date")] // Chỉ lưu ngày
         public DateTime? DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Gender is required.")]
@@ -33,7 +35,7 @@ namespace Volunteer_website.ViewModel
         public string Name { get; set; }
         public string? ImagePath { get; set; }
         public int Role { get; set; }
-
+        public bool is_active { get; set; } = true;
     }
 
 }

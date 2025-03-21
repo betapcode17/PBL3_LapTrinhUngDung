@@ -1,8 +1,10 @@
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\flaticon.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\payment.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.waypoints.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation\dist\additional-methods.min.js
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\assets\js\hoverable-collapse.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\open-iconic\open-iconic.svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\bootstrap\bootstrap-reboot.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.easing.1.3.js
@@ -11,11 +13,11 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Causes_Detail.htm
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\bootstrap.min.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\bootstrap.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\imageSwitcher.js
-E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Detail_Volunteer.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\owl.carousel.min.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\assets\js\misc.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\index_user.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map
@@ -33,6 +35,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\animate.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\event.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Contact-info.html
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Volunteer.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\images\arrow-right-from-bracket-solid (2).svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.min.js
@@ -40,6 +43,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\favicon.ico
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\css\mixins\_text-hide.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Event_Detail.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation\dist\jquery.validate.js
@@ -66,7 +70,6 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery\dist\j
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\Search.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Volunteer_Detail.html
-E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Test.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Change-PassWord.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Account_Manage.html
@@ -76,6 +79,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\bootstrap\boo
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Event_Detail.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\range.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\icomoon\icomoon.svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js
@@ -94,16 +98,20 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery-migrate
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\site.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Profile_Manage.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\registered_events.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Login.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery\dist\jquery.slim.min.js
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\registered_events.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\bootstrap-datepicker.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.animateNumber.min.js
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\assets\js\off-canvas.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.magnific-popup.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Update_Info.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\open-iconic\open-iconic.otf
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\flaticon\font\flaticon.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Search.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\about.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
@@ -132,6 +140,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dis
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\signUp.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Profile_Home.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\index_guess.html
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Volunteer_Detail.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery\dist\jquery.min.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Cause_Detail.css
@@ -141,6 +150,9 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\gallery.html
 wwwroot\about.html
 wwwroot\Account_Manage.html
+wwwroot\assets\js\hoverable-collapse.js
+wwwroot\assets\js\misc.js
+wwwroot\assets\js\off-canvas.js
 wwwroot\blog.html
 wwwroot\blog-single.html
 wwwroot\causes.html
@@ -160,6 +172,7 @@ wwwroot\css\Cause_Detail.css
 wwwroot\css\css\bootstrap-reboot.css
 wwwroot\css\css\mixins\_text-hide.css
 wwwroot\css\Detail_Event.css
+wwwroot\css\Event_Detail.css
 wwwroot\css\flaticon.css
 wwwroot\css\Footer.css
 wwwroot\css\ionicons.min.css
@@ -171,13 +184,16 @@ wwwroot\css\open-iconic-bootstrap.min.css
 wwwroot\css\owl.carousel.min.css
 wwwroot\css\owl.theme.default.min.css
 wwwroot\css\Profile_Manage.css
+wwwroot\css\registered_events.css
+wwwroot\css\Search.css
 wwwroot\css\signUp.css
 wwwroot\css\site.css
 wwwroot\css\style.css
+wwwroot\css\Volunteer_Detail.css
 wwwroot\Detail_Event.html
-wwwroot\Detail_Volunteer.html
 wwwroot\donate.html
 wwwroot\event.html
+wwwroot\Event_Detail.html
 wwwroot\favicon.ico
 wwwroot\fonts\flaticon\backup.txt
 wwwroot\fonts\flaticon\font\_flaticon.scss
@@ -332,8 +348,10 @@ wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.js
 wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.min.js
 wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
 wwwroot\Login.html
+wwwroot\payment.html
 wwwroot\prepros-6.config
 wwwroot\Profile_Home.html
+wwwroot\registered_events.html
 wwwroot\scss\bootstrap\_alert.scss
 wwwroot\scss\bootstrap\_badge.scss
 wwwroot\scss\bootstrap\_breadcrumb.scss
@@ -419,6 +437,6 @@ wwwroot\scss\bootstrap\utilities\_text.scss
 wwwroot\scss\bootstrap\utilities\_visibility.scss
 wwwroot\scss\style.scss
 wwwroot\SignUp.html
-wwwroot\Test.html
 wwwroot\Update_Info.html
+wwwroot\Volunteer.html
 wwwroot\Volunteer_Detail.html
