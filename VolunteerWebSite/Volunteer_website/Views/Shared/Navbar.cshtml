@@ -1,61 +1,54 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "navbar";
 }
-
+@using System.Security.Claims
+@{
+    var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+    var userName = User.Identity.Name; // Lấy từ ClaimTypes.Name
+}
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-id="ftco-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
         <div class="logo-container">
-            <img src="./images/VolunteerIcon.png"
-            alt="Logo"
-            class="navbar-logo" />
-            <a class="navbar-brand" href="index.html">DUTERS</a>
+            <img src="~/images/VolunteerIcon.png" alt="Logo" class="navbar-logo" />
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">DUTERS</a>
         </div>
 
-        <button class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#ftco-nav"
-        aria-controls="ftco-nav"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
         </button>
 
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a href="index.html" class="nav-link">Home</a>
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="event.html" class="nav-link">Events</a>
+                    <a asp-controller="Event" asp-action="Index" class="nav-link">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a href="causes.html" class="nav-link">Fundraising</a>
+                    <a asp-controller="Fundraising" asp-action="Index" class="nav-link">Fundraising</a>
                 </li>
                 <li class="nav-item">
-                    <a href="donate.html" class="nav-link">Volunteers</a>
+                    <a asp-controller="Volunteer" asp-action="Index" class="nav-link">Volunteers</a>
                 </li>
                 <li class="nav-item">
-                    <a href="blog.html" class="nav-link">News</a>
+                    <a asp-controller="News" asp-action="Index" class="nav-link">News</a>
                 </li>
                 <li class="nav-item">
-                    <a href="about.html" class="nav-link">About Us</a>
+                    <a asp-controller="About" asp-action="Index" class="nav-link">About Us</a>
                 </li>
             </ul>
+
             <!-- nav-icons-container -->
             <div class="nav-icons-container d-flex align-items-center">
                 <!-- Search button -->
-
-                <a class="icon d-flex align-items-center justify-content-center search-icon"
-                id="search-btn"
-                href="#"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvas-search">
+                <a class="icon d-flex align-items-center justify-content-center search-icon" id="search-btn" href="#"
+                   data-bs-toggle="offcanvas" data-bs-target="#offcanvas-search">
                     <i class="fa fa-search"></i>
                 </a>
+
                 <!-- Search screen -->
                 <div id="search-overlay" style="display: none">
                     <div class="search-box">
@@ -69,87 +62,83 @@ id="ftco-navbar">
                     </div>
                     <button id="close-search">&times;</button>
                 </div>
-                @if (!User.Identity.IsAuthenticated)
-                {
-                    <a class="icon d-flex align-items-center justify-content-center"
-                    href="#"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas-search">
-                        <i class="fa-solid fa-hands-holding-child"></i>
-                    </a>
-                }@if (User.Identity.IsAuthenticated)
-                {
-                    <a class="icon d-flex align-items-center justify-content-center position-relative"
-                    href="./registered_events.html"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas-search">
-                        <i class="fa-solid fa-hands-holding-child"></i>
-                        <span class="badge-notify">3</span>
-                    </a>
-                }
+
+                <a class="icon d-flex align-items-center justify-content-center position-relative"
+                   asp-controller="Event" asp-action="RegisteredEvents">
+                    <i class="fa-solid fa-hands-holding-child"></i>
+                    <span class="badge-notify">3</span>
+                </a>
             </div>
+
+            <!-- Kiểm tra nếu user đã đăng nhập -->
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="dropdown" style="margin-left: 20px">
+                    <div class="avatar-container">
+                        <img class="avatar-img rounded-circle"
+                             src="~/images/person_4.jpg"
+                             alt="avatar"
+                             id="profileDropdown" />
+                    </div>
+
+                    <ul class="dropdown-menu dropdown-animation shadow pt-3" aria-labelledby="profileDropdown">
+                        <!-- Hiển thị thông tin người dùng -->
+                        <li class="px-3">
+                            <div class="d-flex align-items-center">
+                                <!-- Avatar -->
+                                <div class="avatar me-3">
+                                    <img class="avatar-img rounded-circle shadow"
+                                         src="~/images/person_4.jpg"
+                                         alt="avatar" />
+                                </div>
+                                <div>
+                                    <a class="h6" href="#">@userName</a>
+                                    <p class="small m-0">@userEmail</p>
+                                </div>
+                            </div>
+                            <hr />
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                                <i class="fa-solid fa-user" style="margin-right: 10px"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item bg-danger-soft-hover" asp-controller="Account" asp-action="Logout">
+                                <i class="fa-solid fa-arrow-right-from-bracket"
+                                   style="margin-right: 10px"></i>
+                                <i class="bi bi-power fa-fw me-2"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="dropdown" style="margin-left: 20px">
+                    <div class="avatar-container">
+                        <a class="icon d-flex align-items-center justify-content-center" id="profileDropdown" href="#"
+                           data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user"></i>
+                        </a>
+                    </div>
+
+                    <ul class="dropdown-menu dropdown-animation shadow pt-3" aria-labelledby="profileDropdown">
+                        <li>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="Login">
+                                <i class="bi bi-person fa-fw me-2"></i>Login
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item bg-danger-soft-hover" asp-controller="Account" asp-action="Register">
+                                <i class="bi bi-power fa-fw me-2"></i>Register
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
         </div>
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <!-- dropdown -->
-            <div class="dropdown" style="margin-left: 20px">
-                <div class="avatar-container">
-                    <a class="icon d-flex align-items-center justify-content-center"
-                    id="profileDropdown"
-                    href="#"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas-search">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
-                </div>
-
-                <ul class="dropdown-menu dropdown-animation shadow pt-3"
-                aria-labelledby="profileDropdown">
-                    <!-- Profile info -->
-                    <!-- Links -->
-                    <li>
-                        <a class="dropdown-item" href="Login.html">
-                            <i class="bi bi-person fa-fw me-2"></i>Login
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item bg-danger-soft-hover" href="SignUp.html">
-                            <i class="bi bi-power fa-fw me-2"></i>Register
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        }
-        @if (User.Identity.IsAuthenticated){
-            <!-- dropdown -->
-            <div class="dropdown" style="margin-left: 20px">
-                <div class="avatar-container">
-                    <a class="icon d-flex align-items-center justify-content-center"
-                       id="profileDropdown"
-                       href="#"
-                       data-bs-toggle="offcanvas"
-                       data-bs-target="#offcanvas-search">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
-                </div>
-
-                <ul class="dropdown-menu dropdown-animation shadow pt-3"
-                    aria-labelledby="profileDropdown">
-                    <!-- Profile info -->
-                    <!-- Links -->
-                    <li>
-                        <a class="dropdown-item" href="Login.html">
-                            <i class="bi bi-person fa-fw me-2"></i>Login
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item bg-danger-soft-hover" href="SignUp.html">
-                            <i class="bi bi-power fa-fw me-2"></i>Register
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        }
     </div>
 </nav>
 <!-- END nav -->

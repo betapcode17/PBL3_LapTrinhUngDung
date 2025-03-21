@@ -5,6 +5,10 @@ using Volunteer_website.Data;
 using AutoMapper;
 using Volunteer_website.Helpers;
 using MyCommerce.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Controllers
 {
@@ -19,7 +23,7 @@ namespace Volunteer_website.Controllers
             _mapper = mapper;
         }
 
-      
+        #region Register
         [HttpGet]
         public IActionResult Register()
         {
@@ -32,13 +36,7 @@ namespace Volunteer_website.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra xem User đã tồn tại chưa
-                //var existingUser = db.Users.FirstOrDefault(u => u.UserName == model.UserName);
-                //if (existingUser != null)
-                //{
-                //    ModelState.AddModelError("", "UserName đã tồn tại!");
-                //    return View(model);
-                //}
+              
 
                 try
                 {
@@ -46,9 +44,10 @@ namespace Volunteer_website.Controllers
                     var user = _mapper.Map<User>(model);
                     user.UserId = Guid.NewGuid().ToString(); // Sinh UserId tự động
                     user.RandomKey = Util.GenerateRandomkey();
+                    user.UserName = model.UserName;
                     user.Password = model.Password.ToMd5Hash(user.RandomKey);
                     user.Role = 0;
-
+                    user.is_active = true;
                     // Map RegisterVM sang Volunteer
                     var volunteer = _mapper.Map<Volunteer>(model);
                     volunteer.VolunteerId = user.UserId; // Gán UserId cho VolunteerId
@@ -72,10 +71,95 @@ namespace Volunteer_website.Controllers
             }
             return View(model);
         }
+        #endregion
 
-        public ActionResult Login()
+        #region Login
+        [HttpGet]
+        public ActionResult Login(string? ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginVM model, string? returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.Values.SelectMany(v => v.Errors).ToList().ForEach(error =>
+                    Console.WriteLine("Lỗi ModelState: " + error.ErrorMessage));
+                return View(model);
+            }
+
+            var user = db.Users.SingleOrDefault(kh => kh.UserName == model.UserName);
+            if (user == null)
+            {
+                ModelState.AddModelError("loi", "Không tìm thấy người dùng.");
+                return View(model);
+            }
+
+            if (!user.is_active)
+            {
+                ModelState.AddModelError("loi", "Tài khoản đã bị khóa. Vui lòng liên hệ Admin.");
+                return View(model);
+            }
+
+            if (user.Password != model.Password.ToMd5Hash(user.RandomKey))
+            {
+                ModelState.AddModelError("loi", "Sai thông tin đăng nhập");
+                return View(model);
+            }
+
+            var volunteer = db.Volunteers.SingleOrDefault(vol => vol.VolunteerId == user.UserId);
+            if (volunteer == null)
+            {
+                ModelState.AddModelError("loi", "Thông tin tình nguyện viên không tồn tại.");
+                return View(model);
+            }
+
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, volunteer.Name ?? ""),
+            new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
+            new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
+            new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
+            new Claim(ClaimTypes.Gender, volunteer.Gender ? "Male" : "Female"),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
+        };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            try
+            {
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                Console.WriteLine("Đăng nhập thành công");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi SignInAsync: " + ex.Message);
+                return View(model);
+            }
+
+            return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) ? Redirect(returnUrl) : RedirectToAction("Index", "Home");
+        }
+
+
+        #endregion
+        [Authorize]
+        public IActionResult profile()
+        {
+
+            return View();
+        }
+        [Authorize]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home"); // Chuyển hướng về trang chủ
+        }
+
     }
 }

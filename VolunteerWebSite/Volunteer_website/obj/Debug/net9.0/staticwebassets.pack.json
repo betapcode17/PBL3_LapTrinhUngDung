@@ -25,8 +25,8 @@
       "PackagePath": "staticwebassets\\Detail_Event.html"
     },
     {
-      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Detail_Volunteer.html",
-      "PackagePath": "staticwebassets\\Detail_Volunteer.html"
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Event_Detail.html",
+      "PackagePath": "staticwebassets\\Event_Detail.html"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Login.html",
@@ -41,12 +41,12 @@
       "PackagePath": "staticwebassets\\SignUp.html"
     },
     {
-      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Test.html",
-      "PackagePath": "staticwebassets\\Test.html"
-    },
-    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Update_Info.html",
       "PackagePath": "staticwebassets\\Update_Info.html"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Volunteer.html",
+      "PackagePath": "staticwebassets\\Volunteer.html"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Volunteer_Detail.html",
@@ -55,6 +55,18 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\about.html",
       "PackagePath": "staticwebassets\\about.html"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\assets\\js\\hoverable-collapse.js",
+      "PackagePath": "staticwebassets\\assets\\js\\hoverable-collapse.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\assets\\js\\misc.js",
+      "PackagePath": "staticwebassets\\assets\\js\\misc.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\assets\\js\\off-canvas.js",
+      "PackagePath": "staticwebassets\\assets\\js\\off-canvas.js"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\blog-single.html",
@@ -85,6 +97,10 @@
       "PackagePath": "staticwebassets\\css\\Detail_Event.css"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Event_Detail.css",
+      "PackagePath": "staticwebassets\\css\\Event_Detail.css"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Footer.css",
       "PackagePath": "staticwebassets\\css\\Footer.css"
     },
@@ -95,6 +111,14 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Profile_Manage.css",
       "PackagePath": "staticwebassets\\css\\Profile_Manage.css"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Search.css",
+      "PackagePath": "staticwebassets\\css\\Search.css"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Volunteer_Detail.css",
+      "PackagePath": "staticwebassets\\css\\Volunteer_Detail.css"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\ajax-loader.gif",
@@ -163,6 +187,10 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\owl.theme.default.min.css",
       "PackagePath": "staticwebassets\\css\\owl.theme.default.min.css"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\registered_events.css",
+      "PackagePath": "staticwebassets\\css\\registered_events.css"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\signUp.css",
@@ -797,8 +825,16 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.slim.min.map"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\payment.html",
+      "PackagePath": "staticwebassets\\payment.html"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\prepros-6.config",
       "PackagePath": "staticwebassets\\prepros-6.config"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\registered_events.html",
+      "PackagePath": "staticwebassets\\registered_events.html"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\scss\\bootstrap\\_alert.scss",
