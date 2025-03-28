@@ -7,9 +7,6 @@ namespace Volunteer_website.Helpers
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile() {
-
-
-            // Map từ RegisterVM sang Volunteer
             CreateMap<RegisterVM, Volunteer>()
                 .ForMember(dest => dest.VolunteerId, opt => opt.Ignore()) // Bỏ qua VolunteerId (sinh tự động)
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
@@ -21,9 +18,6 @@ namespace Volunteer_website.Helpers
                 .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath))
                 .ForMember(dest => dest.Donations, opt => opt.Ignore()) // Không map danh sách Donations
                 .ForMember(dest => dest.Registrations, opt => opt.Ignore()); // Không map danh sách Registrations
-
-
-            // Map từ RegisterVM sang User
             CreateMap<RegisterVM, User>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName)) // Đặt UserName là Email
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password)) // Map password

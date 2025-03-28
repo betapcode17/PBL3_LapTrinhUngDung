@@ -11,7 +11,6 @@ namespace MyCommerce.Models
             var sha256 = SHA256.Create();
             byte[] encryptedSHA256 = sha256.ComputeHash(Encoding.UTF8.GetBytes(string.Concat(password, saltKey)));
             sha256.Clear();
-
             return Convert.ToBase64String(encryptedSHA256);
         }
 
@@ -23,7 +22,6 @@ namespace MyCommerce.Models
 
             return Convert.ToBase64String(encryptedSHA512);
         }
-
         public static string ToMd5Hash(this string password, string? saltKey)
         {
             using (var md5 = MD5.Create())
@@ -38,7 +36,6 @@ namespace MyCommerce.Models
                 return sBuilder.ToString();
             }
         }
-
         #endregion
 
     }
