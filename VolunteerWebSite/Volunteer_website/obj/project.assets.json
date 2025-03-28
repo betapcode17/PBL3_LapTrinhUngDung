@@ -95,19 +95,6 @@
           }
         }
       },
-      "FluentAssertions/8.2.0": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/FluentAssertions.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/FluentAssertions.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
       "Humanizer/2.14.1": {
         "type": "package",
         "dependencies": {
@@ -3471,30 +3458,6 @@
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
         }
-      },
-      "X.PagedList/10.5.7": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/X.PagedList.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/X.PagedList.dll": {}
-        }
-      },
-      "X.PagedList.Mvc.Core/10.5.7": {
-        "type": "package",
-        "dependencies": {
-          "X.PagedList": "10.5.7"
-        },
-        "compile": {
-          "lib/net8.0/X.PagedList.Mvc.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/X.PagedList.Mvc.Core.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       }
     }
   },
@@ -3594,31 +3557,6 @@
         "tools/init.ps1",
         "tools/install.ps1",
         "tools/migrate.exe"
-      ]
-    },
-    "FluentAssertions/8.2.0": {
-      "sha512": "Gh4jkECcrR0i17ofCVqsiVz2+lxC+p5TYFPCrbZFi7eQQWGEZhvCDwvhycBKX1Kmtbd+H2CW/ugW7wdH9Br9NQ==",
-      "type": "package",
-      "path": "fluentassertions/8.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "FluentAssertions.png",
-        "LICENSE",
-        "fluentassertions.8.2.0.nupkg.sha512",
-        "fluentassertions.nuspec",
-        "lib/net47/FluentAssertions.dll",
-        "lib/net47/FluentAssertions.pdb",
-        "lib/net47/FluentAssertions.xml",
-        "lib/net6.0/FluentAssertions.dll",
-        "lib/net6.0/FluentAssertions.pdb",
-        "lib/net6.0/FluentAssertions.xml",
-        "lib/netstandard2.0/FluentAssertions.dll",
-        "lib/netstandard2.0/FluentAssertions.pdb",
-        "lib/netstandard2.0/FluentAssertions.xml",
-        "lib/netstandard2.1/FluentAssertions.dll",
-        "lib/netstandard2.1/FluentAssertions.pdb",
-        "lib/netstandard2.1/FluentAssertions.xml"
       ]
     },
     "Humanizer/2.14.1": {
@@ -9014,49 +8952,11 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
-    },
-    "X.PagedList/10.5.7": {
-      "sha512": "Nevli+eaR3wMeb6pSNa+ApsddA9bw6Pl7wuX7B2nFj0v184RV/FtFRUckgNAaogGcmEiLXcsQX3ox0y164DnHg==",
-      "type": "package",
-      "path": "x.pagedlist/10.5.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "lib/net481/X.PagedList.dll",
-        "lib/net6.0/X.PagedList.dll",
-        "lib/net7.0/X.PagedList.dll",
-        "lib/net8.0/X.PagedList.dll",
-        "lib/netstandard2.0/X.PagedList.dll",
-        "lib/netstandard2.1/X.PagedList.dll",
-        "x-pagedlist.png",
-        "x.pagedlist.10.5.7.nupkg.sha512",
-        "x.pagedlist.nuspec"
-      ]
-    },
-    "X.PagedList.Mvc.Core/10.5.7": {
-      "sha512": "YuQEz9Y2AC8oaYk6yBISRxSpKuUEYLwoDpjimump8O+v4B2vZcigWQ6nEYE9blwmKLV0xGLy0S2zlbicvKCyPg==",
-      "type": "package",
-      "path": "x.pagedlist.mvc.core/10.5.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "lib/net6.0/X.PagedList.Mvc.Core.dll",
-        "lib/net7.0/X.PagedList.Mvc.Core.dll",
-        "lib/net8.0/X.PagedList.Mvc.Core.dll",
-        "x-pagedlist.png",
-        "x.pagedlist.mvc.core.10.5.7.nupkg.sha512",
-        "x.pagedlist.mvc.core.nuspec"
-      ]
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
-      "FluentAssertions >= 8.2.0",
       "Microsoft.AspNet.Identity.EntityFramework >= 2.2.4",
       "Microsoft.AspNet.Identity.Owin >= 2.2.4",
       "Microsoft.AspNetCore.Authentication.Cookies >= 2.3.0",
@@ -9066,8 +8966,7 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.3",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.3",
       "Microsoft.Owin.Host.SystemWeb >= 4.2.2",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 9.0.0",
-      "X.PagedList.Mvc.Core >= 10.5.7"
+      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 9.0.0"
     ]
   },
   "packageFolders": {
@@ -9124,10 +9023,6 @@
             "target": "Package",
             "version": "[12.0.1, )"
           },
-          "FluentAssertions": {
-            "target": "Package",
-            "version": "[8.2.0, )"
-          },
           "Microsoft.AspNet.Identity.EntityFramework": {
             "target": "Package",
             "version": "[2.2.4, )"
@@ -9171,10 +9066,6 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[9.0.0, )"
-          },
-          "X.PagedList.Mvc.Core": {
-            "target": "Package",
-            "version": "[10.5.7, )"
           }
         },
         "imports": [

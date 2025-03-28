@@ -36,32 +36,29 @@ namespace Volunteer_website.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra username đã tồn tại hay chưa
-                if (db.Users.Any(u => u.UserName == model.UserName))
-                {
-                    ModelState.AddModelError("UserName", "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác!");
-                    return View(model);
-                }
+              
 
                 try
                 {
+                    // Map RegisterVM sang User
                     var user = _mapper.Map<User>(model);
-                    user.UserId = Guid.NewGuid().ToString();
+                    user.UserId = Guid.NewGuid().ToString(); // Sinh UserId tự động
                     user.RandomKey = Util.GenerateRandomkey();
                     user.UserName = model.UserName;
                     user.Password = model.Password.ToMd5Hash(user.RandomKey);
                     user.Role = 0;
                     user.is_active = true;
-
+                    // Map RegisterVM sang Volunteer
                     var volunteer = _mapper.Map<Volunteer>(model);
-                    volunteer.VolunteerId = user.UserId;
+                    volunteer.VolunteerId = user.UserId; // Gán UserId cho VolunteerId
 
+                    // Thêm vào database
                     db.Users.Add(user);
                     db.Volunteers.Add(volunteer);
-                    db.SaveChanges();
+                    db.SaveChanges(); // Lưu vào DB
 
                     TempData["SuccessMessage"] = "Đăng ký thành công!";
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home"); // Chuyển hướng sau khi đăng ký thành công
                 }
                 catch (Exception ex)
                 {
@@ -114,16 +111,14 @@ namespace Volunteer_website.Controllers
                 return View(model);
             }
 
-            if (user.Role == 0)
+            var volunteer = db.Volunteers.SingleOrDefault(vol => vol.VolunteerId == user.UserId);
+            if (volunteer == null)
             {
-                var volunteer = db.Volunteers.SingleOrDefault(vol => vol.VolunteerId == user.UserId);
-                if (volunteer == null)
-                {
-                    ModelState.AddModelError("loi", "Thông tin tình nguyện viên không tồn tại.");
-                    return View(model);
-                }
+                ModelState.AddModelError("loi", "Thông tin tình nguyện viên không tồn tại.");
+                return View(model);
+            }
 
-                var claims = new List<Claim>
+            var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, volunteer.Name ?? ""),
             new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
@@ -133,68 +128,21 @@ namespace Volunteer_website.Controllers
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                try
-                {
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-                    Console.WriteLine("Đăng nhập thành công");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Lỗi SignInAsync: " + ex.Message);
-                    return View(model);
-                }
-
-                // Role 0: Điều hướng về Index của Home Controller
-                return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    ? Redirect(returnUrl)
-                    : RedirectToAction("Index", "Home");
-            }
-            else if (user.Role == 1)
+            try
             {
-                var org = db.Organizations.SingleOrDefault(vol => vol.OrgId == user.UserId);
-                if (org == null)
-                {
-                    ModelState.AddModelError("loi", "Thông tin tổ chức không tồn tại.");
-                    return View(model);
-                }
-
-                var claims = new List<Claim>
-        {
-             
-            new Claim(ClaimTypes.Name, org.Name ?? ""),
-            new Claim(ClaimTypes.Email, org.Email ?? ""),
-            new Claim(ClaimTypes.MobilePhone, org.PhoneNumber ?? ""),
-            new Claim(ClaimTypes.StreetAddress, org.Address ?? ""),
-            new Claim(ClaimTypes.Gender, org.Description ?? ""),
-            new Claim(ClaimTypes.Role, user.Role.ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
-        };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                try
-                {
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-                    Console.WriteLine("Đăng nhập thành công");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Lỗi SignInAsync: " + ex.Message);
-                    return View(model);
-                }
-
-               return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-    ? Redirect(returnUrl)
-    : Redirect(Url.Action("Index", "HomeOrg", new { area = "Organization" }));
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                Console.WriteLine("Đăng nhập thành công");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi SignInAsync: " + ex.Message);
+                return View(model);
             }
 
-            // Nếu không thuộc role 0 hoặc 1, có thể thêm điều hướng mặc định hoặc thông báo lỗi
-            ModelState.AddModelError("loi", "Vai trò không hợp lệ.");
-            return View(model);
+            return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) ? Redirect(returnUrl) : RedirectToAction("Index", "Home");
         }
 
 
