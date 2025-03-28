@@ -73,11 +73,53 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label class="form-label">Main Image <small>(Optional)</small></label>
-                    <input name="imagePath" class="form-control" type="file" />
+                    <input name="imagePath" class="form-control" type="file" id="mainImageInput" accept="image/*" />
+
+                    <!-- Hiển thị ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Main Image:</label>
+                            <div class="d-flex align-items-center">
+                                <img src="@Model.ImagePath" alt="Current Image" style="max-width: 100px; max-height: 100px; margin-right: 10px;" id="mainImagePreview" />
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeMainImage()">Remove</button>
+                            </div>
+                            <input type="hidden" name="existingImagePath" value="@Model.ImagePath" />
+                        </div>
+                    }
+                    <!-- Preview ảnh mới -->
+                    <div class="mt-2" id="mainImageNewPreview" style="display: none;">
+                        <label class="form-label">New Main Image Preview:</label>
+                        <img src="" alt="New Image Preview" style="max-width: 100px; max-height: 100px;" id="mainImageNewPreviewImg" />
+                    </div>
                 </div>
+
                 <div class="col-md-3 form-group">
                     <label class="form-label">Additional Images <small>(Optional)</small></label>
-                    <input name="listImg" class="form-control" type="file" multiple />
+                    <input name="listImg" class="form-control" type="file" multiple id="additionalImagesInput" accept="image/*" />
+
+                    <!-- Hiển thị các ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.ListImg))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Additional Images:</label>
+                            <div class="d-flex flex-wrap" id="additionalImagesContainer">
+                                @foreach (var img in Model.ListImg.Split(','))
+                                {
+                                    <div class="d-flex align-items-center mb-2 mr-2" style="margin-right: 10px;">
+                                        <img src="@img" alt="Additional Image" style="max-width: 100px; max-height: 100px; margin-right: 5px;" class="additional-image" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeAdditionalImage(this, '@img')">Remove</button>
+                                        <input type="hidden" name="existingListImg" value="@img" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!-- Preview ảnh mới -->
+                    <div class="mt-2" id="additionalImagesNewPreview" style="display: none;">
+                        <label class="form-label">New Additional Images Preview:</label>
+                        <div class="d-flex flex-wrap" id="additionalImagesNewPreviewContainer"></div>
+                    </div>
                 </div>
             </div>
             <div class="row mb-3">
@@ -95,3 +137,4 @@
         </form>
     </div>
 </div>
+

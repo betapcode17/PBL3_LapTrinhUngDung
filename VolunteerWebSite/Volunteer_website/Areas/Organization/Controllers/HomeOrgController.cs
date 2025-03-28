@@ -36,13 +36,13 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var lstEvent = _db.Events.AsNoTracking()
                             .OrderBy(x => x.Name)
                             .ToPagedList(pageNumber, pageSize);
-
             return View(lstEvent);
         }
         #endregion
+
         #region Thêm sự kiện
         [Route("CreateEvent")]
-        [HttpGet] 
+        [HttpGet]
         public IActionResult CreateEvent()
         {
             var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -77,7 +77,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return View(model);
         }
-      
+
         [Route("CreateEvent")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -143,8 +143,121 @@ namespace Volunteer_website.Areas.Organization.Controllers
             // Nếu có lỗi, hiển thị lại form
             return View(eventModel);
         }
+    
+    #endregion
+
+       #region Chỉnh sửa sự kiện
+         [Route("EditEvent/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> EditEvent(string id)
+        {
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
+
+            var eventModel = await _db.Events.FindAsync(id);
+            if (eventModel == null)
+            {
+                return NotFound();
+            }
+            ViewBag.OrgId = eventModel.OrgId; // Truyền dữ liệu tổ chức vào View
+            return View(eventModel);
+        }
+
+        [Route("EditEvent/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditEvent(Event model, IFormFile? imagePath, IFormFileCollection? listImg)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.OrgId = model.OrgId;
+                return View(model);
+            }
+
+            var existingEvent = await _db.Events.FindAsync(model.EventId);
+            if (existingEvent == null)
+            {
+                return NotFound();
+            }
+
+            // Cập nhật dữ liệu từ form
+            existingEvent.Name = model.Name;
+            existingEvent.TargetMember = model.TargetMember;
+            existingEvent.Status = model.Status;
+            existingEvent.type_event_name = model.type_event_name;
+            existingEvent.DayBegin = model.DayBegin;
+            existingEvent.DayEnd = model.DayEnd;
+            existingEvent.Location = model.Location;
+            existingEvent.TargetFunds = model.TargetFunds;
+            existingEvent.Description = model.Description;
+
+            // Xử lý ảnh nếu có upload
+            if (imagePath != null)
+            {
+                existingEvent.ImagePath = await SaveImage(imagePath);
+            }
+
+            _db.Update(existingEvent);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Event");
+        }
+
+        private async Task<string> SaveImage(IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(fileStream);
+            }
+
+            return "/uploads/" + uniqueFileName; // Trả về đường dẫn ảnh
+        }
+
+        #endregion
+
+        #region Xóa sự kiện
+        [Route("DeleteEvent")]
+        [HttpGet]
+        public IActionResult DeleteEvent(string id)
+        {
+            TempData["Message"] = "";
+
+            var registrations = _db.Registrations.Where(x => x.EventId == id).ToList();
+            var donations = _db.Donations.Where(x => x.EventId == id).ToList();
+
+            if (registrations.Count > 0 || donations.Count > 0)
+            {
+                TempData["Message"] = "Can not delete";
+                return RedirectToAction("Event");
+            }
+
+            var eventToDelete = _db.Events.Find(id);
+            if (eventToDelete != null)
+            {
+                _db.Events.Remove(eventToDelete);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Event");
+        }
+
+        #endregion
+
     }
-    #endregion
-    #region Chỉnh sửa sự kiện
-    #endregion
 }

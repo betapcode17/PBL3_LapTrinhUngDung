@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Data.Entity;
+using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -42,7 +43,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization();
 
-
+//
+builder.Services.AddDbContext<VolunteerManagementContext>(options =>
+    options.UseSqlServer("VolunteerDB", sqlOptions =>
+        sqlOptions.CommandTimeout(300) // Tăng thời gian timeout lên 300 giây
+    ));
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -80,11 +85,24 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCookiePolicy();
 
-// Configure endpoints
+//// Configure endpoints
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 app.MapRazorPages();
+app.Use(async (context, next) =>
+{
+    var routeValues = context.GetRouteData();
+    Console.WriteLine($"Route Debug: {string.Join(", ", routeValues.Values.Select(kv => $"{kv.Key}={kv.Value}"))}");
+    await next();
+});
 
 app.Run();
