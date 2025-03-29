@@ -2302,6 +2302,12 @@
   }
 }
 
+@media(max-width: 768px) {
+  .container {
+    max-width: 250px;
+  }
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -2581,6 +2587,15 @@ th {
 
 label {
   display: inline-block;
+}
+
+section {
+  display: block;
+}
+
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 button {
@@ -19795,4 +19810,54 @@ dl li {
 
 .navbar-title:hover {
   color: #212529; /* Màu chữ khi hover */
+}
+
+.no-grow {
+  flex-grow: 0 !important;
+}
+
+ /* Giới hạn độ dài cho phần mô tả sự kiện */
+ .card-body p:not(.card-text) {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;         /* Giới hạn số dòng hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;       /* Hiển thị dấu "..." khi bị cắt */
+  max-height: 4.5em;             /* Chiều cao tối đa (1.5em x 3 dòng) */
+}
+
+.List-Items + .List-Items {
+  margin-top: 40px;
+}
+.List-Items {
+  background-color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.List-Items .card {
+  width: calc(33.333% - 20px);
+}
+
+.List-Items .card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.List-title {
+  width: 100%;
+  justify-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--bs-gray); 
+  text-decoration: none; /* Bỏ gạch chân */
+  transition: color 0.3s ease-in-out;
+  padding: 30px 0;
+  text-align: center;
+}
+
+.no-border {
+  border: none !important;
 }

@@ -4998,22 +4998,22 @@ input[type="button"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #78d5ef;
+  color: orange;
   background-color: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e6e4de;
 }
 .page-link:hover {
   z-index: 2;
-  color: #34c0e7;
+  color: orange;
   text-decoration: none;
   background-color: #e9ecef;
-  border-color: #dee2e6;
+  border-color: #e6e6de;
 }
 .page-link:focus {
   z-index: 2;
   outline: 0;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(120, 213, 239, 0.25);
-  box-shadow: 0 0 0 0.2rem rgba(120, 213, 239, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(246, 199, 111, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(239, 209, 120, 0.25);
 }
 .page-link:not(:disabled):not(.disabled) {
   cursor: pointer;
@@ -5033,8 +5033,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #78d5ef;
-  border-color: #78d5ef;
+  background-color: orange;
+  border-color: orange;
 }
 
 .page-item.disabled .page-link {
@@ -11103,6 +11103,7 @@ textarea.form-control {
 }
 
 .blog-entry {
+  width: 100%;
   border: 1px solid #f2f2f2;
   background: #fff;
   overflow: hidden;
