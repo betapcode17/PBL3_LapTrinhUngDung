@@ -40,27 +40,7 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXE9yZ0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9MYXlvdXRBZG1pbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/HomeOrg/CreateEvent.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcQ3JlYXRlRXZlbnQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/HomeOrg/Event.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcRXZlbnQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/HomeOrg/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/OrgLayout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXE9yZ0xheW91dC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Hoclaptrinh/PBL3/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Account/Login.cshtml]
+[E:/HOCKI4/PBL3-LTUD/VolunteerWebSite/Volunteer_website/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
