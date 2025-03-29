@@ -21,7 +21,7 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<EventType> EventTypes { get; set; }
+    
 
     public virtual DbSet<Organization> Organizations { get; set; }
 
@@ -131,31 +131,17 @@ public partial class VolunteerManagementContext : DbContext
                 .HasColumnName("status");
             entity.Property(e => e.TargetFunds).HasColumnName("target_funds");
             entity.Property(e => e.TargetMember).HasColumnName("target_member");
-            entity.Property(e => e.TypeEventId)
+            entity.Property(e => e.type_event_name)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("type_event_id");
+                .HasColumnName("type_event_name");
 
             entity.HasOne(d => d.Org).WithMany(p => p.Events)
                 .HasForeignKey(d => d.OrgId)
                 .HasConstraintName("FK__Events__org_id__52593CB8");
         });
 
-        modelBuilder.Entity<EventType>(entity =>
-        {
-            entity.HasKey(e => e.TypeId).HasName("PK__Event_Ty__2C0005982BC52012");
-
-            entity.ToTable("Event_Types");
-
-            entity.Property(e => e.TypeId)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("type_id");
-            entity.Property(e => e.TypeName)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("type_name");
-        });
+       
 
         modelBuilder.Entity<Organization>(entity =>
         {

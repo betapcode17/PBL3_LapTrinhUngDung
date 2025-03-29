@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Data.Entity;
+using System.Globalization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Volunteer_website.Data;
 using Volunteer_website.Helpers;
 using Volunteer_website.Models;
+
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +43,23 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization();
 
+//
+builder.Services.AddDbContext<VolunteerManagementContext>(options =>
+    options.UseSqlServer("VolunteerDB", sqlOptions =>
+        sqlOptions.CommandTimeout(300) // Tăng thời gian timeout lên 300 giây
+    ));
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { new CultureInfo("en-US") };
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 // Configure Cookie Policy
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -61,11 +85,24 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCookiePolicy();
 
-// Configure endpoints
+//// Configure endpoints
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 app.MapRazorPages();
+app.Use(async (context, next) =>
+{
+    var routeValues = context.GetRouteData();
+    Console.WriteLine($"Route Debug: {string.Join(", ", routeValues.Values.Select(kv => $"{kv.Key}={kv.Value}"))}");
+    await next();
+});
 
 app.Run();
