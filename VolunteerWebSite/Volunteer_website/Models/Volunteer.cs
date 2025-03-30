@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
-public partial class Volunteer 
+public partial class Volunteer
 {
-
     public string VolunteerId { get; set; } = null!;
 
     public string? PhoneNumber { get; set; }
@@ -16,7 +15,7 @@ public partial class Volunteer
 
     public DateTime? DateOfBirth { get; set; }
 
-    public bool Gender { get; set; } = true;
+    public bool? Gender { get; set; }
 
     public string? ImagePath { get; set; }
 

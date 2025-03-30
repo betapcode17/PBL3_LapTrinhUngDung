@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
 public partial class Registration
 {
@@ -11,7 +11,9 @@ public partial class Registration
 
     public string? EventId { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; } = false;
+
+    public virtual ICollection<Evaluation> Evaluations { get; set; } = new List<Evaluation>();
 
     public virtual Event? Event { get; set; }
 
