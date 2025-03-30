@@ -19861,3 +19861,136 @@ dl li {
 .no-border {
   border: none !important;
 }
+
+/* Tùy chỉnh thanh tìm kiếm để phù hợp với Admin */
+.search-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.search-container .search-box {
+  width: 100%;
+  max-width: 100%;
+}
+
+.search-container .search-input {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-container .search-input:hover,
+.search-container .search-input:focus-within {
+  border-color: #ff7300;
+  box-shadow: 0 1px 5px rgba(255, 115, 0, 0.2);
+}
+
+.search-container .search-input input[type="text"] {
+  padding: 12px 15px;
+}
+
+.search-container .search-button {
+  background: #ff7300;
+  padding: 12px 20px;
+}
+
+.search-container .search-button:hover {
+  background: #e66800;
+}
+
+.search-container .search-button i {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* Điều chỉnh layout của page-header để hiển thị thanh tìm kiếm */
+.page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .search-container {
+      margin: 10px 0;
+  }
+  
+  .page-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+  }
+  
+  .search-container {
+      width: auto;
+      min-width: 400px;
+  }
+}
+
+/* Tùy chỉnh bảng danh sách tình nguyện viên */
+
+.volunteer-list {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.volunteer-list thead th {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+  color: #666;
+  font-weight: 500;
+  padding: 12px 15px;
+}
+
+.volunteer-list .check-column {
+  width: 40px;
+}
+
+.volunteer-item {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.volunteer-item:hover {
+  background-color: #f7f9fc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.volunteer-item td {
+  padding: 12px 15px;
+  vertical-align: middle;
+}
+
+.volunteer-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.volunteer-list .badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.volunteer-list .form-check-input {
+  cursor: pointer;
+}
+
+.selected-row {
+  background-color: #f0f7ff !important;
+}
+
+/* Make sure this style exists for the bulk actions section */
+.bulk-actions {
+  visibility: hidden;
+}
+
+.bulk-actions.visible {
+  visibility: visible;
+}

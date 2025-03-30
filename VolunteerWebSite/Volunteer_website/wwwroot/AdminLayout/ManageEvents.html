@@ -135,7 +135,7 @@
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" href="Events.html">
+              <a class="nav-link" href="ManageEvents.html">
                 <span class="menu-title">Events</span>
                 <i class="mdi mdi-calendar-multiple menu-icon"></i>
               </a>
@@ -176,6 +176,17 @@
                 </span>
                 Events Management
               </h3>
+              <!-- Thêm thanh tìm kiếm ở đây -->
+              <div class="search-container">
+                <div class="search-box">
+                    <div class="search-input">
+                        <input type="text" id="event-search" placeholder="Search events by name, date, location..." />
+                        <button class="search-button" type="submit">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+                    </div>
+                </div>
+              </div>
             </div>
 
             <div class="List-Items">
@@ -346,7 +357,7 @@
             
             <!-- Events not approved -->
             <div class="List-Items">
-              <h4 class="List-title"><i class="mdi mdi-calendar-remove"></i> Events under review</h4>
+              <h4 class="List-title"><i class="mdi mdi-calendar-remove"></i> Rejected Events</h4>
               <!-- list events -->
               <div class="row">
                 <!-- Event 1 -->

@@ -31,15 +31,3 @@
     color: #555;
     word-wrap: break-word;
 }
-
-.search-container {
-    width: 100%; /* điều chỉnh độ dài*/
-    /* max-width: 800px; */
-    display: flex; /* hiển thị theo chiều ngang */
-    align-items: center;   /* căn giữa theo chiều dọc */
-    justify-content: center;    /* căn giữa theo chiều ngang */
-    padding : 30px 0 40px 0;
-}
-.search-container .search-box {
-    width: 70%;
-} 
