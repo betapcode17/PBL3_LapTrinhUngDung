@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 public partial class Event : IValidatableObject
 {
     [Key]

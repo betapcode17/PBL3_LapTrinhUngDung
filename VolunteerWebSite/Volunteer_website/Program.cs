@@ -9,14 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Volunteer_website.Data;
 using Volunteer_website.Helpers;
 using Volunteer_website.Models;
-
-
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container

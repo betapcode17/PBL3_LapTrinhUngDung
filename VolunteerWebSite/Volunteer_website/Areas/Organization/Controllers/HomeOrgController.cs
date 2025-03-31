@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Volunteer_website.Data;
+using Volunteer_website.Models;
 using X.PagedList.Extensions;
 
 namespace Volunteer_website.Areas.Organization.Controllers
@@ -34,7 +34,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             int pageNumber = page ?? 1;
 
             var lstEvent = _db.Events.AsNoTracking()
-                            .OrderBy(x => x.Name)
+                            .OrderBy(x => x.EventId)
                             .ToPagedList(pageNumber, pageSize);
             return View(lstEvent);
         }
@@ -234,7 +234,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
         #region Xóa sự kiện
         [Route("DeleteEvent")]
-        [HttpGet]
+        [HttpPost]
         public IActionResult DeleteEvent(string id)
         {
             TempData["Message"] = "";
@@ -251,12 +251,128 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var eventToDelete = _db.Events.Find(id);
             if (eventToDelete != null)
             {
-                _db.Events.Remove(eventToDelete);
-                _db.SaveChanges();
+                try
+                {
+                    // Logic xóa
+                    _db.Events.Remove(_db.Events.Find(id));
+                    _db.SaveChanges();
+
+                    // Trả về JSON thay vì Redirect
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Xóa thành công"
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = ex.Message
+                    });
+                }
             }
             return RedirectToAction("Event");
         }
 
+        #endregion
+
+        #region Danh sách người đăng kí tham gia
+        [Route("GetRegisteredVolunteers")]
+        public IActionResult GetRegisteredVolunteers(int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+
+            // Lấy danh sách đăng ký kèm theo thông tin Volunteer và Event
+            var lstRegistered = _db.Registrations
+                                   .Include(r => r.Volunteer) // Load dữ liệu Volunteer
+                                   .Include(r => r.Event) // Load dữ liệu Event
+                                   .AsNoTracking()
+                                   .OrderBy(x => x.EventId)
+                                   .ToPagedList(pageNumber, pageSize);
+
+            return View(lstRegistered);
+        }
+
+        #endregion
+
+        #region Cập nhật trạng thái người tham gia
+        [HttpGet]
+        [Route("UpdateStatus")]
+        public IActionResult UpdateStatus(string regId, bool status)
+        {
+            try
+            {
+                var registration = _db.Registrations.FirstOrDefault(r => r.RegId == regId);
+                if (registration == null)
+                {
+                    return Json(new { success = false, message = "Registration not found" });
+                }
+
+                registration.Status = status;
+                _db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    message = status ? "Registration approved" : "Registration rejected"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
+        }
+        #endregion
+
+        #region Xem chi tiết người tham gia
+        [Route("GetVolunteerDetails")]
+        [HttpGet]
+        public IActionResult GetVolunteerDetails(string id)
+        {
+            try
+            {
+                var volunteer = _db.Volunteers
+                    .FirstOrDefault(v => v.VolunteerId == id);
+
+                if (volunteer == null)
+                {
+                    return Json(new { success = false, message = "Volunteer not found" });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        volunteerId = volunteer.VolunteerId,
+                        name = volunteer.Name,
+                        email = volunteer.Email,
+                        phoneNumber = volunteer.PhoneNumber,
+                        dateOfBirth = volunteer.DateOfBirth?.ToString("dd/MM/yyyy"),
+                        gender = volunteer.Gender.HasValue ?
+                            (volunteer.Gender.Value ? "Male" : "Female") : "Not specified",
+                        imagePath = volunteer.ImagePath,
+                        address = volunteer.Address
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while fetching volunteer details",
+                    error = ex.Message
+                });
+            }
+        }
         #endregion
 
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.ViewModel;
 using Volunteer_website.Models;
-using Volunteer_website.Data;
 using AutoMapper;
 using Volunteer_website.Helpers;
 using MyCommerce.Models;
@@ -51,7 +50,7 @@ namespace Volunteer_website.Controllers
                     user.UserName = model.UserName;
                     user.Password = model.Password.ToMd5Hash(user.RandomKey);
                     user.Role = 0;
-                    user.is_active = true;
+                    user.IsActive = true;
 
                     var volunteer = _mapper.Map<Volunteer>(model);
                     volunteer.VolunteerId = user.UserId;
@@ -102,7 +101,7 @@ namespace Volunteer_website.Controllers
                 return View(model);
             }
 
-            if (!user.is_active)
+            if (!user.IsActive)
             {
                 ModelState.AddModelError("loi", "Tài khoản đã bị khóa. Vui lòng liên hệ Admin.");
                 return View(model);
@@ -129,7 +128,7 @@ namespace Volunteer_website.Controllers
             new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
             new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
             new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
-            new Claim(ClaimTypes.Gender, volunteer.Gender ? "Male" : "Female"),
+            new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
