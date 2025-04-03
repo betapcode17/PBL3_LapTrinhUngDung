@@ -218,3 +218,19 @@ tr {
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
 }
+.table thead th {
+  color: #fff; /* Màu chữ cho tiêu đề bảng */
+  font-weight: bold; /* Chữ đậm */
+  text-align: center; /* Căn giữa chữ */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới cho tiêu đề bảng */
+  font-size: 1.1rem; /* Kích thước chữ tiêu đề */
+  padding: 1rem; /* Khoảng cách bên trong tiêu đề bảng */
+}
+.event-table td {
+  color: #000000; /* Màu chữ cho các ô trong bảng */
+  font-size: 1rem; /* Kích thước chữ cho các ô trong bảng */
+  padding: 1rem; /* Khoảng cách bên trong các ô trong bảng */
+  border-bottom: 1px solid #dee2e6; /* Viền dưới cho các ô trong bảng */
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
+  text-align: center; /* Căn giữa theo chiều ngang */
+}

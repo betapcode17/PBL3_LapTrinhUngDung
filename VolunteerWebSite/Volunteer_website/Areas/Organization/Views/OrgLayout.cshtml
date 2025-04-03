@@ -25,7 +25,7 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
-  
+     
     <link rel="stylesheet" href="~/OrgLayout/assets/css/style.css" />
     <link rel="stylesheet" href="~/OrgLayout/ManageEvent.css">
     <link href="~/OrgLayout/CreateEvent.css" rel="stylesheet" />
@@ -37,13 +37,14 @@
           rel="stylesheet" />
     <!-- Nhúng Material Design Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css">
-
+    
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
           integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
+    <link href="~/OrgLayout/VolunteerDetails.css" rel="stylesheet" />
 </head>
 <body>
     <div class="container-scroller">
@@ -54,7 +55,7 @@
                     <img src="~/OrgLayout/assets/images/VolunteerIcon.png"
                          alt="Logo"
                          class="navbar-logo" />
-                    <a class="navbar-title" href="index.html">DUTERS</a>
+                    <a class="navbar-title" >DUTERS</a>
                 </div>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
@@ -131,7 +132,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="ManageVolunteer.html">
+                        <a asp-area="Organization" asp-controller="HomeOrg" asp-action="GetRegisteredVolunteers" class="nav-link" >
                             <span class="menu-title">Volunteers</span>
                             <i class="mdi mdi-account-group menu-icon"></i>
                         </a>

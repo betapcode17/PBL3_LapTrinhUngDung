@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
 public partial class User
 {
@@ -11,8 +11,9 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public int Role { get; set; }
+    public int? Role { get; set; }
 
-    public string RandomKey { get; set; }
-    public bool is_active { get; set; } = true; 
+    public string? RandomKey { get; set; }
+
+    public bool IsActive { get; set; }
 }

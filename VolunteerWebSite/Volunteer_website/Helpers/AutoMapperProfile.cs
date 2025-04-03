@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Volunteer_website.Data;
+using Volunteer_website.Models;
 using Volunteer_website.ViewModel;
 
 namespace Volunteer_website.Helpers
@@ -22,7 +22,7 @@ namespace Volunteer_website.Helpers
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName)) // Đặt UserName là Email
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password)) // Map password
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => 1)) // Mặc định role là 1 (ví dụ: User)
-                  .ForMember(dest => dest.is_active, opt => opt.MapFrom(src => true)) // Mặc định role là 1 (ví dụ: User)
+                  .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true)) // Mặc định role là 1 (ví dụ: User)
                 .ForMember(dest => dest.UserId, opt => opt.Ignore()); // UserId thường do hệ thống sinh ra
 
         }

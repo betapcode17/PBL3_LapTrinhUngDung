@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
 public partial class VolunteerManagementContext : DbContext
 {
@@ -19,9 +19,9 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Donation> Donations { get; set; }
 
-    public virtual DbSet<Event> Events { get; set; }
+    public virtual DbSet<Evaluation> Evaluations { get; set; }
 
-    
+    public virtual DbSet<Event> Events { get; set; }
 
     public virtual DbSet<Organization> Organizations { get; set; }
 
@@ -31,9 +31,9 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Volunteer> Volunteers { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=MSI\\SQLEXPRESS;Initial Catalog=VolunteerManagement;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;Connect Timeout=30");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS;Database=VolunteerManagement;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -93,6 +93,27 @@ public partial class VolunteerManagementContext : DbContext
                 .HasConstraintName("FK__Donation__volunt__59FA5E80");
         });
 
+        modelBuilder.Entity<Evaluation>(entity =>
+        {
+            entity.HasKey(e => e.EvaluationId).HasName("PK__Evaluati__36AE68F3A5580E2A");
+
+            entity.Property(e => e.EvaluationId)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .HasDefaultValueSql("(newid())");
+            entity.Property(e => e.EvaluatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.RegId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("reg_id");
+
+            entity.HasOne(d => d.Reg).WithMany(p => p.Evaluations)
+                .HasForeignKey(d => d.RegId)
+                .HasConstraintName("FK_Evaluations_Registrations");
+        });
+
         modelBuilder.Entity<Event>(entity =>
         {
             entity.HasKey(e => e.EventId).HasName("PK__Events__2370F72732470AFA");
@@ -132,16 +153,13 @@ public partial class VolunteerManagementContext : DbContext
             entity.Property(e => e.TargetFunds).HasColumnName("target_funds");
             entity.Property(e => e.TargetMember).HasColumnName("target_member");
             entity.Property(e => e.type_event_name)
-                .HasMaxLength(50)
-                .IsUnicode(false)
+                .HasMaxLength(100)
                 .HasColumnName("type_event_name");
 
             entity.HasOne(d => d.Org).WithMany(p => p.Events)
                 .HasForeignKey(d => d.OrgId)
                 .HasConstraintName("FK__Events__org_id__52593CB8");
         });
-
-       
 
         modelBuilder.Entity<Organization>(entity =>
         {
@@ -188,7 +206,7 @@ public partial class VolunteerManagementContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("event_id");
             entity.Property(e => e.Status)
-                .HasMaxLength(20)
+                .HasDefaultValue(false)
                 .HasColumnName("status");
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)
@@ -212,21 +230,19 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("user_id");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("password");
-            entity.Property(e => e.Role)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("role");
+            entity.Property(e => e.RandomKey).HasMaxLength(255);
+            entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.UserName)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("user_name");
-            entity.Property(e => e.is_active) // Thêm dòng này
-       .HasColumnName("is_active")
-       .HasDefaultValue(true); // Nếu mặc định là true
         });
 
         modelBuilder.Entity<Volunteer>(entity =>
@@ -246,9 +262,7 @@ public partial class VolunteerManagementContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
-            entity.Property(e => e.Gender)
-                .HasMaxLength(10)
-                .HasColumnName("gender");
+            entity.Property(e => e.Gender).HasColumnName("gender");
             entity.Property(e => e.ImagePath)
                 .HasMaxLength(200)
                 .HasColumnName("image_path");
