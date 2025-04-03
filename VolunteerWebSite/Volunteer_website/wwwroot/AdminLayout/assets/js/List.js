@@ -3,7 +3,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const selectAllCheckbox = document.getElementById('select-all');
-    const volunteerCheckboxes = document.querySelectorAll('input[name="volunteer-select"]');
+    const volunteerCheckboxes = document.querySelectorAll('input[name="inline-select"]');
     const bulkActions = document.querySelector('.bulk-actions');
     const selectedCount = document.querySelector('.selected-count');
     
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update bulk actions visibility
     function updateBulkActionsVisibility() {
-      const checkedBoxes = document.querySelectorAll('input[name="volunteer-select"]:checked');
+      const checkedBoxes = document.querySelectorAll('input[name="inline-select"]:checked');
       
       if (checkedBoxes.length > 0) {
         bulkActions.classList.add('visible');

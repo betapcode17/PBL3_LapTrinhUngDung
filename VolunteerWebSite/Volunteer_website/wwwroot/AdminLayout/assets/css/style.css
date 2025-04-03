@@ -19930,14 +19930,14 @@ dl li {
   }
 }
 
-/* Tùy chỉnh bảng danh sách tình nguyện viên */
+/* Tùy chỉnh bảng danh sách  */
 
-.volunteer-list {
+.inline-list {
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.volunteer-list thead th {
+.inline-list thead th {
   background-color: #f9f9f9;
   border-bottom: 1px solid #e0e0e0;
   color: #666;
@@ -19945,40 +19945,40 @@ dl li {
   padding: 12px 15px;
 }
 
-.volunteer-list .check-column {
+.inline-list .check-column {
   width: 40px;
 }
 
-.volunteer-item {
+.inline-item {
   transition: all 0.2s ease;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.volunteer-item:hover {
+.inline-item:hover {
   background-color: #f7f9fc;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.volunteer-item td {
+.inline-item td {
   padding: 12px 15px;
   vertical-align: middle;
 }
 
-.volunteer-avatar {
+.inline-avatar {
   width: 40px;
   height: 40px;
   object-fit: cover;
   border: 1px solid #eee;
 }
 
-.volunteer-list .badge {
+.inline-list .badge {
   padding: 5px 10px;
   border-radius: 4px;
   font-weight: 500;
   font-size: 0.75rem;
 }
 
-.volunteer-list .form-check-input {
+.inline-list .form-check-input {
   cursor: pointer;
 }
 
