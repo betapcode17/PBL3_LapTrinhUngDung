@@ -45,6 +45,10 @@
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
     <link href="~/OrgLayout/VolunteerDetails.css" rel="stylesheet" />
+    <!-- Include Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="~/OrgLayout/DeleteEvent.js" rel="stylesheet" />
+     <link href="~/OrgLayout/EventDetails.css" rel="stylesheet" />
 </head>
 <body>
     <div class="container-scroller">
@@ -139,7 +143,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="ManageDonation.html">
+                        <a class="nav-link" asp-area="Organization" asp-controller="HomeOrg" asp-action="GetDonatedVolunteer">
                             <span class="menu-title">Donation</span>
                             <i class="mdi mdi-hand-heart menu-icon"></i>
                         </a>

@@ -1,8 +1,8 @@
-﻿
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 
@@ -19,13 +19,15 @@ namespace Volunteer_website.Areas.Organization.Controllers
         {
             _db = db;
         }
-
+        #region Trang chủ
         [Route("")]
         [Route("Index")]
         public IActionResult Index()
         {
             return View();
         }
+        #endregion
+
         #region Hiển thị sự kiện
         [Route("Event")]
         public IActionResult Event(int? page)
@@ -198,6 +200,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             if (imagePath != null)
             {
                 existingEvent.ImagePath = await SaveImage(imagePath);
+                existingEvent.ListImg = await SaveImageList(listImg);
             }
 
             _db.Update(existingEvent);
@@ -229,7 +232,39 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return "/uploads/" + uniqueFileName; // Trả về đường dẫn ảnh
         }
+        private async Task<string> SaveImageList(IFormFileCollection? listImages)
+        {
+            if (listImages == null || listImages.Count == 0)
+            {
+                return string.Empty;
+            }
 
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var savedPaths = new List<string>();
+
+            foreach (var image in listImages)
+            {
+                if (image.Length > 0)
+                {
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                    }
+
+                    savedPaths.Add("/uploads/" + uniqueFileName);
+                }
+            }
+
+            return string.Join(",", savedPaths); // Trả về các đường dẫn cách nhau bởi dấu phẩy
+        }
         #endregion
 
         #region Xóa sự kiện
@@ -276,6 +311,59 @@ namespace Volunteer_website.Areas.Organization.Controllers
             return RedirectToAction("Event");
         }
 
+        #endregion
+
+        #region Xem chi tiết sự kiện 
+        [Route("GetEventDetails")]
+        [HttpGet]
+        public IActionResult GetEventDetails(string id)
+        {
+            try
+            {
+                var events = _db.Events.FirstOrDefault(v => v.EventId == id);
+                var registrationCount = _db.Registrations.Count(r => r.EventId == id);
+                var donationCount = _db.Donations.Count(d => d.EventId == id);
+                var totalAmount = _db.Donations.Where(d => d.EventId == id).Sum(d => d.Amount);
+
+                if (events == null)
+                {
+                    return Json(new { success = false, message = "Event not found" });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        eventId = events.EventId,
+                        orgId = events.OrgId,
+                        typeEventName = events.type_event_name,
+                        name = events.Name,
+                        description = events.Description,
+                        dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
+                        dayEnd = events.DayEnd?.ToString("dd/MM/yyyy"),
+                        location = events.Location,
+                        targetMember = events.TargetMember,
+                        targetFunds = events.TargetFunds,
+                        imagePath = events.ImagePath,
+                        listImg = events.ListImg,
+                        status = events.Status,
+                        registrationCount,
+                        donationCount,
+                        totalAmount             
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while fetching event details",
+                    error = ex.Message
+                });
+            }
+        }
         #endregion
 
         #region Danh sách người đăng kí tham gia
@@ -375,5 +463,19 @@ namespace Volunteer_website.Areas.Organization.Controllers
         }
         #endregion
 
+        #region Xem danh sách người Donation
+        [Route("GetDonatedVolunteer")]
+        public IActionResult GetDonatedVolunteer(int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+            var lstDonated = _db.Donations.Include(r=>r.Volunteer)
+                                          .Include(r=>r.Event)
+                                          .AsNoTracking()
+                                          .OrderBy(x=>x.EventId)   
+                                          .ToPagedList(pageNumber,pageSize);
+            return View(lstDonated);
+        }
+        #endregion
     }
 }
