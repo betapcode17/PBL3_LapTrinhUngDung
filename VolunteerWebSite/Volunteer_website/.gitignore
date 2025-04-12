@@ -1,4 +1,11 @@
+﻿   # Bỏ qua tất cả các tệp có phần mở rộng .log
+   *.log
 
+   # Bỏ qua thư mục build
+   build/
+
+   # Bỏ qua file cấu hình cá nhân
+   appsettings.json
 .vs/
 appsettings.json
 bin/
