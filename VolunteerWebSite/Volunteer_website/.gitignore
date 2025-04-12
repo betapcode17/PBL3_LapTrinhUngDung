@@ -1,5 +1,11 @@
 
 .vs/
-appsetrings.json
+appsettings.json
 bin/
 Depandencies/
+obj/
+obj/Debug/net9.0
+obj/Release/net9.0
+packages/
+database/
+program.cs
