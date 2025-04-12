@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "Event Management";
-    Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
 }
 <div class="container-fluid">
     <!-- Phần tiêu đề -->
@@ -20,7 +20,7 @@
                 <label for="searchBox">Search: </label>
                 <input type="text" id="searchBox" class="form-control search-input" placeholder="Search events..." onkeyup="searchEvents()">
             </div>
-            <a href="#" class="btn btn-primary create-btn"><i class="fa-solid fa-plus"></i> Create Event</a>
+            <a href="../Areas/Organization/Views/HomeOrg/CreateEvent.cshtml" class="btn btn-primary create-btn"><i class="fa-solid fa-plus"></i> Create Event</a>
         </div>
 
         <!-- Event List Table -->

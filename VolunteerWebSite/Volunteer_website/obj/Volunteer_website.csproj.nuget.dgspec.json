@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj": {}
+    "D:\\Hoclaptrinh\\PBL3\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj": {}
   },
   "projects": {
-    "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj": {
+    "D:\\Hoclaptrinh\\PBL3\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
+        "projectUniqueName": "D:\\Hoclaptrinh\\PBL3\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
         "projectName": "Volunteer_website",
-        "projectPath": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\obj\\",
+        "projectPath": "D:\\Hoclaptrinh\\PBL3\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
+        "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
+        "outputPath": "D:\\Hoclaptrinh\\PBL3\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -58,14 +58,6 @@
               "target": "Package",
               "version": "[8.2.0, )"
             },
-            "Microsoft.AspNet.Identity.EntityFramework": {
-              "target": "Package",
-              "version": "[2.2.4, )"
-            },
-            "Microsoft.AspNet.Identity.Owin": {
-              "target": "Package",
-              "version": "[2.2.4, )"
-            },
             "Microsoft.AspNetCore.Authentication.Cookies": {
               "target": "Package",
               "version": "[2.3.0, )"
@@ -73,6 +65,10 @@
             "Microsoft.AspNetCore.CookiePolicy": {
               "target": "Package",
               "version": "[2.3.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.3, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -93,10 +89,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.3, )"
-            },
-            "Microsoft.Owin.Host.SystemWeb": {
-              "target": "Package",
-              "version": "[4.2.2, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",

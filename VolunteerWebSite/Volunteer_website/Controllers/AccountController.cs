@@ -123,14 +123,14 @@ namespace Volunteer_website.Controllers
                 }
 
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, volunteer.Name ?? ""),
-            new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
-            new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
-            new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
-            new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
-        };
+                {
+                    new Claim(ClaimTypes.Name, volunteer.Name ?? ""),
+                    new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
+                    new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
+                    new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
+                    new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
+                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -161,16 +161,15 @@ namespace Volunteer_website.Controllers
                 }
 
                 var claims = new List<Claim>
-        {
-             
-            new Claim(ClaimTypes.Name, org.Name ?? ""),
-            new Claim(ClaimTypes.Email, org.Email ?? ""),
-            new Claim(ClaimTypes.MobilePhone, org.PhoneNumber ?? ""),
-            new Claim(ClaimTypes.StreetAddress, org.Address ?? ""),
-            new Claim(ClaimTypes.Gender, org.Description ?? ""),
-            new Claim(ClaimTypes.Role, user.Role.ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
-        };
+                {
+                    new Claim(ClaimTypes.Name, org.Name ?? ""),
+                    new Claim(ClaimTypes.Email, org.Email ?? ""),
+                    new Claim(ClaimTypes.MobilePhone, org.PhoneNumber ?? ""),
+                    new Claim(ClaimTypes.StreetAddress, org.Address ?? ""),
+                    new Claim(ClaimTypes.Gender, org.Description ?? ""),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -186,10 +185,46 @@ namespace Volunteer_website.Controllers
                     return View(model);
                 }
 
-               return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-    ? Redirect(returnUrl)
-    : Redirect(Url.Action("Index", "HomeOrg", new { area = "Organization" }));
+                return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    ? Redirect(returnUrl)
+                    : Redirect(Url.Action("Index", "HomeOrg", new { area = "Organization" }));
             }
+            else if(user.Role == 2)
+            {
+                var Admin = db.Admins.SingleOrDefault(vol => vol.AdminId == user.UserId);
+                if (Admin == null)
+                {
+                    ModelState.AddModelError("loi", "Thông tin Admin không tồn tại.");
+                    return View(model);
+                }
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, Admin.Name ?? ""),
+                    new Claim(ClaimTypes.Email, Admin.Email ?? ""),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                try
+                {
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                    Console.WriteLine("Đăng nhập thành công");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Lỗi SignInAsync: " + ex.Message);
+                    return View(model);
+                }
+
+                return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    ? Redirect(returnUrl)
+                    : Redirect(Url.Action("Index", "HomeAdmin", new { area = "Admin" }));
+            }
+
 
             // Nếu không thuộc role 0 hoặc 1, có thể thêm điều hướng mặc định hoặc thông báo lỗi
             ModelState.AddModelError("loi", "Vai trò không hợp lệ.");
@@ -204,7 +239,7 @@ namespace Volunteer_website.Controllers
 
             return View();
         }
-        [Authorize]
+
         [Authorize]
         public async Task<IActionResult> Logout()
         {

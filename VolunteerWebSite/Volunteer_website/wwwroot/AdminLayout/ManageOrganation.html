@@ -20,6 +20,7 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
+     <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/Volunteer_list.css"/>
@@ -231,7 +232,7 @@
                               <td>3 events</td>
                               <td>
                                 <div class="d-flex">
-                                  <button class="btn btn-outline-primary btn-sm me-2 no-border"><i class="mdi mdi-eye"></i></button>
+                                  <button class="btn btn-outline-primary btn-sm me-2 no-border" data-bs-toggle="modal" data-bs-target="#organizationDetailModal"><i class="mdi mdi-eye"></i></button>
                                   <button class="btn btn-outline-danger btn-sm no-border"><i class="mdi mdi-delete"></i></button>
                                 </div>
                               </td>
@@ -366,7 +367,6 @@
                 </div>
               </div>
             </div>
-
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
@@ -395,5 +395,71 @@
     <script src="Chart.js"></script>
     <script src="assets/js/List.js"></script>
     <!-- End custom js for this page -->
+
+    <!-- Organization Detail Modal -->
+    <div class="modal fade" id="organizationDetailModal" tabindex="-1" aria-labelledby="organizationDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="organizationDetailModalLabel">Organization Detail</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Organization Information -->
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Name:</strong> Da Nang Xanh Club</p>
+                <p><strong>Email:</strong> danangxanhclub@gmail.com</p>
+                <p><strong>Phone:</strong> 0123 456 789</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Active</span></p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Events Organized:</strong> 5</p>
+                <p><strong>Founded Date:</strong> January 1, 2015</p>
+                <p><strong>Notes:</strong> A leading organization in environmental protection in Da Nang.</p>
+              </div>
+            </div>
+
+            <!-- Event List -->
+            <h5 class="mt-4">Events Organized</h5>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Beach Cleanup</td>
+                    <td>March 20, 2023</td>
+                    <td>Da Nang Beach</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Tree Planting Campaign</td>
+                    <td>April 10, 2023</td>
+                    <td>Son Tra Peninsula</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Summer Volunteering</td>
+                    <td>June 15, 2024</td>
+                    <td>Da Nang City</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Edit Organization</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

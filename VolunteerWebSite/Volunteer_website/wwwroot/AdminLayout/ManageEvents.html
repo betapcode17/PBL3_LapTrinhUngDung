@@ -204,7 +204,9 @@
                       <p class="card-text">Location: Noc Tu Nuong, Tra Tap Commune, Nam Tra My District</p>
                       <p>Like the warm embrace of sunlight in early summer, Summer Volunteering touches lives with kindness, spreading smiles and creating brighter days for those in need.</p>
                       <div class="template-demo mt-2">
-                        <button type="button" class="btn btn-gradient-primary btn-rounded btn-fw">View Details</button>
+                        <button type="button" class="btn btn-gradient-primary btn-rounded btn-fw" data-bs-toggle="modal" data-bs-target="#eventDetailModal">
+                          View Details
+                        </button>
                         <button type="button" class="btn btn-gradient-danger btn-rounded btn-fw">Delete</button>
                       </div>
                     </div>
@@ -465,5 +467,73 @@
     <script src="assets/js/todolist.js"></script>
     <script src="Chart.js"></script>
     <!-- End custom js for this page -->
+
+    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="eventDetailModalLabel">Event Detail</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Event Information -->
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Event Name:</strong> Summer Volunteer 2024</p>
+                <p><strong>Date:</strong> June 15, 2024</p>
+                <p><strong>Time:</strong> 9:00 AM - 5:00 PM</p>
+                <p><strong>Location:</strong> Da Nang City</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  <strong>Description:</strong> A summer event to clean up the beaches and promote environmental awareness.
+                </p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Active</span></p>
+              </div>
+            </div>
+    
+            <!-- Volunteer List -->
+            <h5 class="mt-4">Volunteers</h5>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Le Duong Huy</td>
+                    <td>leduonghuy@gmail.com</td>
+                    <td>0123 456 789</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Tran Quoc Dat</td>
+                    <td>tranquocdat@gmail.com</td>
+                    <td>0987 654 321</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Phan Tran Chi Bao</td>
+                    <td>ChiBao@gmail.com</td>
+                    <td>0987 654 321</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Edit Event</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>

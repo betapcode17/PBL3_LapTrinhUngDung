@@ -173,9 +173,9 @@
                 <span
                   class="page-title-icon bg-gradient-primary text-white me-2"
                 >
-                  <i class="mdi mdi-account-group menu-icon"></i>
+                  <i class="mdi mdi-hand-heart menu-icon"></i>
                 </span>
-                Organation Management
+                Donation Management
               </h3>
               <div class="search-container">
                 <div class="search-box">
@@ -229,7 +229,7 @@
                               <td>$2344</td>
                               <td>
                                 <div class="d-flex">
-                                  <button class="btn btn-outline-primary btn-sm me-2 no-border"><i class="mdi mdi-eye"></i></button>                                </div>
+                                  <button class="btn btn-outline-primary btn-sm me-2 no-border" data-bs-toggle="modal" data-bs-target="#donationDetailModal"><i class="mdi mdi-eye"></i></button>                                </div>
                               </td>
                             </tr>
                             
@@ -338,5 +338,67 @@
     <script src="Chart.js"></script>
     <script src="assets/js/List.js"></script>
     <!-- End custom js for this page -->
+
+    <!-- Donation Detail Modal -->
+    <div class="modal fade" id="donationDetailModal" tabindex="-1" aria-labelledby="donationDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="donationDetailModalLabel">Donation Detail</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Donation Information -->
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Event Name:</strong> Summer Volunteer 2024</p>
+                <p><strong>Email:</strong> johndoe@gmail.com</p>
+                <p><strong>Phone:</strong> 0123 456 789</p>
+                <p><strong>Amount:</strong> $2344</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Peoples :</strong> 3</p>
+              </div>
+            </div>
+
+            <!-- Peoples Donation -->
+            <h5 class="mt-4">Peoples Donation</h5>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Le Duong Huy</td>
+                    <td>June 15, 2024</td>
+                    <td>$2000</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Tran Quoc Dat</td>
+                    <td>January 5, 2025</td>
+                    <td>$200</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Phan Tran Chi Bao</td>
+                    <td>January 5, 2025</td>
+                    <td>$144</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>

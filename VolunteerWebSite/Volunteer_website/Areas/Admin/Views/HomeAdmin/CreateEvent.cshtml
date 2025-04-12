@@ -1,0 +1,140 @@
+﻿@model Volunteer_website.Models.Event
+@using System.Security.Claims
+@{
+    var orgID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "ORG1";
+    ViewData["Title"] = "Create Event";
+    Layout = "~/Areas/Admin/Views/OrgLayout.cshtml";
+}
+<div class="container">
+    <div class="create-event-container">
+        <h2 class="form-title">Create New Event</h2>
+        <hr />
+        <form method="post" asp-area="Organization" asp-action="CreateEvent" enctype="multipart/form-data" novalidate>
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-group">
+                    <label asp-for="EventId" class="form-label">Event ID</label>
+                    <input asp-for="EventId" class="form-control" readonly value="@Model.EventId" name="EventId" />
+                    <span asp-validation-for="EventId" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="Name" class="form-label">Event Name</label>
+                    <input asp-for="Name" class="form-control" name="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="TargetMember" class="form-label">Target Members</label>
+                    <input asp-for="TargetMember" class="form-control" type="number" name="TargetMember" />
+                    <span asp-validation-for="TargetMember" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" class="form-control form-select" name="Status">
+                        <option value="">-- Select Status --</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 form-group">
+                    <label asp-for="OrgId" class="form-label">Organization ID</label>
+                    <input asp-for="OrgId" class="form-control" value="@ViewBag.OrgId" readonly name="OrgId" />
+                    <span asp-validation-for="OrgId" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="type_event_name" class="form-label">Event Type</label>
+                    <input asp-for="type_event_name" class="form-control" name="type_event_name" />
+                    <span asp-validation-for="type_event_name" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="DayBegin" class="form-label">Start Date</label>
+                    <input asp-for="DayBegin" class="form-control" type="date" name="DayBegin" />
+                    <span asp-validation-for="DayBegin" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="DayEnd" class="form-label">End Date</label>
+                    <input asp-for="DayEnd" class="form-control" type="date" name="DayEnd" />
+                    <span asp-validation-for="DayEnd" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 form-group">
+                    <label asp-for="Location" class="form-label">Location</label>
+                    <input asp-for="Location" class="form-control" name="Location" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label asp-for="TargetFunds" class="form-label">Target Funds</label>
+                    <input asp-for="TargetFunds" class="form-control" type="number" name="TargetFunds" />
+                    <span asp-validation-for="TargetFunds" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label class="form-label">Main Image <small>(Optional)</small></label>
+                    <input name="imagePath" class="form-control" type="file" id="mainImageInput" accept="image/*" />
+
+                    <!-- Hiển thị ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Main Image:</label>
+                            <div class="d-flex align-items-center">
+                                <img src="@Model.ImagePath" alt="Current Image" style="max-width: 100px; max-height: 100px; margin-right: 10px;" id="mainImagePreview" />
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeMainImage()">Remove</button>
+                            </div>
+                            <input type="hidden" name="existingImagePath" value="@Model.ImagePath" />
+                        </div>
+                    }
+                    <!-- Preview ảnh mới -->
+                    <div class="mt-2" id="mainImageNewPreview" style="display: none;">
+                        <label class="form-label">New Main Image Preview:</label>
+                        <img src="" alt="New Image Preview" style="max-width: 100px; max-height: 100px;" id="mainImageNewPreviewImg" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label class="form-label">Additional Images <small>(Optional)</small></label>
+                    <input name="listImg" class="form-control" type="file" multiple id="additionalImagesInput" accept="image/*" />
+
+                    <!-- Hiển thị các ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.ListImg))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Additional Images:</label>
+                            <div class="d-flex flex-wrap" id="additionalImagesContainer">
+                                @foreach (var img in Model.ListImg.Split(','))
+                                {
+                                    <div class="d-flex align-items-center mb-2 mr-2" style="margin-right: 10px;">
+                                        <img src="@img" alt="Additional Image" style="max-width: 100px; max-height: 100px; margin-right: 5px;" class="additional-image" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeAdditionalImage(this, '@img')">Remove</button>
+                                        <input type="hidden" name="existingListImg" value="@img" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!-- Preview ảnh mới -->
+                    <div class="mt-2" id="additionalImagesNewPreview" style="display: none;">
+                        <label class="form-label">New Additional Images Preview:</label>
+                        <div class="d-flex flex-wrap" id="additionalImagesNewPreviewContainer"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12 form-group">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="5" name="Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+            <div class="form-group d-flex justify-content-end gap-3 mt-4">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" asp-area="Organization" class="btn btn-back">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
