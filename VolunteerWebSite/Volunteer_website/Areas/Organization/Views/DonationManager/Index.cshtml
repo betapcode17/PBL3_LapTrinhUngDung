@@ -1,4 +1,5 @@
 ﻿@model IPagedList<Volunteer_website.Models.Donation>
+@using Volunteer_website.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using X.PagedList
 @using X.PagedList.Mvc.Core
@@ -39,8 +40,18 @@
         <!-- Search Bar -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div class="search-container">
-                <label for="searchBox">Search: </label>
-                <input type="text" id="searchBox" class="form-control search-input" placeholder="Search volunteers...">
+                <form asp-action="Index" method="get" class="d-flex align-items-center">
+                    <input type="text"
+                           name="searchValue"
+                           id="searchBoxVolunteers"
+                           class="form-control me-2"
+                           placeholder="Search Event.."
+                           value="@ViewBag.SearchValue" />
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -55,7 +66,7 @@
                         <th>Amount</th>
                         <th>Message</th>
                         <th>Donation Date</th>
-                   
+
                     </tr>
                 </thead>
                 <tbody id="eventTable">
@@ -63,8 +74,19 @@
                     {
                         <tr>
                             <td>@item.DonationId</td>
-                            <td>@item.Volunteer?.Name</td>
-                            <td>@item.Event?.Name</td>
+                            <td>
+                                @{
+                                    var volunteer = ViewBag.Volunteers?[item.VolunteerId] as Volunteer;
+                                    @volunteer?.Name
+                                }
+                            </td>
+                            <td>
+
+                                @{
+                                    var eventItem = ViewBag.Events[item.EventId] as Event;
+                                    @eventItem?.Name
+                                }
+                            </td>
                             <td>@item.Amount</td>
                             <td>@item.Message</td>
                             <td>
@@ -142,22 +164,22 @@
         </div>
 
         <!-- Pagination -->
-        <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
+        <div class="pagination d-flex justify-content-center mt-4">
             @if (Model.HasPreviousPage)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = Model.PageNumber - 1 })"
-                   class="pagination-link rounded">«</a>
+                <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })"
+                   class="pagination-link rounded me-1">«</a>
             }
 
             @for (int i = 1; i <= Model.PageCount; i++)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = i })"
-                   class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+                <a href="@Url.Action("Index", new { page = i })"
+                   class="pagination-link rounded me-1 @(i == Model.PageNumber ? "active btn btn-primary" : "btn btn-outline-secondary")">@i</a>
             }
 
             @if (Model.HasNextPage)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = Model.PageNumber + 1 })"
+                <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })"
                    class="pagination-link rounded">»</a>
             }
         </div>

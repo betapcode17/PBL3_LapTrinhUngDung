@@ -31,11 +31,9 @@
                 <div class="col-md-3 form-group">
                     <label asp-for="Status" class="form-label">Status</label>
                     <select asp-for="Status" class="form-control form-select" name="Status">
-                        <option value="">-- Select Status --</option>
                         <option value="true">Active</option>
-                        <option value="false">Inactive</option>
+                        <option value="false" selected>Inactive</option> <!-- Thêm selected vào đây -->
                     </select>
-                    <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">

@@ -2,6 +2,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using X.PagedList
 @using X.PagedList.Mvc.Core
+@using Volunteer_website.Models
 @{
     ViewData["Title"] = "Registered Volunteers";
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
@@ -36,21 +37,30 @@
             </div>
         }
 
-        <!-- Search Bar -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div class="search-container">
-                <label for="searchBox">Search: </label>
-                <input type="text" id="searchBox" class="form-control search-input" placeholder="Search volunteers...">
+                <form asp-action="Index" method="get" class="d-flex align-items-center">
+                    <input type="text"
+                           name="searchValue"
+                           id="searchBoxVolunteers"
+                           class="form-control me-2"
+                           placeholder="Search Register.."
+                           value="@ViewBag.SearchValue" />
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                    </button>
+                </form>
             </div>
         </div>
 
-        <!-- Volunteer Registration Table -->
+      
         <div class="table-responsive">
             <table class="table table-bordered table-hover event-table shadow-sm">
                 <thead class="table-dark">
                     <tr>
                         <th>Register ID</th>
-                        <th>Volunteer Name</th>                                            
+                        <th>Volunteer Name</th>
                         <th>Event Name</th>
                         <th>Event Date</th>
                         <th>Status</th>
@@ -62,8 +72,18 @@
                     {
                         <tr>
                             <td>@item.RegId</td>
-                            <td>@item.Volunteer?.Name</td>                                                  
-                            <td>@item.Event?.Name</td>
+                            <td>
+                                @{
+                                    var volunteer = ViewBag.Volunteers?[item.VolunteerId] as Volunteer;
+                                    @volunteer?.Name
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    var eventItem = ViewBag.Events[item.EventId] as Event;
+                                    @eventItem?.Name
+                                }
+                            </td>
                             <td>
                                 @if (item.Event?.DayBegin != null && item.Event?.DayEnd != null)
                                 {
@@ -99,7 +119,7 @@
                                         onclick="showVolunteerDetails('@item.VolunteerId')">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                              
+
                             </td>
                         </tr>
                     }
@@ -157,7 +177,7 @@
                                         </div>
                                     </div>
                                 </div>
-                          
+
                             </div>
                         </div>
                     </div>
@@ -165,26 +185,131 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
+        <div class="pagination d-flex justify-content-center mt-4">
             @if (Model.HasPreviousPage)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = Model.PageNumber - 1 })"
-                   class="pagination-link rounded">«</a>
+                <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })"
+                   class="pagination-link rounded me-1">«</a>
             }
 
             @for (int i = 1; i <= Model.PageCount; i++)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = i })"
-                   class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+                <a href="@Url.Action("Index", new { page = i })"
+                   class="pagination-link rounded me-1 @(i == Model.PageNumber ? "active btn btn-primary" : "btn btn-outline-secondary")">@i</a>
             }
 
             @if (Model.HasNextPage)
             {
-                <a href="@Url.Action("GetRegisteredVolunteers", new { page = Model.PageNumber + 1 })"
+                <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })"
                    class="pagination-link rounded">»</a>
             }
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        function showVolunteerDetails(regId) {
+          $.ajax({
+            url: "/Organization/RegistrationManager/GetVolunteerDetails",
+            type: "GET",
+            data: { id: regId },
+            success: function (response) {
+              if (response && response.success && response.data) {
+                const data = response.data;
 
+                // Cập nhật thông tin
+                $("#volunteerId").text(`ID: ${data.volunteerId || "N/A"}`);
+                $("#volunteerName").text(data.name || "N/A");
+                $("#volunteerEmail").text(data.email || "N/A");
+                $("#volunteerPhone").text(data.phoneNumber || "N/A");
+                $("#volunteerDob").text(data.dateOfBirth || "N/A");
+                $("#volunteerGender").text(data.gender || "N/A");
+                $("#volunteerAddress").text(data.address || "N/A");
+
+                // Cập nhật hình ảnh nếu có
+                if (data.imagePath) {
+                  $("#volunteerImage").attr("src", data.imagePath);
+                } else {
+                  $("#volunteerImage").attr(
+                    "src",
+                    "https://via.placeholder.com/200?text=No+Image"
+                  );
+                }
+
+                // Hiển thị modal
+                $("#volunteerDetailsModal").modal("show");
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: response.message || "Invalid response from server.",
+                });
+              }
+            },
+            error: function (xhr) {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: xhr.responseJSON?.message || "Unable to fetch volunteer details.",
+              });
+            },
+          });
+        }
+        function confirmAction(regId, actionType) {
+          const actionText = actionType === "approve" ? "approve" : "reject";
+          const status = actionType === "approve"; // true for approve, false for reject
+          const actionColor = actionType === "approve" ? "#28a745" : "#dc3545";
+
+          Swal.fire({
+            title: `Are you sure to ${actionText} this registration?`,
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: actionColor,
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: `Yes, ${actionText} it!`,
+            cancelButtonText: "Cancel",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              updateRegistrationStatus(regId, status);
+            }
+          });
+        }
+        function updateRegistrationStatus(regId, status) {
+          // Kiểm tra dữ liệu đầu vào
+          if (!regId || typeof status !== "boolean") {
+            Swal.fire("Lỗi", "Dữ liệu không hợp lệ", "error");
+            return;
+          }
+
+          // Sửa URL cho đúng định dạng
+          const url = `/Organization/RegistrationManager/Update?regId=${encodeURIComponent(
+            regId
+          )}&status=${status}`;
+
+          fetch(url)
+            .then((response) => {
+              if (!response.ok) throw new Error(`Lỗi HTTP! Status: ${response.status}`);
+              return response.json();
+            })
+            .then((data) => {
+              if (data.success) {
+                Swal.fire(
+                  "Thành công",
+                  "Cập nhật trạng thái thành công",
+                  "success"
+                ).then(() => window.location.reload());
+              } else {
+                throw new Error(data.message || "Cập nhật thất bại");
+              }
+            })
+            .catch((error) => {
+              console.error("Chi tiết lỗi:", error);
+              Swal.fire("Lỗi", error.message || "Có lỗi xảy ra khi cập nhật", "error");
+            });
+        }
+        
+
+
+    </script>
+}

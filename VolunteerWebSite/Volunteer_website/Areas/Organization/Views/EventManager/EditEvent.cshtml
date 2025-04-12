@@ -25,13 +25,13 @@
                     <label asp-for="TargetMember" class="form-label">Target Members</label>
                     <input asp-for="TargetMember" class="form-control" type="number" name="TargetMember" value="@Model.TargetFunds" />
                 </div>
-                <div class="col-md-3 form-group">
-                    <label asp-for="Status" class="form-label">Status</label>
-                    <select asp-for="Status" class="form-control form-select" name="Status">
-                        <option value="true">Active</option>
-                        <option value="false">Inactive</option>
-                    </select>
-                </div>
+              <div class="col-md-3 form-group">
+    <label asp-for="Status" class="form-label">Status</label>
+    <select asp-for="Status" class="form-control form-select" name="Status">
+        <option value="true">Active</option>
+        <option value="false" selected>Inactive</option> <!-- Thêm selected vào đây -->
+    </select>
+</div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-3 form-group">
