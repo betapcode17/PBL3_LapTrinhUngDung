@@ -1,2 +1,12 @@
 
 .vs/
+# Ignore build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.json
+*.vs/
+*.user
