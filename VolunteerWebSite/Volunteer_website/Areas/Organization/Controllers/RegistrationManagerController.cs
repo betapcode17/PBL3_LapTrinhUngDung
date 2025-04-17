@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿//
+using System.Data.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
@@ -38,7 +39,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
             var lstRegistered = query
                                 .OrderBy(x => x.RegId)
-                                .ToPagedList(pageNumber, pageSize);        
+                                .ToPagedList(pageNumber, pageSize);
             var volunteerIds = lstRegistered.Select(d => d.VolunteerId).Distinct().ToList();
             var volunteers = _db.Volunteers
                                 .Where(v => volunteerIds.Contains(v.VolunteerId))
@@ -133,3 +134,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
     }
 }
+
+
+
+//

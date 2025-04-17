@@ -99,7 +99,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 gender = volunteer.Gender, // true/false hoặc null
                 imagePath = volunteer.ImagePath ?? "/default-profile.png", // Fallback image nếu null
                 address = volunteer.Address,
-                age = CalculateAge(volunteer.DateOfBirth) // Thêm tuổi nếu cần
+                age = CalculateAge(volunteer.DateOfBirth?.ToDateTime(TimeOnly.MinValue)) // Thêm tuổi nếu cần
             });
         }
         private int? CalculateAge(DateTime? dateOfBirth)

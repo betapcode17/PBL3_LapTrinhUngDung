@@ -6,7 +6,7 @@
 }
 
 .modal-header {
-  background-color: #ff7300;
+  background-color: #ff7300 !important;
   color: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

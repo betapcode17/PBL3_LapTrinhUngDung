@@ -78,7 +78,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             existingEvent.Name = model.Name;
             existingEvent.TargetMember = model.TargetMember;
             existingEvent.Status = model.Status;
-            existingEvent.type_event_name = model.type_event_name;
+            existingEvent.TypeEventName = model.TypeEventName;
             existingEvent.DayBegin = model.DayBegin;
             existingEvent.DayEnd = model.DayEnd;
             existingEvent.Location = model.Location;
@@ -197,7 +197,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-    [Bind("EventId,OrgId,type_event_name,Name,Description,DayBegin,DayEnd,Location,TargetMember,TargetFunds,Status")]
+    [Bind("EventId,OrgId,type_event_name,Name,Description,DayBegin,DayEnd,Location,TargetMember,TargetFunds,IsActive")]
     Event eventModel,
     IFormFile imagePath,  // Chú ý tên tham số
     IEnumerable<IFormFile> listImg)  // Chú ý tên tham số
@@ -327,7 +327,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                     {
                         eventDetail.EventId,
                         eventDetail.Name,
-                        Type = eventDetail.type_event_name,
+                        Type = eventDetail.TypeEventName,
                         eventDetail.Location,
                         StartDate = eventDetail.DayBegin?.ToString("dd/MM/yyyy"),
                         EndDate = eventDetail.DayEnd?.ToString("dd/MM/yyyy"),

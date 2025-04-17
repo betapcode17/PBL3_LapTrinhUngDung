@@ -25,13 +25,15 @@
                     <label asp-for="TargetMember" class="form-label">Target Members</label>
                     <input asp-for="TargetMember" class="form-control" type="number" name="TargetMember" value="@Model.TargetFunds" />
                 </div>
-              <div class="col-md-3 form-group">
-    <label asp-for="Status" class="form-label">Status</label>
-    <select asp-for="Status" class="form-control form-select" name="Status">
-        <option value="true">Active</option>
-        <option value="false" selected>Inactive</option> <!-- Thêm selected vào đây -->
-    </select>
-</div>
+               <div class="col-md-3 form-group">
+                    <label asp-for="@Model.IsActive" class="form-label">IsActive</label>
+                    <select asp-for="IsActive" class="form-control form-select" name="IsActive">
+                        <option value="0" selected>Inactive</option>
+                        <option value="1">Active</option>
+                        <!-- Thêm option khác nếu có -->
+                    </select>
+                    <span asp-validation-for="IsActive" class="text-danger"></span>
+                </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-3 form-group">
@@ -40,7 +42,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="type_event_name" class="form-label">Event Type</label>
-                    <input asp-for="type_event_name" class="form-control" name="type_event_name"  value="@Model.type_event_name"/>
+                    <input asp-for="type_event_name" class="form-control" name="type_event_name"  value="@Model.TypeEventName"/>
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="DayBegin" class="form-label">Start Date</label>

@@ -8,12 +8,9 @@
 }
 @Html.AntiForgeryToken()
 <div class="container-fluid">
-    <!-- Phần tiêu đề -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
         <h1 class="text-center my-4 heading-title">Event Management</h1>
     </div>
-
-    <!-- Phần thân -->
     <div class="body-section border rounded p-4" style="background-color: #ffffff;">
         <!-- Search Bar and Create Button -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
@@ -27,7 +24,7 @@
                            value="@ViewBag.SearchValue" />
 
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                        <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
@@ -59,8 +56,8 @@
                             <td>@dayBegin - @dayEnd</td>
                             <td>@item.Location</td>
                             <td>
-                                <span class="badge status-badge @(item.Status == true ? "bg-success" : "bg-secondary")">
-                                    @(item.Status == true ? "Active" : "Inactive")
+                                <span class="badge status-badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
+                                    @(item.IsActive == 0 ? "Active" : "Inactive")
                                 </span>
                             </td>
                             <td class="action_btn">
@@ -91,18 +88,18 @@
                                     </script>
                                 }
 
-                    
+
 
                             </td>
                         </tr>
                     }
-                
+
 
                 </tbody>
             </table>
         </div>
 
-        <!-- Popup Chi Tiết Sự Kiện - Chỉ Đọc --><div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsLabel" aria-hidden="true">
+        <div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-primary text-white">
@@ -113,7 +110,6 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <!-- Cột trái - Ảnh chính -->
                             <div class="col-md-5">
                                 <div class="text-center mb-3 border rounded p-2 bg-light">
                                     <img id="eventMainImage" src="" class="img-fluid rounded" alt="Ảnh sự kiện">
@@ -123,7 +119,7 @@
                                 </div>
                             </div>
 
-                            <!-- Cột phải - Thông tin -->
+                          
                             <div class="col-md-7">
                                 <div class="row g-3">
                                     <div class="col-md-8">
@@ -299,7 +295,7 @@
             });
         }
 
-        
+
     </script>
     <style>
         .custom-small-btn {
@@ -349,3 +345,4 @@
         }
     </style>
 }
+<!-- Cột phải - Thông tin -->

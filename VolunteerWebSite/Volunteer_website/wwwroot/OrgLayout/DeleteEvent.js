@@ -1,4 +1,3 @@
-// Hàm xác nhận xóa
 function confirmDelete(eventId) {
   Swal.fire({
     title: "Bạn chắc chắn muốn xóa?",
@@ -11,44 +10,23 @@ function confirmDelete(eventId) {
     cancelButtonText: "Hủy",
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteEvent(eventId);
+      // Tạo form ẩn để submit
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = `/Organization/EventManager/Delete?id=${eventId}`;
+
+      // Thêm CSRF token
+      const csrfToken = document.querySelector(
+        'input[name="__RequestVerificationToken"]'
+      ).value;
+      const csrfInput = document.createElement("input");
+      csrfInput.type = "hidden";
+      csrfInput.name = "__RequestVerificationToken";
+      csrfInput.value = csrfToken;
+      form.appendChild(csrfInput);
+
+      document.body.appendChild(form);
+      form.submit();
     }
   });
-}
-async function deleteEvent(eventId) {
-  try {
-    const response = await fetch(
-      `/Organization/HomeOrg/DeleteEvent?id=${eventId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json", // Yêu cầu server chỉ trả về JSON
-        },
-      }
-    );
-
-    // Kiểm tra nếu response không phải JSON
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      const html = await response.text();
-      throw new Error(
-        html.includes("<!DOCTYPE html>")
-          ? "Lỗi hệ thống. Vui lòng tải lại trang"
-          : "Phản hồi không hợp lệ từ server"
-      );
-    }
-
-    const data = await response.json();
-
-    if (data.success) {
-      Swal.fire("Thành công", data.message, "success");
-      setTimeout(() => window.location.reload(), 1500); // Reload sau 1.5s
-    } else {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    Swal.fire("Lỗi", error.message, "error");
-    console.error("Chi tiết lỗi:", error);
-  }
 }
