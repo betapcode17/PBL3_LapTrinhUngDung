@@ -1,0 +1,92 @@
+/* Tổng thể modal */
+#volunteerDetailsModal .modal-content {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  background: #ffffff; /* Nền trắng */
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Header - Màu cam nổi bật */
+#volunteerDetailsModal .modal-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  color: #ffffff;
+  font-weight: bold;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon Close */
+#volunteerDetailsModal .modal-header .btn-close {
+  filter: brightness(90%);
+  transition: filter 0.3s ease, transform 0.2s ease-in-out;
+}
+
+#volunteerDetailsModal .modal-header .btn-close:hover {
+  filter: brightness(100%);
+  transform: rotate(90deg);
+}
+
+/* Body - Nền trắng */
+#volunteerDetailsModal .modal-body {
+  padding: 2rem;
+  background: #ffffff; /* Nền trắng */
+}
+
+/* Grid hiển thị thông tin */
+.volunteer-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Từng hàng thông tin */
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid #ff8c00;
+  transition: background 0.3s ease-in-out;
+}
+
+.detail-item:hover {
+  background: rgba(255, 140, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Label - Màu cam đậm */
+.detail-label {
+  font-weight: 700;
+  color: #ff6347;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+/* Giá trị - Màu tối hơn để dễ đọc */
+.detail-value {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+  font-size: 1.1rem;
+}
+
+/* Container hình ảnh volunteer */
+#volunteerImageContainer {
+  transition: all 0.3s ease-in-out;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff; /* Nền trắng */
+  border: 3px solid #ff8c00;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+#volunteerImageContainer:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}

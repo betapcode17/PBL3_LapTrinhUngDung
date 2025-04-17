@@ -1,0 +1,58 @@
+.modal-body .form-floating {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.modal-body .form-floating input,
+.modal-body .form-floating textarea {
+  padding-top: 1.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.modal-body .form-floating label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  left: 10px;
+  top: 10px;
+}
+
+.modal-body .form-floating input[readonly],
+.modal-body .form-floating textarea[readonly] {
+  background-color: #f8f9fa;
+  border: none;
+}
+
+#eventImageGallery .col-12 {
+  text-align: center;
+  font-style: italic;
+}
+.modal-body {
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.modal-body .form-floating {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.modal-body input,
+.modal-body textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.modal-body label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  position: absolute;
+  left: 12px;
+  top: 12px;
+}
+
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+}

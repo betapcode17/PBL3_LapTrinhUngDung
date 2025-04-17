@@ -1,0 +1,55 @@
+/* Volunteer Details Modal Styles */
+#volunteerDetailsModal .modal-content {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+#volunteerDetailsModal .modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: none;
+}
+
+#volunteerDetailsModal .modal-body {
+  padding: 1.5rem;
+}
+
+.volunteer-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-value {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+}
+
+#volunteerImageContainer {
+  transition: all 0.3s ease;
+}
+
+#volunteerImageContainer:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}

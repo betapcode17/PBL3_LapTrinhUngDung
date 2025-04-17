@@ -2,6 +2,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\vendors\js\vendor.bundle.base.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\flaticon.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\Modal.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\payment.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.waypoints.min.js
@@ -11,6 +12,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\open-iconic
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\bootstrap\bootstrap-reboot.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.easing.1.3.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\donate.html
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\EventDetail.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Causes_Detail.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\ManageVolunteer.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\CHANGELOG.md
@@ -19,6 +21,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\bootstrap.min.
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\Search.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\imageSwitcher.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\css\style.css.map
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\Evaluation.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\owl.carousel.min.css
@@ -52,6 +55,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Contact-info.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Volunteer.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\partials\_navbar.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\images\favicon.ico
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\DeleteEvent.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\images\arrow-right-from-bracket-solid (2).svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\js\file-upload.js
@@ -88,6 +92,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dis
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\owl.carousel.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\ManageEvent.html
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\Evaluation.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\causes.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\style.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\main.js
@@ -103,6 +108,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\Search.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\Search.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Volunteer_Detail.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Change-PassWord.html
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\EventDetails.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Volunteer_list.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\ManageDonation.html
@@ -148,6 +154,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery-migrate-3.0.1.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\site.js
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\VolunteerDetails.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Profile_Manage.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\js\hoverable-collapse.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map
@@ -167,6 +174,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\assets\js\off-can
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.magnific-popup.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Update_Info.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\open-iconic\open-iconic.otf
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\EditImg.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\package.json
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\flaticon\font\flaticon.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\partials\_sidebar.html
@@ -180,6 +188,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\Detail_Event.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\flaticon\font\Flaticon.svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\partials\_sidebar.html
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\js\misc.js
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\volunteer.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery\dist\jquery.slim.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\images\logo.svg
@@ -187,6 +196,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\gulpfile.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\assets\js\todo.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\CreateEvent.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\GetRegistered copy.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\navBar.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\js\dashboard.js
@@ -197,6 +207,7 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\js\popper.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\AdminLayout\assets\vendors\chart.js\Chart.min.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\fonts\ionicons\fonts\ionicons.svg
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Footer.css
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\OrgLayout\GetRegistered.js
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\css\Volunteer_detal.css
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map
@@ -614,6 +625,7 @@ wwwroot\OrgLayout\assets\images\favicon.ico
 wwwroot\OrgLayout\assets\images\favicon.png
 wwwroot\OrgLayout\assets\images\logo.svg
 wwwroot\OrgLayout\assets\images\logo-mini.svg
+wwwroot\OrgLayout\assets\images\pic-1.jpg
 wwwroot\OrgLayout\assets\images\sprites\blue.png
 wwwroot\OrgLayout\assets\images\sprites\dark.png
 wwwroot\OrgLayout\assets\images\sprites\flag.png
@@ -688,6 +700,14 @@ wwwroot\OrgLayout\CHANGELOG.md
 wwwroot\OrgLayout\Chart.js
 wwwroot\OrgLayout\CreateEvent.css
 wwwroot\OrgLayout\css\main.css
+wwwroot\OrgLayout\DeleteEvent.js
+wwwroot\OrgLayout\EditImg.js
+wwwroot\OrgLayout\Evaluation.css
+wwwroot\OrgLayout\Evaluation.js
+wwwroot\OrgLayout\EventDetail.js
+wwwroot\OrgLayout\EventDetails.css
+wwwroot\OrgLayout\GetRegistered copy.js
+wwwroot\OrgLayout\GetRegistered.js
 wwwroot\OrgLayout\gulpfile.js
 wwwroot\OrgLayout\gulp-tasks\inject.js
 wwwroot\OrgLayout\gulp-tasks\serve.js
@@ -698,6 +718,7 @@ wwwroot\OrgLayout\ManageDonation.html
 wwwroot\OrgLayout\ManageEvent.css
 wwwroot\OrgLayout\ManageEvent.html
 wwwroot\OrgLayout\ManageVolunteer.html
+wwwroot\OrgLayout\Modal.css
 wwwroot\OrgLayout\package.json
 wwwroot\OrgLayout\partials\_footer.html
 wwwroot\OrgLayout\partials\_navbar.html
@@ -708,6 +729,8 @@ wwwroot\OrgLayout\screenshot.jpg
 wwwroot\OrgLayout\Search.css
 wwwroot\OrgLayout\Search.js
 wwwroot\OrgLayout\TEST.HTML
+wwwroot\OrgLayout\volunteer.js
+wwwroot\OrgLayout\VolunteerDetails.css
 wwwroot\payment.html
 wwwroot\prepros-6.config
 wwwroot\Profile_Home.html
@@ -798,10 +821,52 @@ wwwroot\scss\bootstrap\utilities\_visibility.scss
 wwwroot\scss\style.scss
 wwwroot\SignUp.html
 wwwroot\Update_Info.html
+wwwroot\uploads\031be743-e62e-4246-856c-a1b5dd68d3d1.jpg
+wwwroot\uploads\07adef73-1059-43b2-b6d3-6e71834d6bb3.jpg
+wwwroot\uploads\102230064-23T_NHAT2-Tham gia gặp mặt doanh nghiệp enouvo.jpg
 wwwroot\uploads\102230064-23T_NHAT2-Tham gia tình nguyện hè sơn màu nắng ấm..jpg
 wwwroot\uploads\14082024.png
+wwwroot\uploads\168d0a6c-c6d7-4d2f-97a1-60012c164e16.jpg
+wwwroot\uploads\17f660e5-db4b-40dd-88eb-ed1a1f44a61d.jpg
+wwwroot\uploads\1ee4136e-7e07-421e-8c1c-5ca11aedae07.jpg
 wwwroot\uploads\2162459.jpg
+wwwroot\uploads\24a069b4-8def-453c-8d15-bb10c8a6d200.jpg
+wwwroot\uploads\2a5012f3-0581-43eb-a63b-35ccdfc8a082.jpg
+wwwroot\uploads\2c1746b3-f818-4016-8ce7-6377c556e2d9.jpg
+wwwroot\uploads\318d8edf-a387-4c7f-9173-2f0f94a2ddf4.jpg
+wwwroot\uploads\4a9ff133-9425-48f3-a655-3910a721c4a5.jpg
+wwwroot\uploads\4b50aa3e-2068-4ea0-abbc-6d1e0ea494a9.jpg
+wwwroot\uploads\56db6594-2bc1-4987-acf3-1d0bb9297e52.jpg
+wwwroot\uploads\58a4b8e2-0602-4f92-b426-e3f60e7b52ba.jpeg
+wwwroot\uploads\672cad42-4e9a-4ce2-b630-c91d651b9b25.jpg
+wwwroot\uploads\7.jpg
+wwwroot\uploads\7a9879e1-681e-4aac-88fe-c71ed3d1d84a.png
+wwwroot\uploads\8527f496-16a8-447f-8a99-e8702e8af6b9.jpg
+wwwroot\uploads\893009aa-0744-4ec7-bf49-eb10725838f3.jpg
+wwwroot\uploads\92204ad6-2e3c-45f2-9890-1fbff97ded66.jpg
+wwwroot\uploads\a4ce26f5-f404-4d7d-9142-29d49d330c2f.jpg
+wwwroot\uploads\a504df34-093c-4b44-a880-02606485032f.jpeg
+wwwroot\uploads\aa0b1e5f-b8e5-48cc-8127-99cd0cadbd19.jpg
+wwwroot\uploads\b0de6a1c-bf71-4f7b-93f0-4fa4f01ad738.jpg
+wwwroot\uploads\b5b38df3-2e40-497a-aae2-6e1a2213c9fe.jpg
+wwwroot\uploads\Banner.jpg
+wwwroot\uploads\bg_2.jpg
+wwwroot\uploads\bg_5.jpg
+wwwroot\uploads\bg_6.jpg
+wwwroot\uploads\bg_7.jpg
+wwwroot\uploads\c0b564c8-d33d-473c-bfe5-ec88b9154320.jpg
+wwwroot\uploads\c1d99ded-2472-4a44-8e63-29333b7eb1db.jpg
+wwwroot\uploads\cause-3.jpg
+wwwroot\uploads\cause-6.jpg
+wwwroot\uploads\cb045529-925b-4dcd-a924-c0eeaa6783fe.jpg
+wwwroot\uploads\cb446106-cbf8-4b7b-b31f-a7bc3414a388.jpg
 wwwroot\uploads\datto.jpg
+wwwroot\uploads\ec3c0a95-a2bd-47e9-978a-e0ee5d30ee46.jpg
+wwwroot\uploads\ef2e60f1-a77c-4f4d-94e2-1bfe84a9838c.jpg
+wwwroot\uploads\event-1.jpg
+wwwroot\uploads\hinh-anh-dong-anime-chibi-dep.gif
+wwwroot\uploads\tinhnguyen.png
+wwwroot\uploads\TQD.png
 wwwroot\Volunteer.html
 wwwroot\Volunteer_Detail.html
 wwwroot\Volunteer_list.html

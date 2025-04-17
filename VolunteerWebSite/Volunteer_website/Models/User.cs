@@ -16,4 +16,6 @@ public partial class User
     public string? RandomKey { get; set; }
 
     public bool IsActive { get; set; }
+
+    public DateOnly? CreateAt { get; set; }
 }

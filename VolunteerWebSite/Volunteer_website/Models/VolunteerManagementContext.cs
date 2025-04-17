@@ -33,7 +33,7 @@ public partial class VolunteerManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS;Database=VolunteerManagement;Integrated Security=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS;Database=VolunteerManagement;Integrated Security=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,18 +122,15 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("event_id");
-            entity.Property(e => e.DayBegin)
-                .HasColumnType("datetime")
-                .HasColumnName("day_begin");
-            entity.Property(e => e.DayEnd)
-                .HasColumnType("datetime")
-                .HasColumnName("day_end");
+            entity.Property(e => e.DayBegin).HasColumnName("day_begin");
+            entity.Property(e => e.DayEnd).HasColumnName("day_end");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .HasColumnName("description");
             entity.Property(e => e.ImagePath)
                 .HasMaxLength(100)
                 .HasColumnName("image_path");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.ListImg)
                 .HasMaxLength(100)
                 .HasColumnName("list_img");
@@ -148,11 +145,11 @@ public partial class VolunteerManagementContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("org_id");
             entity.Property(e => e.Status)
-                .HasDefaultValue(false)
+                .HasMaxLength(50)
                 .HasColumnName("status");
             entity.Property(e => e.TargetFunds).HasColumnName("target_funds");
             entity.Property(e => e.TargetMember).HasColumnName("target_member");
-            entity.Property(e => e.type_event_name)
+            entity.Property(e => e.TypeEventName)
                 .HasMaxLength(100)
                 .HasColumnName("type_event_name");
 
@@ -205,9 +202,7 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("event_id");
-            entity.Property(e => e.Status)
-                .HasDefaultValue(false)
-                .HasColumnName("status");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -256,9 +251,7 @@ public partial class VolunteerManagementContext : DbContext
             entity.Property(e => e.Address)
                 .HasMaxLength(100)
                 .HasColumnName("address");
-            entity.Property(e => e.DateOfBirth)
-                .HasColumnType("datetime")
-                .HasColumnName("date_of_birth");
+            entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");

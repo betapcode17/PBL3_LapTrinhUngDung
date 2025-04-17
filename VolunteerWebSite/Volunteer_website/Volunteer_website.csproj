@@ -48,7 +48,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Organization\Data\" />
     <Folder Include="Areas\Organization\Models\" />
-    <Folder Include="Data\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

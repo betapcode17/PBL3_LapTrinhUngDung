@@ -13,7 +13,7 @@ public partial class Volunteer
 
     public string? Name { get; set; }
 
-    public DateTime? DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
 
     public bool? Gender { get; set; }
 

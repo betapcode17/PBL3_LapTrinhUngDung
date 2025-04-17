@@ -565,6 +565,38 @@
       "PackagePath": "staticwebassets\\OrgLayout\\CreateEvent.css"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\DeleteEvent.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\DeleteEvent.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\EditImg.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\EditImg.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\Evaluation.css",
+      "PackagePath": "staticwebassets\\OrgLayout\\Evaluation.css"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\Evaluation.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\Evaluation.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\EventDetail.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\EventDetail.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\EventDetails.css",
+      "PackagePath": "staticwebassets\\OrgLayout\\EventDetails.css"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\GetRegistered copy.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\GetRegistered copy.js"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\GetRegistered.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\GetRegistered.js"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\LICENSE",
       "PackagePath": "staticwebassets\\OrgLayout"
     },
@@ -585,6 +617,10 @@
       "PackagePath": "staticwebassets\\OrgLayout\\ManageVolunteer.html"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\Modal.css",
+      "PackagePath": "staticwebassets\\OrgLayout\\Modal.css"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\PSD\\Purple_dashboard_free.psd",
       "PackagePath": "staticwebassets\\OrgLayout\\PSD\\Purple_dashboard_free.psd"
     },
@@ -603,6 +639,10 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\TEST.HTML",
       "PackagePath": "staticwebassets\\OrgLayout\\TEST.HTML"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\VolunteerDetails.css",
+      "PackagePath": "staticwebassets\\OrgLayout\\VolunteerDetails.css"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\assets\\css\\style.css",
@@ -779,6 +819,10 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\assets\\images\\logo.svg",
       "PackagePath": "staticwebassets\\OrgLayout\\assets\\images\\logo.svg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\assets\\images\\pic-1.jpg",
+      "PackagePath": "staticwebassets\\OrgLayout\\assets\\images\\pic-1.jpg"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\assets\\images\\sprites\\blue.png",
@@ -1099,6 +1143,10 @@
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\screenshot.jpg",
       "PackagePath": "staticwebassets\\OrgLayout\\screenshot.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\OrgLayout\\volunteer.js",
+      "PackagePath": "staticwebassets\\OrgLayout\\volunteer.js"
     },
     {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\Profile_Home.html",
@@ -2293,6 +2341,18 @@
       "PackagePath": "staticwebassets\\scss\\style.scss"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\031be743-e62e-4246-856c-a1b5dd68d3d1.jpg",
+      "PackagePath": "staticwebassets\\uploads\\031be743-e62e-4246-856c-a1b5dd68d3d1.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\07adef73-1059-43b2-b6d3-6e71834d6bb3.jpg",
+      "PackagePath": "staticwebassets\\uploads\\07adef73-1059-43b2-b6d3-6e71834d6bb3.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\102230064-23T_NHAT2-Tham gia gặp mặt doanh nghiệp enouvo.jpg",
+      "PackagePath": "staticwebassets\\uploads\\102230064-23T_NHAT2-Tham gia gặp mặt doanh nghiệp enouvo.jpg"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\102230064-23T_NHAT2-Tham gia tình nguyện hè sơn màu nắng ấm..jpg",
       "PackagePath": "staticwebassets\\uploads\\102230064-23T_NHAT2-Tham gia tình nguyện hè sơn màu nắng ấm..jpg"
     },
@@ -2301,12 +2361,168 @@
       "PackagePath": "staticwebassets\\uploads\\14082024.png"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\168d0a6c-c6d7-4d2f-97a1-60012c164e16.jpg",
+      "PackagePath": "staticwebassets\\uploads\\168d0a6c-c6d7-4d2f-97a1-60012c164e16.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\17f660e5-db4b-40dd-88eb-ed1a1f44a61d.jpg",
+      "PackagePath": "staticwebassets\\uploads\\17f660e5-db4b-40dd-88eb-ed1a1f44a61d.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\1ee4136e-7e07-421e-8c1c-5ca11aedae07.jpg",
+      "PackagePath": "staticwebassets\\uploads\\1ee4136e-7e07-421e-8c1c-5ca11aedae07.jpg"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\2162459.jpg",
       "PackagePath": "staticwebassets\\uploads\\2162459.jpg"
     },
     {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\24a069b4-8def-453c-8d15-bb10c8a6d200.jpg",
+      "PackagePath": "staticwebassets\\uploads\\24a069b4-8def-453c-8d15-bb10c8a6d200.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\2a5012f3-0581-43eb-a63b-35ccdfc8a082.jpg",
+      "PackagePath": "staticwebassets\\uploads\\2a5012f3-0581-43eb-a63b-35ccdfc8a082.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\2c1746b3-f818-4016-8ce7-6377c556e2d9.jpg",
+      "PackagePath": "staticwebassets\\uploads\\2c1746b3-f818-4016-8ce7-6377c556e2d9.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\318d8edf-a387-4c7f-9173-2f0f94a2ddf4.jpg",
+      "PackagePath": "staticwebassets\\uploads\\318d8edf-a387-4c7f-9173-2f0f94a2ddf4.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\4a9ff133-9425-48f3-a655-3910a721c4a5.jpg",
+      "PackagePath": "staticwebassets\\uploads\\4a9ff133-9425-48f3-a655-3910a721c4a5.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\4b50aa3e-2068-4ea0-abbc-6d1e0ea494a9.jpg",
+      "PackagePath": "staticwebassets\\uploads\\4b50aa3e-2068-4ea0-abbc-6d1e0ea494a9.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\56db6594-2bc1-4987-acf3-1d0bb9297e52.jpg",
+      "PackagePath": "staticwebassets\\uploads\\56db6594-2bc1-4987-acf3-1d0bb9297e52.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\58a4b8e2-0602-4f92-b426-e3f60e7b52ba.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\58a4b8e2-0602-4f92-b426-e3f60e7b52ba.jpeg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\672cad42-4e9a-4ce2-b630-c91d651b9b25.jpg",
+      "PackagePath": "staticwebassets\\uploads\\672cad42-4e9a-4ce2-b630-c91d651b9b25.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\7.jpg",
+      "PackagePath": "staticwebassets\\uploads\\7.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\7a9879e1-681e-4aac-88fe-c71ed3d1d84a.png",
+      "PackagePath": "staticwebassets\\uploads\\7a9879e1-681e-4aac-88fe-c71ed3d1d84a.png"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\8527f496-16a8-447f-8a99-e8702e8af6b9.jpg",
+      "PackagePath": "staticwebassets\\uploads\\8527f496-16a8-447f-8a99-e8702e8af6b9.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\893009aa-0744-4ec7-bf49-eb10725838f3.jpg",
+      "PackagePath": "staticwebassets\\uploads\\893009aa-0744-4ec7-bf49-eb10725838f3.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\92204ad6-2e3c-45f2-9890-1fbff97ded66.jpg",
+      "PackagePath": "staticwebassets\\uploads\\92204ad6-2e3c-45f2-9890-1fbff97ded66.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\Banner.jpg",
+      "PackagePath": "staticwebassets\\uploads\\Banner.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\TQD.png",
+      "PackagePath": "staticwebassets\\uploads\\TQD.png"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\a4ce26f5-f404-4d7d-9142-29d49d330c2f.jpg",
+      "PackagePath": "staticwebassets\\uploads\\a4ce26f5-f404-4d7d-9142-29d49d330c2f.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\a504df34-093c-4b44-a880-02606485032f.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\a504df34-093c-4b44-a880-02606485032f.jpeg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\aa0b1e5f-b8e5-48cc-8127-99cd0cadbd19.jpg",
+      "PackagePath": "staticwebassets\\uploads\\aa0b1e5f-b8e5-48cc-8127-99cd0cadbd19.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\b0de6a1c-bf71-4f7b-93f0-4fa4f01ad738.jpg",
+      "PackagePath": "staticwebassets\\uploads\\b0de6a1c-bf71-4f7b-93f0-4fa4f01ad738.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\b5b38df3-2e40-497a-aae2-6e1a2213c9fe.jpg",
+      "PackagePath": "staticwebassets\\uploads\\b5b38df3-2e40-497a-aae2-6e1a2213c9fe.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\bg_2.jpg",
+      "PackagePath": "staticwebassets\\uploads\\bg_2.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\bg_5.jpg",
+      "PackagePath": "staticwebassets\\uploads\\bg_5.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\bg_6.jpg",
+      "PackagePath": "staticwebassets\\uploads\\bg_6.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\bg_7.jpg",
+      "PackagePath": "staticwebassets\\uploads\\bg_7.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\c0b564c8-d33d-473c-bfe5-ec88b9154320.jpg",
+      "PackagePath": "staticwebassets\\uploads\\c0b564c8-d33d-473c-bfe5-ec88b9154320.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\c1d99ded-2472-4a44-8e63-29333b7eb1db.jpg",
+      "PackagePath": "staticwebassets\\uploads\\c1d99ded-2472-4a44-8e63-29333b7eb1db.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\cause-3.jpg",
+      "PackagePath": "staticwebassets\\uploads\\cause-3.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\cause-6.jpg",
+      "PackagePath": "staticwebassets\\uploads\\cause-6.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\cb045529-925b-4dcd-a924-c0eeaa6783fe.jpg",
+      "PackagePath": "staticwebassets\\uploads\\cb045529-925b-4dcd-a924-c0eeaa6783fe.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\cb446106-cbf8-4b7b-b31f-a7bc3414a388.jpg",
+      "PackagePath": "staticwebassets\\uploads\\cb446106-cbf8-4b7b-b31f-a7bc3414a388.jpg"
+    },
+    {
       "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\datto.jpg",
       "PackagePath": "staticwebassets\\uploads\\datto.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\ec3c0a95-a2bd-47e9-978a-e0ee5d30ee46.jpg",
+      "PackagePath": "staticwebassets\\uploads\\ec3c0a95-a2bd-47e9-978a-e0ee5d30ee46.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\ef2e60f1-a77c-4f4d-94e2-1bfe84a9838c.jpg",
+      "PackagePath": "staticwebassets\\uploads\\ef2e60f1-a77c-4f4d-94e2-1bfe84a9838c.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\event-1.jpg",
+      "PackagePath": "staticwebassets\\uploads\\event-1.jpg"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\hinh-anh-dong-anime-chibi-dep.gif",
+      "PackagePath": "staticwebassets\\uploads\\hinh-anh-dong-anime-chibi-dep.gif"
+    },
+    {
+      "Id": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\wwwroot\\uploads\\tinhnguyen.png",
+      "PackagePath": "staticwebassets\\uploads\\tinhnguyen.png"
     },
     {
       "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Volunteer_website.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

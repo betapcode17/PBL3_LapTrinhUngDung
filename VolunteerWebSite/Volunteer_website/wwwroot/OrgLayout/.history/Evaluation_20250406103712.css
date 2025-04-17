@@ -1,0 +1,194 @@
+/* General container styling for the form */
+/* .evaluation-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
+} */
+
+/* Styling for the form title */
+/* .evaluation-container h2 {
+  color: #ff6f00;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+} */
+
+/* Styling for form labels */
+label {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Styling for dropdowns and inputs */
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+select:focus,
+textarea:focus {
+  border-color: #ff6f00;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 111, 0, 0.3);
+}
+
+/* Rating container styling */
+.rating-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Styling for the rating stars */
+.rating-stars {
+  font-size: 32px; /* Slightly larger stars for better visibility */
+  color: #ddd; /* Default color for unselected stars */
+  cursor: pointer;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.rating-stars i {
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover ~ i {
+  color: #ffb22b; /* Active or hovered star color */
+}
+
+/* Volunteer info section (if applicable, e.g., for the image) */
+.volunteer-info img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%; /* Circular image for a modern look */
+  border: 2px solid #ff6f00;
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.volunteer-details {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* Volunteer history section */
+.volunteer-history {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 20px;
+  background: #fff;
+}
+
+.volunteer-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.volunteer-history th,
+.volunteer-history td {
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.volunteer-history th {
+  position: sticky;
+  top: 0;
+  background: #f5f5f5;
+  color: #333;
+  font-weight: bold;
+}
+
+.volunteer-history td {
+  color: #666;
+}
+
+/* No data message styling */
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Checkbox styling */
+.checkbox-container {
+  margin: 15px 0;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.checkbox-container label {
+  font-weight: normal;
+  color: #555;
+}
+
+/* Button styling */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button[type="submit"] {
+  background: #ff6f00;
+  color: #fff;
+  font-weight: bold;
+}
+
+button[type="submit"]:hover {
+  background: #e65c00;
+}
+
+button[type="button"] {
+  background: #ddd;
+  color: #333;
+  margin-left: 10px;
+}
+
+button[type="button"]:hover {
+  background: #ccc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .evaluation-container {
+    padding: 15px;
+  }
+
+  .rating-stars {
+    font-size: 28px;
+  }
+
+  button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
