@@ -10,3 +10,5 @@ obj/
 *.json
 *.vs/
 *.user
+/../../Front End/
+/../../PBL3_LapTrinhUngDung/
