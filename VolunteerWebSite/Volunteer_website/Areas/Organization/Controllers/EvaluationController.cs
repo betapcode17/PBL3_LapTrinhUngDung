@@ -2,10 +2,8 @@
 using Volunteer_website.Models;
 using System.Net.Mail;
 using System.Net;
-using System.Data.Entity;
-using Microsoft.Owin.BuilderProperties;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using X.PagedList.Extensions;
 

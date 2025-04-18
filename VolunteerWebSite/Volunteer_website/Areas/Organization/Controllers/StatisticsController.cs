@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 
 namespace Volunteer_website.Areas.Organization.Controllers
@@ -104,39 +105,61 @@ namespace Volunteer_website.Areas.Organization.Controllers
             return Json(data);
         }
         #endregion
-
-
-        #region Số lượng tình nguyện viên mới theo tháng
+        #region Số lượt quyên góp theo tháng 
         [HttpGet]
-        public IActionResult GetNewVolunteersByMonth()
+        public IActionResult GetDonationByMonth()
         {
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            var data = (from v in _db.Volunteers
-                        join u in _db.Users on v.VolunteerId equals u.UserId
-                        where u.CreateAt != null
-                        group u by new { u.CreateAt.Value.Year, u.CreateAt.Value.Month } into g
-                        select new
-                        {
-                            Year = g.Key.Year,
-                            Month = g.Key.Month,
-                            Count = g.Count()
-                        })
-                       .OrderBy(g => g.Year)
-                       .ThenBy(g => g.Month)
-                       .ToList();
+            if (string.IsNullOrEmpty(orgID))
+            {
+                return Unauthorized(); // Không có orgID => không được truy cập
+            }
+
+            var data = _db.Donations
+                .Where(d => d.DonationDate != null && d.Event != null && d.Event.OrgId == orgID)
+                .GroupBy(d => new { d.DonationDate.Value.Year, d.DonationDate.Value.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Count = g.Count()
+                })
+                .OrderBy(g => g.Year)
+                .ThenBy(g => g.Month)
+                .ToList();
 
             return Json(data);
         }
         #endregion
 
+        #region Tổng số tiền quyên góp theo tháng
+        [HttpGet]
+        public IActionResult GetDonationAmountByMonth()
+        {
+            var orgID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrEmpty(orgID))
+            {
+                return Unauthorized(); // Không có orgID => không được truy cập
+            }
 
+            var data = _db.Donations
+                .Where(d => d.DonationDate != null && d.Event != null && d.Event.OrgId == orgID)
+                .GroupBy(d => new { d.DonationDate.Value.Year, d.DonationDate.Value.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalAmount = g.Sum(d => d.Amount)
+                })
+                .OrderBy(g => g.Year)
+                .ThenBy(g => g.Month)
+                .ToList();
 
-
-
-        #region Số tiền quyên góp theo tháng 
-
+            return Json(data);
+        }
         #endregion
+
     }
 }

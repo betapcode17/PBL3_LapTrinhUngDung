@@ -119,7 +119,7 @@
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
                   <span class="font-weight-bold mb-2">Trần Quốc Đạt</span>
-                  <span class="text-secondary text-small">CEO</span>
+                  <span class="text-secondary text-small">Admin</span>
                 </div>
                 <i
                   class="mdi mdi-bookmark-check text-success nav-profile-badge"
@@ -134,7 +134,7 @@
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" href="ManageEvent.html">
+              <a class="nav-link" href="ManageEvents.html">
                 <span class="menu-title">Events</span>
                 <i class="mdi mdi-calendar-multiple menu-icon"></i>
               </a>
@@ -143,10 +143,17 @@
             <li class="nav-item">
               <a class="nav-link" href="ManageVolunteer.html">
                 <span class="menu-title">Volunteers</span>
-                <i class="mdi mdi-account-group menu-icon"></i>
+                <i class="mdi mdi-account-heart menu-icon"></i>
               </a>
             </li>
             
+            <li class="nav-item">
+              <a class="nav-link" href="ManageOrganation.html">
+                <span class="menu-title">Organation</span>
+                <i class="mdi mdi-account-group menu-icon"></i>
+              </a>
+            </li>
+
             <li class="nav-item">
               <a class="nav-link" href="ManageDonation.html">
                 <span class="menu-title">Donation</span>
@@ -154,17 +161,6 @@
               </a>
             </li>
             
-            </li>
-            <li class="nav-item sidebar-actions">
-              <span class="nav-link">
-                <div class="border-bottom">
-                  <h6 class="font-weight-normal mb-3">Events</h6>
-                </div>
-                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">
-                  + Add a Evens
-                </button>
-              </span>
-            </li>
           </ul>
         </nav>
         <!-- partial -->
@@ -175,20 +171,10 @@
                 <span
                   class="page-title-icon bg-gradient-primary text-white me-2"
                 >
-                  <i class="mdi mdi-home"></i>
+                  <i class="mdi mdi-view-dashboard menu-icon"></i>
                 </span>
                 Dashboard
               </h3>
-              <nav aria-label="breadcrumb">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview
-                    <i
-                      class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"
-                    ></i>
-                  </li>
-                </ul>
-              </nav>
             </div>
             <div class="row">
               <div class="col-md-4 stretch-card grid-margin">
@@ -219,7 +205,7 @@
                       Total Volunteers
 
                       <i
-                        class="fa-regular fa-user mdi-24px float-right"
+                        class="mdi mdi-account-heart mdi-24px float-right"
                         style="color: #74c0fc"
                       ></i>
                     </h4>
@@ -236,22 +222,47 @@
                       alt="circle-image"
                     />
                     <h4 class="font-weight-normal mb-3">
-                      Total Donation
-                      <i class="mdi mdi-chart-line mdi-24px float-right"></i>
+                      Total Events
+                      <i class="mdi mdi-calendar-multiple mdi-24px float-right"></i>
                     </h4>
-                    <h2 class="mb-5">$ 15,0000</h2>
+                    <h2 class="mb-5">150</h2>
                   </div>
                 </div>
               </div>
+
               <div class="row">
                 <div class="card">
                   <div class="card-body">
+                    <h4 class="card-title">Number of Donation</h4>
+                    <div class="chart-container">
+                      <canvas id="barChart3"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Number of volunteers</h4>
+                    <div class="chart-container">
+                      <canvas id="barChart2"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Number of events</h4>
                     <div class="chart-container">
                       <canvas id="barChart"></canvas>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
           <!-- content-wrapper ends -->
