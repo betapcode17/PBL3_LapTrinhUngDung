@@ -11,8 +11,6 @@ public partial class Evaluation
 
     public bool IsCompleted { get; set; }
 
-    public int Rating { get; set; }
-
     public string? Feedback { get; set; }
 
     public DateTime EvaluatedAt { get; set; }

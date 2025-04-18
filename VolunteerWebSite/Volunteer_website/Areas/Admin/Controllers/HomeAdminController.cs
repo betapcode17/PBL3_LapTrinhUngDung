@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Volunteer_website.Models;
+using Volunteer_website.Areas.Admin.Data;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Core;
 namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -32,16 +34,19 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
             var currentYear = DateTime.Now.Year;
             var startYear = currentYear - 5;
-            var eventCountsByYear = _db.Events.Where(e => e.DayBegin.HasValue && e.DayBegin.Value.Year >= startYear)
-                                            .GroupBy(e => e.DayBegin.Value.Year)
-                                            .Select(g => new { Year = g.Key, Count = g.Count() })
-                                            .OrderBy(e => e.Year)
-                                            .ToList();
+            int[] eventsByYear = new int[6];
+
+            for (int i = 0; i < 6; i++)
+            {
+                var year = startYear + i;
+                eventsByYear[i] = _db.Events.Count(e => e.DayBegin.HasValue && e.DayBegin.Value.Year == year);
+            }
 
             ViewBag.Events = events;
             ViewBag.Donations = totalAmount;
             ViewBag.Volunteers = volunteers;
-            ViewBag.eventCountsByYear = eventCountsByYear;
+            ViewBag.EventsByYear = eventsByYear;
+
             return View();
         }
         #endregion
@@ -58,6 +63,88 @@ namespace Volunteer_website.Areas.Admin.Controllers
                             .ToPagedList(pageNumber, pageSize);
             return View(lstEvent);
         }
+        #endregion
+
+        #region Duyệt sự kiện 
+
+        [HttpPost]
+        [Route("acceptEvent")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
+        {
+            try
+            {
+                //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
+                //Console.WriteLine(firstEvent.EventId);
+                var EventId = request.EventId;
+                var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
+                if (existingEvent == null)
+                {
+                    return Json(new { success = false, message = "Event not found" });
+                }
+
+                // chuyển trạng thái status
+                existingEvent.Status = "accept";
+
+                _db.Update(existingEvent);
+                await _db.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Event accepted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("rejectEvent")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
+        {
+            try
+            {
+                var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
+                if (existingEvent == null)
+                {
+                    return Json(new { success = false, message = "Event not found" });
+                }
+
+                // chuyển trạng thái status
+                existingEvent.Status = "reject";
+
+                _db.Update(existingEvent);
+                await _db.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Event accepted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region Danh sách user
+        [Route("Volunteers")]
+        public IActionResult Volunteers(int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+
+            // Lấy danh sách đăng ký kèm theo thông tin Volunteer và Event
+            //var lstRegistered = _db.Registrations
+            //                       .Include(r => r.Volunteer) // Load dữ liệu Volunteer
+            //                       .Include(r => r.Event) // Load dữ liệu Event
+            //                       .AsNoTracking()
+            //                       .OrderBy(x => x.EventId)
+            //                       .ToPagedList(pageNumber, pageSize);
+
+            var listUser = _db.Users.AsNoTracking().Where(user => user.Role == 0)
+                                                    .ToPagedList(pageNumber, pageSize);
+            return View(listUser);
+        }
+
         #endregion
 
         #region Thêm sự kiện
@@ -166,125 +253,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
         #endregion
 
-        #region Chỉnh sửa sự kiện
-        [Route("EditEvent/{id}")]
-        [HttpGet]
-        public async Task<IActionResult> EditEvent(string id)
-        {
-            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(orgId))
-            {
-                return RedirectToAction("Login", "Account", new { area = "" });
-            }
-
-            var eventModel = await _db.Events.FindAsync(id);
-            if (eventModel == null)
-            {
-                return NotFound();
-            }
-            ViewBag.OrgId = eventModel.OrgId; // Truyền dữ liệu tổ chức vào View
-            return View(eventModel);
-        }
-
-        [Route("EditEvent/{id}")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditEvent(Event model, IFormFile? imagePath, IFormFileCollection? listImg)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.OrgId = model.OrgId;
-                return View(model);
-            }
-
-            var existingEvent = await _db.Events.FindAsync(model.EventId);
-            if (existingEvent == null)
-            {
-                return NotFound();
-            }
-
-            // Cập nhật dữ liệu từ form
-            existingEvent.Name = model.Name;
-            existingEvent.TargetMember = model.TargetMember;
-            existingEvent.Status = model.Status;
-            existingEvent.type_event_name = model.type_event_name;
-            existingEvent.DayBegin = model.DayBegin;
-            existingEvent.DayEnd = model.DayEnd;
-            existingEvent.Location = model.Location;
-            existingEvent.TargetFunds = model.TargetFunds;
-            existingEvent.Description = model.Description;
-
-            // Xử lý ảnh nếu có upload
-            if (imagePath != null)
-            {
-                existingEvent.ImagePath = await SaveImage(imagePath);
-                existingEvent.ListImg = await SaveImageList(listImg);
-            }
-
-            _db.Update(existingEvent);
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Event");
-        }
-
-        private async Task<string> SaveImage(IFormFile image)
-        {
-            if (image == null || image.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await image.CopyToAsync(fileStream);
-            }
-
-            return "/uploads/" + uniqueFileName; // Trả về đường dẫn ảnh
-        }
-        private async Task<string> SaveImageList(IFormFileCollection? listImages)
-        {
-            if (listImages == null || listImages.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var savedPaths = new List<string>();
-
-            foreach (var image in listImages)
-            {
-                if (image.Length > 0)
-                {
-                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(fileStream);
-                    }
-
-                    savedPaths.Add("/uploads/" + uniqueFileName);
-                }
-            }
-
-            return string.Join(",", savedPaths); // Trả về các đường dẫn cách nhau bởi dấu phẩy
-        }
-        #endregion
-
         #region Xóa sự kiện
         [Route("DeleteEvent")]
         [HttpPost]
@@ -355,7 +323,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     {
                         eventId = events.EventId,
                         orgId = events.OrgId,
-                        typeEventName = events.type_event_name,
+                        typeEventName = events.TypeEventName,
                         name = events.Name,
                         description = events.Description,
                         dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
@@ -384,25 +352,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Danh sách người đăng kí tham gia
-        [Route("GetRegisteredVolunteers")]
-        public IActionResult GetRegisteredVolunteers(int? page)
-        {
-            int pageSize = 8;
-            int pageNumber = page ?? 1;
-
-            // Lấy danh sách đăng ký kèm theo thông tin Volunteer và Event
-            var lstRegistered = _db.Registrations
-                                   .Include(r => r.Volunteer) // Load dữ liệu Volunteer
-                                   .Include(r => r.Event) // Load dữ liệu Event
-                                   .AsNoTracking()
-                                   .OrderBy(x => x.EventId)
-                                   .ToPagedList(pageNumber, pageSize);
-
-            return View(lstRegistered);
-        }
-
-        #endregion
 
         #region Cập nhật trạng thái người tham gia
         [HttpGet]
@@ -497,14 +446,11 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #endregion
 
         #region Logout
-        [HttpPost]
-        [Route ("")]
-        [Route("Logout")]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            Console.WriteLine("Sao không thấy taoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-            await HttpContext.SignOutAsync("Admin");
-            return Redirect("~/index_guess.html");
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Login", "Account", new { area = "" });
         }
         #endregion
     }

@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <!-- Phần tiêu đề -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
-        <h1 class="text-center my-4 heading-title">Event Management</h1>
+        <h1 class="text-center my-4 heading-title">Event approval</h1>
     </div>
 
     <!-- Phần thân -->
@@ -47,8 +47,8 @@
                             <td>@dayBegin - @dayEnd</td>
                             <td>@item.Location</td>
                             <td>
-                                <span class="badge status-badge @(item.Status == true ? "bg-success" : "bg-secondary")">
-                                    @(item.Status == true ? "Active" : "Inactive")
+                                <span class="badge status-badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
+                                    @(item.IsActive == 0 ? "Active" : "Inactive")
                                 </span>
                             </td>
                             <td class="action_btn">

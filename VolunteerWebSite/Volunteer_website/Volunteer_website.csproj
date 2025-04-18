@@ -4,7 +4,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>b213453c-0fb8-47b4-b564-05874644ddf2</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\OrgLayout\approvalEvent.js" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\.DS_Store" />
@@ -17,6 +22,7 @@
     <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
     <None Include="wwwroot\images\.DS_Store" />
     <None Include="wwwroot\js\.DS_Store" />
+    <None Include="wwwroot\OrgLayout\approvalEvent.js" />
     <None Include="wwwroot\scss\.DS_Store" />
   </ItemGroup>
 
@@ -41,9 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\NewFolder\" />
     <Folder Include="Areas\Organization\Data\" />
     <Folder Include="Areas\Organization\Models\" />
     <Folder Include="Data\" />

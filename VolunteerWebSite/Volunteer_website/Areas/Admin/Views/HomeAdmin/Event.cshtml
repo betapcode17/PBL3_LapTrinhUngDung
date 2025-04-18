@@ -20,7 +20,6 @@
                 <label for="searchBox">Search: </label>
                 <input type="text" id="searchBox" class="form-control search-input" placeholder="Search events..." onkeyup="searchEvents()">
             </div>
-            <a href="#" class="btn btn-primary create-btn"><i class="fa-solid fa-plus"></i> Create Event</a>
         </div>
 
         <!-- Event List Table -->
@@ -32,6 +31,7 @@
                         <th>Event Name</th>
                         <th>Date</th>
                         <th>Location</th>
+                        <th>Is active</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -52,19 +52,33 @@
                                 <td>@dayBegin - @dayEnd</td>
                                 <td>@item.Location</td>
                                 <td>
-                                    <span class="badge status-badge @(item.Status == true ? "bg-success" : "bg-secondary")">
-                                        @(item.Status == true ? "Active" : "Inactive")
+                                    <span class="badge status-badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
+                                        @(item.IsActive == 0 ? "Active" : "Inactive")
                                     </span>
                                 </td>
+                                <td>
+                                    @if (item.Status == "pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                    else if (item.Status == "accept")
+                                    {
+                                        <span class="badge bg-success">Accept</span>
+                                    }
+                                    else if (item.Status == "reject")
+                                    {
+                                        <span class="badge bg-danger">Reject</span>
+                                    }
+                                </td>
                                 <td class="action_btn">
-                                    <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="EditEvent" asp-route-id="@item.EventId" class="btn btn-warning btn-sm action-btn">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-
-
-                                    <button onclick="showEventDetails('@item.EventId')" class="btn btn-info btn-sm action-btn"><i class="fa-solid fa-eye"></i></button>
-                                    <button onclick="confirmDelete('@item.EventId')" class="btn btn-danger btn-sm">
-                                        <i class="fa-solid fa-trash"></i>
+                                    <button onclick="showEventDetails('@item.EventId')" class="btn btn-info btn-sm action-btn">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    <button onclick="confirmAccept('@item.EventId')" class="btn btn-success btn-sm action-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button onclick="confirmReject('@item.EventId')" class="btn btn-danger btn-sm action-btn">
+                                        <i class="fa-solid fa-xmark"></i>
                                     </button>
 
                                 </td>
@@ -224,5 +238,5 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="~/OrgLayout/Search.js"></script>
-<script src="~/OrgLayout/DeleteEvent.js"></script>
+<script src="~/OrgLayout/approvalEvent.js"></script>
 <script src="~/OrgLayout/EventDetail.js"></script>

@@ -189,7 +189,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             existingEvent.Name = model.Name;
             existingEvent.TargetMember = model.TargetMember;
             existingEvent.Status = model.Status;
-            existingEvent.type_event_name = model.type_event_name;
+            existingEvent.TypeEventName = model.TypeEventName;
             existingEvent.DayBegin = model.DayBegin;
             existingEvent.DayEnd = model.DayEnd;
             existingEvent.Location = model.Location;
@@ -337,7 +337,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                     {
                         eventId = events.EventId,
                         orgId = events.OrgId,
-                        typeEventName = events.type_event_name,
+                        typeEventName = events.TypeEventName,
                         name = events.Name,
                         description = events.Description,
                         dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
