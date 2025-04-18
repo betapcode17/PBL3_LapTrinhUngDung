@@ -140,7 +140,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
             //                       .OrderBy(x => x.EventId)
             //                       .ToPagedList(pageNumber, pageSize);
 
-            var listUser = _db.Users.AsNoTracking().Where(user => user.Role == 0)
+            var listUser = _db.Volunteers.AsNoTracking()
                                                     .ToPagedList(pageNumber, pageSize);
             return View(listUser);
         }
