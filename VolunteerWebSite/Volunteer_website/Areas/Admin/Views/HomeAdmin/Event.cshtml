@@ -52,8 +52,8 @@
                                 <td>@dayBegin - @dayEnd</td>
                                 <td>@item.Location</td>
                                 <td>
-                                    <span class="badge status-badge @(item.Status == true ? "bg-success" : "bg-secondary")">
-                                        @(item.Status == true ? "Active" : "Inactive")
+                                    <span class="badge status-badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
+                                        @(item.IsActive == 0 ? "Active" : "Inactive")
                                     </span>
                                 </td>
                                 <td class="action_btn">

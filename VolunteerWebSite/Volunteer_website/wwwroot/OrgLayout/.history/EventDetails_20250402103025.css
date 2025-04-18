@@ -1,0 +1,81 @@
+/* 🌟 Căn chỉnh khoảng cách giữa các nhóm nhập liệu */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* 🎨 Thiết kế nhãn */
+.form-label {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 3px;
+  display: block;
+}
+
+/* ✨ Định dạng input readonly - Giao diện đẹp hơn */
+.form-control-plaintext {
+  font-size: 1rem;
+  color: #2c3e50;
+  padding: 8px 12px;
+  border-bottom: 2px solid #3498db;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🔥 Hiệu ứng khi hover vào input */
+.form-control-plaintext:hover {
+  background-color: #eaf2ff;
+  border-bottom: 2px solid #1e6fd9;
+}
+
+/* 🎨 Nâng cấp textarea */
+textarea.form-control-plaintext {
+  resize: none;
+  min-height: 90px;
+  overflow: hidden;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* ✨ Hiệu ứng hover cho textarea */
+textarea.form-control-plaintext:hover {
+  background-color: #eaf2ff;
+}
+
+/* 🖼 Ảnh sự kiện */
+#eventMainImage {
+  max-height: 280px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* 🔍 Hiệu ứng zoom nhẹ khi hover vào ảnh */
+#eventMainImage:hover {
+  transform: scale(1.02);
+}
+
+/* 📷 Danh sách ảnh */
+#eventImageGallery .col-12 {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* 🔘 Nút đóng modal */
+.modal-footer .btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🎨 Hiệu ứng hover cho nút */
+.modal-footer .btn:hover {
+  background-color: #dc3545;
+  color: white;
+}

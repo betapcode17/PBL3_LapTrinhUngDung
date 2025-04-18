@@ -1,0 +1,231 @@
+/* General container styling */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+/* Form title styling */
+.form-title {
+  color: #ff6f00;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Card styling */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #ff6f00;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 111, 0, 0.3);
+}
+
+/* Rating container styling */
+.rating-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.rating-stars {
+  font-size: 32px;
+  color: #ddd;
+  cursor: pointer;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.rating-stars i {
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover ~ i {
+  color: #ffb22b;
+}
+
+/* Volunteer details section with border */
+.volunteer-details {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 2px solid #ff6f00; /* Added border as requested */
+  border-radius: 10px;
+  background: #fff9f0; /* Light background to highlight the section */
+}
+
+.volunteer-details img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ff6f00;
+  margin-bottom: 15px;
+}
+
+.volunteer-details h4 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.volunteer-details p {
+  font-size: 14px;
+  color: #666;
+}
+
+.volunteer-details .badge {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+/* Volunteer history section */
+.volunteer-history {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 20px;
+  background: #fff;
+}
+
+.volunteer-history h5 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.volunteer-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.volunteer-history th,
+.volunteer-history td {
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.volunteer-history th {
+  position: sticky;
+  top: 0;
+  background: #f5f5f5;
+  color: #333;
+  font-weight: bold;
+}
+
+.volunteer-history td {
+  color: #666;
+}
+
+/* No data message */
+.volunteer-history .text-muted {
+  font-style: italic;
+}
+
+/* Checkbox styling */
+.form-check {
+  margin-bottom: 20px;
+}
+
+.form-check-label {
+  font-weight: normal;
+  color: #555;
+}
+
+.form-check-input {
+  margin-right: 8px;
+}
+
+/* Button styling */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-gradient-primary {
+  background: #ff6f00;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-gradient-primary:hover {
+  background: #e65c00;
+}
+
+.btn-light {
+  background: #ddd;
+  color: #333;
+}
+
+.btn-light:hover {
+  background: #ccc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .rating-stars {
+    font-size: 28px;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .volunteer-details {
+    padding: 10px;
+  }
+}

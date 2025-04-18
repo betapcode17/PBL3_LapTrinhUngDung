@@ -1,0 +1,48 @@
+/* 📌 Căn chỉnh label để luôn hiển thị trên input */
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px; /* Tạo khoảng cách giữa label và input */
+  display: block;
+}
+
+/* ✨ Căn chỉnh input */
+.form-control {
+  font-size: 1rem;
+  color: #2c3e50;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  width: 100%;
+}
+
+/* 📏 Căn chỉnh textarea để đẹp hơn */
+textarea.form-control {
+  min-height: 100px;
+  resize: none;
+  background-color: #f8f9fa;
+}
+
+/* 🖼 Ảnh sự kiện bo góc đẹp */
+#eventMainImage {
+  max-height: 250px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+}
+
+/* 🔘 Nút đóng */
+.modal-footer .btn {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.modal-footer .btn:hover {
+  background-color: #dc3545;
+  color: white;
+}

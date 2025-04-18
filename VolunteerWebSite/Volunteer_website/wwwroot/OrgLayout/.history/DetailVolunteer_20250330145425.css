@@ -1,0 +1,28 @@
+/*  */
+#volunteerModal .modal-content {
+  border-radius: 12px;
+}
+
+#volunteerModal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.2rem 1.5rem;
+}
+
+#volunteerModal .modal-body {
+  padding: 1.5rem;
+}
+
+#volunteerModal .list-group-item {
+  border-left: 0;
+  border-right: 0;
+  padding: 0.75rem 0;
+}
+
+#volunteerModal .list-group-item:first-child {
+  border-top: 0;
+}
+
+#volunteerModal .badge {
+  font-size: 0.8em;
+  padding: 0.35em 0.65em;
+}

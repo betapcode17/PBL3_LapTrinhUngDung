@@ -1,0 +1,457 @@
+body {
+  background-color: #f8f9fa; /* Nền xám nhạt giống trong HTML */
+}
+.content-wrapper {
+  padding-top: 0 !important;
+}
+.container {
+  background: #ffffff; /* Nền trắng cho container */
+  padding: 20px; /* Khoảng cách bên trong */
+  border-radius: 10px; /* Bo góc */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  margin-top: 30px; /* Khoảng cách phía trên */
+}
+
+.breadcrumb {
+  background: none; /* Không có nền cho breadcrumb */
+  padding: 10px 0; /* Khoảng cách trên dưới */
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ff7300; /* Màu xanh giống trong HTML */
+  margin-bottom: 20px;
+}
+
+.btn-custom {
+  border-radius: 5px; /* Bo góc cho nút */
+  font-weight: bold; /* Chữ in đậm */
+}
+
+.form-label {
+  font-weight: bold; /* Nhãn in đậm */
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+  font-size: 14px;
+}
+
+.form-control {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  padding: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #28a745; /* Màu xanh lá cây khi focus */
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+  outline: none;
+}
+
+.form-select {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  padding: 8px;
+  font-size: 14px;
+}
+
+textarea.form-control {
+  resize: none; /* Không cho phép thay đổi kích thước textarea */
+}
+
+.text-danger {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.btn-primary {
+  background-color: #28a745; /* Màu xanh lá cây giống nút "Lưu lại" */
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #218838; /* Màu xanh đậm hơn khi hover */
+}
+
+.btn-back {
+  background-color: #dc3545; /* Màu đỏ giống nút "Hủy bỏ" */
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #c82333; /* Màu đỏ đậm hơn khi hover */
+}
+
+.btn-success {
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.btn-dark {
+  border-radius: 5px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.form-group:hover .form-label {
+  color: #ff7300; /* Màu xanh khi hover vào form-group */
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px; /* Bo góc mềm mại hơn */
+  border: 1px solid #dcdcdc; /* Viền nhẹ */
+  padding: 10px 15px; /* Khoảng cách bên trong rộng hơn */
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #f9f9f9; /* Nền nhạt cho input */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03); /* Đổ bóng nhẹ bên trong */
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #ff7300; /* Màu xanh khi focus */
+  box-shadow: 0 0 8px rgba(213, 77, 9, 0.2); /* Hiệu ứng sáng khi focus */
+  outline: none;
+  background: #fff; /* Nền trắng khi focus */
+}
+/* Form Group Animation */
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.form-group:hover {
+  transform: translateY(-2px); /* Nâng nhẹ khi hover */
+}
+
+/*  */
+/* General container styling */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+/* Form title styling */
+.form-title {
+  color: #ff6f00;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Main panel styling */
+.main-panel {
+  width: 100%;
+}
+
+/* Row styling for equal split */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+/* Ensure equal columns with col-md-6 */
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 15px;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+
+/* Card styling */
+.card-vol {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  height: 100%; /* Ensure cards stretch to equal height */
+}
+
+.card-vol-body {
+  padding: 20px;
+}
+
+.card-vol-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #ff6f00;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 111, 0, 0.3);
+}
+
+/* Rating container styling */
+.rating-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.rating-stars {
+  font-size: 32px;
+  color: #ddd;
+  cursor: pointer;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.rating-stars i {
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover ~ i {
+  color: #ffb22b;
+}
+
+/* Volunteer details section - Fixed height */
+.volunteer-details {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  border: 2px solid #ff6f00;
+  border-radius: 10px;
+  background: #fff9f0;
+  height: 300px; /* Fixed height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  overflow: hidden; /* Hide any overflow content */
+}
+
+.volunteer-details img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ff6f00;
+  margin-bottom: 15px;
+}
+
+.volunteer-details h4 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.volunteer-details p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.volunteer-details .badge {
+  font-size: 14px;
+  padding: 6px 12px;
+  margin: 0 5px;
+}
+
+/* Volunteer history section - Fixed height */
+.volunteer-history {
+  margin-top: 20px;
+  background: #fff;
+  height: 200px; /* Fixed height */
+  display: flex;
+  flex-direction: column;
+}
+
+.volunteer-history h5 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+  flex-shrink: 0; /* Prevent the header from shrinking */
+}
+
+.volunteer-history .table-responsive {
+  flex: 1; /* Take up remaining space */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.volunteer-history table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0;
+}
+
+.volunteer-history th,
+.volunteer-history td {
+  padding: 8px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.volunteer-history th {
+  position: sticky;
+  top: 0;
+  background: #f5f5f5;
+  color: #333;
+  font-weight: bold;
+}
+
+.volunteer-history td {
+  color: #666;
+}
+
+/* No data message - Adjusted for better spacing */
+.volunteer-history .text-muted {
+  font-style: italic;
+  padding: 15px 0;
+  display: block;
+  text-align: center;
+  flex: 1; /* Ensure it takes up the full height when no data */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Checkbox styling */
+.form-check {
+  margin-bottom: 20px;
+}
+
+.form-check-label {
+  font-weight: normal;
+  color: #555;
+}
+
+.form-check-input {
+  margin-right: 8px;
+}
+
+/* Button styling */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-gradient-primary {
+  background: #ff6f00;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-gradient-primary:hover {
+  background: #e65c00;
+}
+
+.btn-light {
+  background: #ddd;
+  color: #333;
+}
+
+.btn-light:hover {
+  background: #ccc;
+}
+
+/* Stretch card to ensure equal height */
+.stretch-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.stretch-card > .card {
+  flex: 1;
+}
+
+/* Grid margin */
+.grid-margin {
+  margin-bottom: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  .rating-stars {
+    font-size: 28px;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .volunteer-details {
+    padding: 15px;
+    height: 280px; /* Slightly smaller height for smaller screens */
+  }
+
+  .volunteer-details img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .volunteer-details h4 {
+    font-size: 20px;
+  }
+
+  .volunteer-details p {
+    font-size: 14px;
+  }
+
+  .volunteer-history {
+    height: 180px; /* Slightly smaller height for smaller screens */
+  }
+}

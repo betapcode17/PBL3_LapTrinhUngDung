@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data.Entity;
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -18,7 +18,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Configure Entity Framework Core
-// Configure Entity Framework Core using the connection string from appsettings.json
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB")));
 
@@ -39,7 +38,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 
 //
-// Removed duplicate DbContext registration
+builder.Services.AddDbContext<VolunteerManagementContext>(options =>
+    options.UseSqlServer("VolunteerDB", sqlOptions =>
+        sqlOptions.CommandTimeout(300) // Tăng thời gian timeout lên 300 giây
+    ));
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
