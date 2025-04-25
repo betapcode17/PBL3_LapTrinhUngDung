@@ -1,7 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Volunteer_website.Data;
+using Volunteer_website.Models;
+using Volunteer_website.Services;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+//Connect Vnpay
+builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+builder.Services.AddDbContext<VolunteerDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
+});
 
 var app = builder.Build();
 
@@ -14,16 +31,15 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // Đảm bảo phục vụ các tệp tĩnh từ wwwroot
+
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

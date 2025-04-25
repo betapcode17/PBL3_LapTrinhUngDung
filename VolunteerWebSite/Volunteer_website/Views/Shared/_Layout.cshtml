@@ -61,22 +61,27 @@
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a href="index.html" class="nav-link">Home</a>
+                            <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Events" class="nav-link">Events</a>
                         </li>
                         <li class="nav-item">
-                            <a href="causes.html" class="nav-link">Fundraising</a>
+                            <a asp-controller="Home" asp-action="Fundrasing" class="nav-link">Fundraising</a>
+
                         </li>
                         <li class="nav-item">
-                            <a href="donate.html" class="nav-link">Volunteers</a>
+                            <a asp-controller="Home" asp-action="Volunteers" class="nav-link">Volunteers</a>
+
                         </li>
                         <li class="nav-item">
-                            <a href="blog.html" class="nav-link">News</a>
+                            <a asp-controller="Home" asp-action="News" class="nav-link">News</a>
+
                         </li>
                         <li class="nav-item">
-                            <a href="about.html" class="nav-link">About Us</a>
+                            <a asp-controller="Home" asp-action="AboutUS" class="nav-link">AboutUs</a>
+
                         </li>
                     </ul>
                     <!-- nav-icons-container -->
@@ -129,12 +134,12 @@
                         <!-- Profile info -->
                         <!-- Links -->
                         <li>
-                            <a class="dropdown-item" href="Login.html">
+                            <a class="dropdown-item" href="@Url.Action("SignIn", "Account")">
                                 <i class="bi bi-person fa-fw me-2"></i>Login
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item bg-danger-soft-hover" href="SignUp.html">
+                            <a class="dropdown-item bg-danger-soft-hover" href="@Url.Action("Sign_Up", "Account")">
                                 <i class="bi bi-power fa-fw me-2"></i>Register
                             </a>
                         </li>

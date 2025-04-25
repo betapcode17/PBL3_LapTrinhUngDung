@@ -1,247 +1,234 @@
-﻿
-@{
-    ViewData["Title"] = "Events";
-}
+﻿    @model List<Volunteer_website.Models.EventModel> 
+    @{
+        ViewData["Title"] = "Events";
+        var role = Context.Session.GetString("UserRole");
+        Layout = (role == "volunteer") ? "~/Views/Shared/User_Layout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    }
+<head>
+    <link rel="stylesheet" href="~/css/Cause.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<div class="hero-wrap"
-     style="background-image: url('@Url.Content("~/images/Banner.jpg")')"
-     data-stellar-background-ratio="0.5">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center"
-             data-scrollax-parent="true">
-            <div class="col-md-7 ftco-animate text-center"
-                 data-scrollax=" properties: { translateY: '70%' }">
-                <p class="breadcrumbs"
-                   data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                    <span class="mr-2"><a href="index.html">Home</a></span>
-                    <span>Event</span>
-                </p>
-                <h1 class="mb-3 bread"
-                    data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                    Events
-                </h1>
+</head>
+
+    <div class="hero-wrap" style="background-image: url('@Url.Content("~/images/bg_1.jpg")');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+            <div class="container">
+              <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+                 <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+                        <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                        <span class="mr-2"><a href="@Url.Action("Index", "Home")">Home </a></span>
+                        <span>Event</span>
+                        </p>
+                    <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">EVENT</h1>
+                </div>
             </div>
         </div>
     </div>
+
+<pre>
+
+</pre>
+<div class="event-filter-container container">
+    <!-- Hàng 1: Các tab lọc trạng thái -->
+    <div class="event-filter-tabs d-flex gap-2 mb-3">
+        <button class="tab-btn active" data-filter="ongoing">Đang diễn ra</button>
+        <button class="tab-btn" data-filter="upcoming">Sắp diễn ra</button>
+        <button class="tab-btn" data-filter="ended">Đã kết thúc</button>
+    </div>
+
+    <!-- Hàng 2: Thanh tìm kiếm, căn trái đúng lề -->
+    <div class="search-box mb-3">
+        <input type="text" id="eventSearch" placeholder="Bạn muốn tìm gì?">
+        <i class="fa fa-search search-icon"></i>
+    </div>
 </div>
 
-<section class="ftco-section">
+
+
+
+<section class="ftco-section pt-3">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-1.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
+            @{
+                var today = DateOnly.FromDateTime(DateTime.Today);
+            }
+
+            @foreach (var ev in Model)
+            {
+                var daysLeft = (ev.DateEnd.DayNumber - today.DayNumber);
+                var percentFund = ev.targetfund > 0 ? (int)((double)ev.currentfund / ev.targetfund * 100) : 0;
+
+                // Xác định trạng thái sự kiện
+                var eventStatus = "";
+                if (today >= ev.DateBegin && today <= ev.DateEnd)
+                {
+                    eventStatus = "ongoing";
+                }
+                else if (today < ev.DateBegin)
+                {
+                    eventStatus = "upcoming";
+                }
+                else
+                {
+                    eventStatus = "ended";
+                }
+
+                <div class="col-md-4 ftco-animate mb-4 event-card" data-status="@eventStatus">
+                    <div class="card">
+                        <img src="@Url.Content(ev.ImagePath)" alt="@ev.Name" />
+                        <div class="card-content">
+                            <span class="card-title">@ev.Name</span>
+                            <div class="org-info">
+                                <span>@ev.Organization</span>
+                                <span style="background: #ffcc99; padding: 5px 10px; border-radius: 5px;">
+                                    @(daysLeft > 0 ? $"{daysLeft} Days Left" : "Closed")
+                                </span>
                             </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: @(percentFund)%"></div>
+                            </div>
+                            <span class="fund-raised">
+                                @ev.currentfund.ToString("N0") / @ev.targetfund.ToString("N0")
+                            </span>
+                            <span class="donation-group">
+                                <span class="donation-count">
+                                    <div>Members</div>
+                                    <span class="count">
+										@ev.currentmember.ToString("N0") / @ev.targetmember.ToString("N0")
+                                        </span>
+                                </span>
+                                <a href="@Url.Action("Detail_Event", "Home", new { id = ev.Event_Id })" class="donate-btn">View</a>
+                            </span>
                         </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-2.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-3.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-4.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-5.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-6.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
+
+        <!-- Phân trang -->
+        
         <div class="row mt-5">
             <div class="col text-center">
                 <div class="block-27">
                     <ul>
-                        <li><a href="#">&lt;</a></li>
+                        <li><a href="#">&#60;</a></li>
                         <li class="active"><span>1</span></li>
                         <li><a href="#">2</a></li>
                         <li><a href="#">3</a></li>
                         <li><a href="#">4</a></li>
                         <li><a href="#">5</a></li>
-                        <li><a href="#">&gt;</a></li>
+                        <li><a href="#">&#62;</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const eventCards = document.querySelectorAll('.event-card');
+        const searchInput = document.getElementById('eventSearch');
+        let currentFilter = "ongoing";
+
+        function applyFilterAndSearch() {
+            const query = searchInput.value.toLowerCase();
+
+            eventCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+
+                const matchesStatus = (status === currentFilter);
+                const matchesSearch = title.includes(query);
+
+                if (matchesStatus && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                currentFilter = this.getAttribute('data-filter');
+                applyFilterAndSearch();
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', applyFilterAndSearch);
+        }
+
+        document.querySelector('.tab-btn[data-filter="ongoing"]').click();
+    });
+</script>
+<style>
+    .search-box {
+        position: relative;
+        width: 20%; /* 1/5 chiều rộng container */
+        min-width: 200px;
+    }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 38px 10px 16px;
+            border: none;
+            border-radius: 25px;
+            background-color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+        }
+
+    .search-icon {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        color: #333;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        font-weight: 600;
+        font-size: 16px;
+        color: #666;
+        padding: 8px 12px;
+        border-bottom: 3px solid transparent;
+        border-radius: 999px; /* Bo tròn hoàn toàn */
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+
+        .tab-btn.active {
+            color: orangered;
+            border-color: #8000ff;
+            background-color: #eee;
+        }
+        /* Style cho thanh tìm kiếm */
+        .tab-btn:hover {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+
+    .event-filter-tabs {
+        display: flex;
+        gap: 20px;
+        margin: 0 auto 20px auto;
+        border: 1px solid #ccc;
+        border-radius: 999px; /* Bo tròn khung */
+        padding: 10px 15px;
+        max-width: 1140px;
+        background-color: #f9f9f9;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* thêm nhẹ shadow nếu thích */
+    }
+
+</style>
