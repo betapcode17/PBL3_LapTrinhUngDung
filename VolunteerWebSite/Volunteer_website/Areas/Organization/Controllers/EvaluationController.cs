@@ -350,8 +350,8 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Console.WriteLine($"Đang gửi email đến: {toEmail}...");
                 smtpClient.Send(mail);
                 Console.WriteLine("✅ Gửi email thành công.");
-
-                TempData["Success"] = $"Đã gửi email thông báo thành công đến {volunteerName}!";
+              
+                TempData["SuccessMessage"] = $"Đã gửi email thông báo thành công đến {volunteerName}!";
             }
             catch (Exception ex)
             {
