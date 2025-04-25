@@ -57,17 +57,17 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if (item.Status == "pending")
+                                    @if (item.Status == "PENDING")
                                     {
-                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        <span class="badge bg-warning text-dark">PENDING</span>
                                     }
-                                    else if (item.Status == "accept")
+                                    else if (item.Status == "ACCEPT")
                                     {
-                                        <span class="badge bg-success">Accept</span>
+                                        <span class="badge bg-success">ACCEPT</span>
                                     }
-                                    else if (item.Status == "reject")
+                                    else if (item.Status == "REJECT")
                                     {
-                                        <span class="badge bg-danger">Reject</span>
+                                        <span class="badge bg-danger">REJECT</span>
                                     }
                                 </td>
                                 <td class="action_btn">

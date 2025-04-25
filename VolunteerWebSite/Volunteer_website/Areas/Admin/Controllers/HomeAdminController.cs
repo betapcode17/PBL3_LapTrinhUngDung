@@ -84,7 +84,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 }
 
                 // chuyển trạng thái status
-                existingEvent.Status = "accept";
+                existingEvent.Status = "ACCEPT";
 
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();
@@ -111,12 +111,12 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 }
 
                 // chuyển trạng thái status
-                existingEvent.Status = "reject";
+                existingEvent.Status = "REJECT";
 
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Event accepted successfully" });
+                return Json(new { success = true, message = "Event rejected successfully" });
             }
             catch (Exception ex)
             {
@@ -189,10 +189,10 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEvent(
-    [Bind("EventId,OrgId,type_event_name,Name,Description,DayBegin,DayEnd,Location,TargetMember,TargetFunds,Status")]
-    Event eventModel,
-    IFormFile imagePath,  // Chú ý tên tham số
-    IEnumerable<IFormFile> listImg)  // Chú ý tên tham số
+                [Bind("EventId,OrgId,type_event_name,Name,Description,DayBegin,DayEnd,Location,TargetMember,TargetFunds,Status")]
+                Event eventModel,
+                IFormFile imagePath,  // Chú ý tên tham số
+                IEnumerable<IFormFile> listImg)  // Chú ý tên tham số
         {
 
             Console.WriteLine($"Name: {eventModel?.Name}");
@@ -351,7 +351,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
             }
         }
         #endregion
-
 
         #region Cập nhật trạng thái người tham gia
         [HttpGet]

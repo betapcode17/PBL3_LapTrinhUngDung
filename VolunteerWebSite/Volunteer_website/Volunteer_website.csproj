@@ -4,34 +4,16 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>b213453c-0fb8-47b4-b564-05874644ddf2</UserSecretsId>
+    <UserSecretsId>88901b99-d9b8-4bde-91f4-d29562c5431b</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\OrgLayout\approvalEvent.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\.DS_Store" />
-    <None Include="wwwroot\css\.DS_Store" />
-    <None Include="wwwroot\css\bootstrap\.DS_Store" />
-    <None Include="wwwroot\css\css\.DS_Store" />
-    <None Include="wwwroot\fonts\.DS_Store" />
-    <None Include="wwwroot\fonts\flaticon\.DS_Store" />
-    <None Include="wwwroot\fonts\icomoon\.DS_Store" />
-    <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
-    <None Include="wwwroot\images\.DS_Store" />
-    <None Include="wwwroot\js\.DS_Store" />
-    <None Include="wwwroot\OrgLayout\approvalEvent.js" />
-    <None Include="wwwroot\scss\.DS_Store" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentAssertions" Version="8.2.0" />
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.4" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -42,15 +24,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\NewFolder\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Organization\Data\" />
     <Folder Include="Areas\Organization\Models\" />
-    <Folder Include="Data\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

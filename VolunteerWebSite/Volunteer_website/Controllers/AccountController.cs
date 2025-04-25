@@ -54,7 +54,7 @@ namespace Volunteer_website.Controllers
 
                     var volunteer = _mapper.Map<Volunteer>(model);
                     volunteer.VolunteerId = user.UserId;
-
+                    user.CreateAt = DateOnly.FromDateTime(DateTime.Now);
                     db.Users.Add(user);
                     db.Volunteers.Add(volunteer);
                     db.SaveChanges();
@@ -129,7 +129,7 @@ namespace Volunteer_website.Controllers
                     new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
                     new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
                     new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Role, user.Role.ToString()!)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -233,6 +233,8 @@ namespace Volunteer_website.Controllers
 
 
         #endregion
+
+        #region Chỉnh sửa trang cá nhân
         [Authorize]
         public IActionResult profile()
         {
@@ -246,6 +248,6 @@ namespace Volunteer_website.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home"); // Chuyển hướng về trang chủ
         }
-
+        #endregion
     }
 }

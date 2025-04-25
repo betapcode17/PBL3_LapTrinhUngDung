@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Volunteer_website.Helpers;
 using Volunteer_website.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -18,7 +18,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Configure Entity Framework Core
-// Configure Entity Framework Core using the connection string from appsettings.json
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB")));
 
@@ -26,20 +25,11 @@ builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // Configure Authentication & Authorization
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Account/Login";
-//        options.LogoutPath = "/Account/Logout";
-//        options.AccessDeniedPath = "/Account/AccessDenied";
-//        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-//        options.SlidingExpiration = true;
-//    });
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
+
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
     options.LoginPath = "/Account/Login";
@@ -47,26 +37,32 @@ builder.Services.AddAuthentication(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     options.SlidingExpiration = true;
-})
-.AddCookie("Admin", options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Admin/HomeAdmin/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    options.SlidingExpiration = true;
 });
+//.AddCookie("Admin", options =>
+//{
+//    options.LoginPath = "/Account/Login";
+//    options.LogoutPath = "/Admin/HomeAdmin/Logout";
+//    options.AccessDeniedPath = "/Account/AccessDenied";
+//    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+//    options.SlidingExpiration = true;
+//});
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Volunteer", policy => policy.RequireRole("0"));
+    options.AddPolicy("Org", policy => policy.RequireRole("1"));
+    options.AddPolicy("Admin", policy=> policy.RequireRole("2"));
+});
 
 builder.Services.AddAuthorization();
 
-//
-// Removed duplicate DbContext registration
-
+// Configure API Behavior
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+
+// Configure Localization
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[] { new CultureInfo("en-US") };
@@ -74,6 +70,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
+
 // Configure Cookie Policy
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -84,7 +81,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 var app = builder.Build();
 
-// Configure middleware
+// Configure Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -99,10 +96,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCookiePolicy();
 
-//// Configure endpoints
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
@@ -112,6 +105,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
 app.MapRazorPages();
+
+// Debugging Route Info
 app.Use(async (context, next) =>
 {
     var routeValues = context.GetRouteData();
