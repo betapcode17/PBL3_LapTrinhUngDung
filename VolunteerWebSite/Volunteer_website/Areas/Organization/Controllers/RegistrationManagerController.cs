@@ -72,7 +72,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
                 registration.Status = status;
                 _db.SaveChanges();
-
+                TempData["SuccessMessage"] = "Duyệt đơn đăng kí thành công";
                 return Json(new
                 {
                     success = true,
