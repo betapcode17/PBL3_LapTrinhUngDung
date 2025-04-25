@@ -56,16 +56,23 @@
                             <td>@dayBegin - @dayEnd</td>
                             <td>@item.Location</td>
                             <td>
-                                <span class="badge status-badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
-                                    @(item.IsActive == 0 ? "Active" : "Inactive")
+                                <span class="badge status-badge
+                                @(item.Status == "PENDING" ? "bg-warning" :
+                                item.Status == "ACCEPTED" ? "bg-success" :
+                                 "bg-danger") text-white fw-semibold text-uppercase">
+                                    @(item.Status == "PENDING" ? "PENDING" :
+                                        item.Status == "ACCEPTED" ? "ACCEPTED" :
+                                        "REJECTED")
                                 </span>
                             </td>
+
+
                             <td class="action_btn">
                                 <a asp-area="Organization" asp-controller="EventManager" asp-action="EditEvent" asp-route-id="@item.EventId" class="btn btn-warning btn-sm action-btn">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 
-                                <a href="javascript:void(0);" class="btn btn-info btn-sm view-event-detail" data-id="@item.EventId">
+                                <a   asp-controller="EventManager" asp-action="EventDetails" asp-route-id="@item.EventId"   class="btn btn-info btn-sm view-event-detail">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
 
@@ -99,95 +106,7 @@
             </table>
         </div>
 
-        <div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="eventDetailsLabel">
-                            <i class="bi bi-calendar-event me-2"></i> Detail Event
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="text-center mb-3 border rounded p-2 bg-light">
-                                    <img id="eventMainImage" src="" class="img-fluid rounded" alt="Ảnh sự kiện">
-                                </div>
-                                <div class="row g-2" id="eventImageGallery">
-                                    <div class="col-12 text-muted">Đang tải ảnh...</div>
-                                </div>
-                            </div>
-
-                          
-                            <div class="col-md-7">
-                                <div class="row g-3">
-                                    <div class="col-md-8">
-                                        <label class="form-label">Tên sự kiện</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventName">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Mã sự kiện</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventId">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Loại sự kiện</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventType">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Địa điểm</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventLocation">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Ngày bắt đầu</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventStartDate">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Ngày kết thúc</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventEndDate">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Mục tiêu thành viên</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventTargetMembers">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Mục tiêu quỹ</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventTargetFunds">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Số đăng ký</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventRegistrationCount">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Số quyên góp</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventDonationCount">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Tổng tiền</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventTotalAmount">
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Mô tả sự kiện</label>
-                                        <textarea class="form-control-plaintext" readonly id="eventDescription"></textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Trạng thái</label>
-                                        <input type="text" class="form-control-plaintext" readonly id="eventStatus">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle me-1"></i> Đóng
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
+     
 
 
         <div class="pagination d-flex justify-content-center mt-4">
