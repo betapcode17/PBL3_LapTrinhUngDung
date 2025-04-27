@@ -18,7 +18,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div class="search-container">
                 <label for="searchBox">Search: </label>
-                <input type="text" id="searchBox" class="form-control search-input" placeholder="Search events..." onkeyup="searchEvents()">
+                <input type="text" id="searchBox" class="form-control search-input" placeholder="Search events..." onkeyup="search()">
             </div>
         </div>
 
@@ -41,7 +41,7 @@
                     <p>No events available.</p>
                 }
                 else {
-                    <tbody id="eventTable">
+                    <tbody id="dataTable">
                         @foreach (var item in Model)
                         {
                             var dayBegin = item.DayBegin?.ToString("dd/MM/yyyy") ?? "N/A";
@@ -80,7 +80,6 @@
                                     <button onclick="confirmReject('@item.EventId')" class="btn btn-danger btn-sm action-btn">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
-
                                 </td>
                             </tr>
                         }
@@ -219,7 +218,7 @@
         </div>
         <!-- Pagination -->
         <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
-            @if (Model.HasPreviousPage)
+            @if (Model!.HasPreviousPage)
             {
                 <a href="@Url.Action("Event", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
             }

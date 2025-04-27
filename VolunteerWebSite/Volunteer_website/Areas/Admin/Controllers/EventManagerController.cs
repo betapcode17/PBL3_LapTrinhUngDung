@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Areas.Admin.Data;
 using Volunteer_website.Models;
@@ -6,11 +7,12 @@ using X.PagedList.Extensions;
 
 namespace Volunteer_website.Areas.Admin.Controllers
 {
-
-    public class EventController : Controller
+    [Area("Admin")]
+    [Authorize("Admin")]
+    public class EventManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
-        public EventController(VolunteerManagementContext context) 
+        public EventManagerController(VolunteerManagementContext context) 
         {
             _db = context;
         }
@@ -91,6 +93,50 @@ namespace Volunteer_website.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+        #endregion
+
+        #region lấy dữ liệu event
+        public async Task<IActionResult> GetEventDetails(string id)
+        {
+            var eventObj = await _db.Events
+                .Include(e => e.Org)  // Include related organization
+                .FirstOrDefaultAsync(ev => ev.EventId == id);
+
+            if (eventObj == null)
+                return Json(new { success = false, message = "Event not found" });
+
+            // Count registrations
+            var registrationCount = await _db.Registrations.CountAsync(r => r.EventId == id);
+
+            // Get donations information
+            var donations = await _db.Donations
+                .Where(d => d.EventId == id)
+                .ToListAsync();
+
+            return Json(new
+            {
+                success = true,
+                data = new
+                {
+                    eventId = eventObj.EventId,
+                    name = eventObj.Name,
+                    description = eventObj.Description,
+                    location = eventObj.Location,
+                    dayBegin = eventObj.DayBegin,
+                    dayEnd = eventObj.DayEnd,
+                    targetMember = eventObj.TargetMember,
+                    targetFunds = eventObj.TargetFunds,
+                    type_event_name = eventObj.TypeEventName,
+                    organizationName = eventObj.Org?.Name,
+                    status = eventObj.Status,
+                    imagePath = eventObj.ImagePath,
+                    listImg = eventObj.ListImg,
+                    registrationCount = registrationCount,
+                    donationCount = donations.Count,
+                    totalAmount = donations.Sum(d => d.Amount ?? 0)
+                }
+            });
         }
         #endregion
     }

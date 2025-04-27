@@ -4,37 +4,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Helpers;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using MyCommerce.Models;
+using X.PagedList;
 
 namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize("Admin")]
-    public class OrganizationsController : Controller
+    public class OrgManagerController : Controller
     {
         private readonly VolunteerManagementContext _context;
 
-        public OrganizationsController(VolunteerManagementContext context)
+        public OrgManagerController(VolunteerManagementContext context)
         {
             _context = context;
         }
 
-        public IActionResult Index(int? page)
+        #region Index
+        [HttpGet]
+        public IActionResult Index(int page = 1)
         {
             int pageSize = 8;
-            int pageNumber = page ?? 1;
+            int pageNumber = page;
 
             var lstOrg = _context.Organizations.AsNoTracking()
                             .OrderBy(x => x.OrgId)
                             .ToPagedList(pageNumber, pageSize);
             return View(lstOrg);
         }
+        #endregion
 
+        #region details
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -52,21 +56,54 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
             return View(organization);
         }
+        #endregion
 
         public IActionResult Create()
         {
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+            [Bind("OrgId,Name,Email,Address,PhoneNumber,ImagePath,Description")] Models.Organization organization)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(organization);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(organization);
+        }
+
         #region Duyệt tổ chức
         [HttpGet]
-        public async Task<IActionResult> ApprovalOrg()
+        public async Task<IActionResult> ApprovalOrg(int page = 1)
         {
-            var organizationsWithUsers = await _context.Organizations
-                .Where(org => _context.Users.Any(user => user.UserId == org.OrgId))
-                .ToListAsync();
+            int pageSize = 8;
+            int pageNumber = page;
 
-            return View(organizationsWithUsers);
+            // 1. Tạo truy vấn cơ bản (không thực thi)
+            var query = _context.Organizations
+                    .AsNoTracking()
+                    .Where(org => !_context.Users.Any(user => user.UserId == org.OrgId))
+                    .OrderBy(x => x.OrgId);
+            
+            // 2. Đếm tổng số bản ghi
+            int totalCount = await query.CountAsync();
+            
+            // 3. Lấy dữ liệu cho trang hiện tại
+            var organizationsWithoutUsers = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            
+            // 4. Tạo StaticPagedList
+            var pagedResults = new StaticPagedList<Models.Organization>(
+                organizationsWithoutUsers, pageNumber, pageSize, totalCount);
+
+            return View(pagedResults);
         }
 
         [HttpPost]
@@ -90,7 +127,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
             return RedirectToAction("ApprovalOrg");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> AcceptApprovalOrg(string id)
         {
             if (id == null)
@@ -106,6 +143,11 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return RedirectToAction("ApprovalOrg");
             }
 
+            if(currentOrg.Email == null) 
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy email của tổ chức.";
+                return RedirectToAction("ApprovalOrg");
+            }
                 // Kiểm tra xem user đã tồn tại chưa
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
             if (existingUser == null)
@@ -115,6 +157,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
                 // Tạo tài khoản mới
                 var user = new User();
+                user.UserId = id;
                 user.RandomKey = Util.GenerateRandomkey();
                 user.UserName = Util.GenerateRandomkey(6);
                 user.Password = randomPassword.ToMd5Hash(user.RandomKey);
@@ -143,20 +186,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
             return RedirectToAction("ApprovalOrg");
         }
         #endregion
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("OrgId,Name,Email,Address,PhoneNumber,ImagePath,Description")] Models.Organization organization)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(organization);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(organization);
-        }
 
         public async Task<IActionResult> Edit(string id)
         {

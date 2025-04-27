@@ -147,6 +147,59 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
         #endregion
 
+        #region Xem chi tiết sự kiện 
+        [Route("GetEventDetails")]
+        [HttpGet]
+        public IActionResult GetEventDetails(string id)
+        {
+            try
+            {
+                var events = _db.Events.FirstOrDefault(v => v.EventId == id);
+                var registrationCount = _db.Registrations.Count(r => r.EventId == id);
+                var donationCount = _db.Donations.Count(d => d.EventId == id);
+                var totalAmount = _db.Donations.Where(d => d.EventId == id).Sum(d => d.Amount);
+
+                if (events == null)
+                {
+                    return Json(new { success = false, message = "Event not found" });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        eventId = events.EventId,
+                        orgId = events.OrgId,
+                        typeEventName = events.TypeEventName,
+                        name = events.Name,
+                        description = events.Description,
+                        dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
+                        dayEnd = events.DayEnd?.ToString("dd/MM/yyyy"),
+                        location = events.Location,
+                        targetMember = events.TargetMember,
+                        targetFunds = events.TargetFunds,
+                        imagePath = events.ImagePath,
+                        listImg = events.ListImg,
+                        status = events.Status,
+                        registrationCount,
+                        donationCount,
+                        totalAmount
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while fetching event details",
+                    error = ex.Message
+                });
+            }
+        }
+        #endregion
+
         #region Thêm sự kiện
         [Route("CreateEvent")]
         [HttpGet]
@@ -203,10 +256,18 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
                 {
+                    TempData["ErrorMessage"] = "Đã gặp lỗi.";
                     Console.WriteLine(error.ErrorMessage);
                 }
-                return View(eventModel);
+                return View("CreateEvent", eventModel);
             }
+
+            if(eventModel == null)
+            {
+                TempData["ErrorMessage"] = "Đã gặp lỗi không truyền được dữ liệu để xử lý.";
+                return View("CreateEvent", eventModel);
+            }
+
             // Xử lý ảnh chính (không bắt buộc)
             if (imagePath != null && imagePath.Length > 0)  // Chỉ xử lý nếu có file
             {
@@ -239,6 +300,23 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 eventModel.ListImg = string.Join(",", imagePaths);
             }
 
+            if(eventModel.DayBegin > eventModel.DayEnd)
+            {
+                TempData["ErrorMessage"] = "Đã gặp lỗi không truyền được dữ liệu để xử lý.";
+                return View("CreateEvent", eventModel);
+            }
+
+            if(eventModel.TargetFunds < 0)
+            {
+                TempData["ErrorMessage"] = "Target Fund cannot be negative.";
+                return View("CreateEvent", eventModel);
+            }
+
+            if (eventModel.TargetMember < 0)
+            {
+                TempData["ErrorMessage"] = "Target Member cannot be negative.";
+                return View("CreateEvent", eventModel);
+            }
             // Xử lý lưu vào database
             if (ModelState.IsValid)
             {
@@ -256,7 +334,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #region Xóa sự kiện
         [Route("DeleteEvent")]
         [HttpPost]
-        public IActionResult DeleteEvent(string id)
+        public async Task<IActionResult> DeleteEvent(string id)
         {
             TempData["Message"] = "";
 
@@ -269,13 +347,13 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return RedirectToAction("Event");
             }
 
-            var eventToDelete = _db.Events.Find(id);
+            var eventToDelete =await _db.Events.FirstOrDefaultAsync(ev => ev.EventId == id);
             if (eventToDelete != null)
             {
                 try
                 {
                     // Logic xóa
-                    _db.Events.Remove(_db.Events.Find(id));
+                    _db.Events.Remove(eventToDelete);
                     _db.SaveChanges();
 
                     // Trả về JSON thay vì Redirect
@@ -297,59 +375,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
             return RedirectToAction("Event");
         }
 
-        #endregion
-
-        #region Xem chi tiết sự kiện 
-        [Route("GetEventDetails")]
-        [HttpGet]
-        public IActionResult GetEventDetails(string id)
-        {
-            try
-            {
-                var events = _db.Events.FirstOrDefault(v => v.EventId == id);
-                var registrationCount = _db.Registrations.Count(r => r.EventId == id);
-                var donationCount = _db.Donations.Count(d => d.EventId == id);
-                var totalAmount = _db.Donations.Where(d => d.EventId == id).Sum(d => d.Amount);
-
-                if (events == null)
-                {
-                    return Json(new { success = false, message = "Event not found" });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        eventId = events.EventId,
-                        orgId = events.OrgId,
-                        typeEventName = events.TypeEventName,
-                        name = events.Name,
-                        description = events.Description,
-                        dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
-                        dayEnd = events.DayEnd?.ToString("dd/MM/yyyy"),
-                        location = events.Location,
-                        targetMember = events.TargetMember,
-                        targetFunds = events.TargetFunds,
-                        imagePath = events.ImagePath,
-                        listImg = events.ListImg,
-                        status = events.Status,
-                        registrationCount,
-                        donationCount,
-                        totalAmount
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "An error occurred while fetching event details",
-                    error = ex.Message
-                });
-            }
-        }
         #endregion
 
         #region Cập nhật trạng thái người tham gia

@@ -51,7 +51,6 @@ namespace Volunteer_website.Controllers
                     user.Password = model.Password.ToMd5Hash(user.RandomKey);
                     user.Role = 0;
                     user.IsActive = true;
-
                     var volunteer = _mapper.Map<Volunteer>(model);
                     volunteer.VolunteerId = user.UserId;
                     user.CreateAt = DateOnly.FromDateTime(DateTime.Now);
@@ -187,9 +186,9 @@ namespace Volunteer_website.Controllers
 
                 return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     ? Redirect(returnUrl)
-                    : Redirect(Url.Action("Index", "HomeOrg", new { area = "Organization" }));
+                    : Redirect(Url.Action("Index", "Statistics", new { area = "Organization" }));
             }
-            else if(user.Role == 2)
+            else if (user.Role == 2)
             {
                 var Admin = db.Admins.SingleOrDefault(vol => vol.AdminId == user.UserId);
                 if (Admin == null)
