@@ -130,7 +130,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var model = new Event
             {
                 EventId = newEventId,
-                OrgId = orgId
+                OrgId = orgId,
             };
 
             return View(model);

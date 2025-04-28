@@ -1,4 +1,4 @@
-﻿@model Volunteer_website.Models.Event
+@model Volunteer_website.Models.Event
 @using System.Security.Claims
 @{
     var orgID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "ORG1";
@@ -138,4 +138,3 @@
         </form>
     </div>
 </div>
-
