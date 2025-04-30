@@ -7,17 +7,20 @@ namespace Volunteer_website.ViewModel
     {
         [Required(ErrorMessage = "Username cannot be blank.")]
         public string UserName { get; set; }
+
         [Required(ErrorMessage = "Password cannot be blank.")]
         [DataType(DataType.Password)]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
         public string Password { get; set; }
+
         [Required(ErrorMessage = "Confirm Password cannot be blank.")]
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match.")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        [Phone(ErrorMessage = "Invalid phone number.")]
+        [Required(ErrorMessage = "Phone number cannot be blank.")]
         public string? PhoneNumber { get; set; }
+
         [Required(ErrorMessage = "Email cannot be blank.")]
         [EmailAddress(ErrorMessage = "Invalid Email format.")]
         public string Email { get; set; }

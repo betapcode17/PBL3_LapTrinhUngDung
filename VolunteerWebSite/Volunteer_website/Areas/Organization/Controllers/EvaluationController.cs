@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Diagnostics;
 using X.PagedList.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Authorize("Org")]
+
     public class EvaluationController : Controller
     {
         private readonly VolunteerManagementContext _db;

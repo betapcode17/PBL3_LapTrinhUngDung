@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Volunteer_website.Helpers;
 using Volunteer_website.Models;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize("Volunteer")]
 public class OrganizationController : Controller
 {
     private readonly VolunteerManagementContext _db;

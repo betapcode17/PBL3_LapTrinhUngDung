@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Volunteer_website.Helpers
 {
@@ -15,6 +16,12 @@ namespace Volunteer_website.Helpers
             }
 
             return sb.ToString();
+        }
+
+        public static bool IsValidPhoneNumber(string phoneNumber)
+        {
+            var regex = new Regex("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$");
+            return regex.IsMatch(phoneNumber);
         }
     }
 }
