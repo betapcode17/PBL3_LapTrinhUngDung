@@ -1,15 +1,22 @@
+/* ======= Typography ======= */
 h4 {
   font-size: 2rem;
   font-weight: 700;
   color: #fd7e14;
   margin-bottom: 25px;
 }
+
+.text-dark {
+  font-weight: 200;
+}
+
+/* ======= Images ======= */
 .carousel-item img {
-  width: 100px; /* Điều chỉnh kích thước nhỏ lại */
-  height: 100px; /* Giữ ảnh vuông */
-  object-fit: cover; /* Cắt ảnh để vừa khung vuông */
-  border-radius: 10px; /* Bo góc nhẹ */
-  margin: auto; /* Căn giữa ảnh */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: auto;
 }
 
 .banner-img {
@@ -17,19 +24,36 @@ h4 {
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+.org-logo img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.donation-card .d-flex img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ======= Carousel Controls ======= */
 .carousel-control-prev,
 .carousel-control-next {
   filter: invert(1) brightness(0.8);
 }
 
+/* ======= Cards ======= */
 .content-card,
 .org-card,
 .donation-card {
   background: #ffffff;
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 25px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -47,18 +71,50 @@ h4 {
   margin-bottom: 15px;
 }
 
-.donation-card .d-flex img {
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 50px;
-  height: 50px;
-}
-
 .donation-card .d-flex span {
   font-weight: 600;
   color: #fd7e14;
 }
 
+.donation-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ======= Org Info ======= */
+.org-info {
+  text-align: left;
+}
+
+.org-name,
+.org_name {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.org-description {
+  color: var(--muted-text);
+  margin-bottom: 15px;
+}
+
+.org-contact a,
+.org-contact p {
+  display: flex;
+  align-items: center;
+  color: var(--muted-text);
+  margin-bottom: 5px;
+}
+
+.org-contact i {
+  margin-right: 10px;
+  color: var(--secondary-color);
+}
+
+/* ======= Progress Bar ======= */
 .progress {
   height: 10px;
   border-radius: 5px;
@@ -72,6 +128,7 @@ h4 {
   transition: width 0.6s ease;
 }
 
+/* ======= Form Controls ======= */
 .input-group {
   margin: 15px 0;
 }
@@ -87,22 +144,22 @@ h4 {
   border-radius: 0 5px 5px 0;
   border-left: none;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.btn-donate {
-  background-color: #fd7e14;
-  color: #fff;
-  font-weight: 600;
   padding: 10px;
-  border-radius: 8px;
-  transition: background-color 0.3s, transform 0.2s;
+  font-size: 14px;
+  border: 1px solid #ced4da;
 }
 
-.btn-donate:hover {
-  background-color: #b02a37;
-  transform: translateY(-2px);
+.form-control:focus {
+  border-color: #fd7e14;
+  box-shadow: 0 0 5px #fd7e14;
 }
 
+input[type="checkbox"] {
+  accent-color: #fd7e14;
+}
+
+/* ======= Buttons ======= */
+.btn-donate,
 .btn-primary {
   background-color: #fd7e14;
   color: #fff;
@@ -110,13 +167,16 @@ h4 {
   padding: 10px;
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s;
+  border: none;
 }
 
+.btn-donate:hover,
 .btn-primary:hover {
-  background-color: #fd7e14;
+  background-color: #b02a37;
   transform: translateY(-2px);
 }
 
+/* ======= Tabs ======= */
 .nav-tabs {
   border-bottom: 2px solid #dee2e6;
   margin-bottom: 20px;
@@ -137,6 +197,7 @@ h4 {
   border-bottom: 2px solid #fd7e14;
 }
 
+/* ======= Search ======= */
 .search-bar {
   margin-bottom: 20px;
   border-radius: 8px;
@@ -151,6 +212,7 @@ h4 {
   border-color: #fd7e14;
 }
 
+/* ======= Table ======= */
 .donor-table {
   border-collapse: separate;
   border-spacing: 0;
@@ -187,6 +249,7 @@ h4 {
   border-bottom: none;
 }
 
+/* ======= Pagination ======= */
 .pagination {
   margin-top: 20px;
 }
@@ -209,41 +272,8 @@ h4 {
   background-color: #e9ecef;
   color: #fd7e14;
 }
-.org-info {
-  text-align: left;
-}
 
-.org-logo img {
-  width: 80px; /* Điều chỉnh kích thước logo */
-  height: 80px; /* Điều chỉnh kích thước logo */
-  border-radius: 50%;
-  margin-bottom: 15px;
-}
-
-.org-name {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-}
-
-.org-description {
-  color: var(--muted-text);
-  margin-bottom: 15px;
-}
-
-.org-contact a,
-.org-contact p {
-  display: flex;
-  align-items: center;
-  color: var(--muted-text);
-  margin-bottom: 5px;
-}
-
-.org-contact i {
-  margin-right: 10px;
-  color: var(--secondary-color); /* Màu biểu tượng */
-}
+/* ======= Modal ======= */
 .modal-content {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -257,8 +287,9 @@ h4 {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
+
 .modal-title {
-  color: #ff9800; /* Màu cam */
+  color: #fd7e14;
   font-size: 18px;
   font-weight: bold;
 }
@@ -277,47 +308,4 @@ h4 {
 .modal-body {
   padding: 20px;
   font-size: 14px;
-}
-
-.form-control {
-  border-radius: 6px;
-  border: 1px solid #ced4da;
-  padding: 10px;
-  font-size: 14px;
-}
-
-.form-control:focus {
-  border-color: #ff9800; /* Màu cam */
-  box-shadow: 0 0 5px #ff9800; /* Màu cam */
-}
-
-input[type="checkbox"] {
-  accent-color: #ff9800; /* Màu cam */
-}
-
-.btn-primary {
-  background-color: #ff9800; /* Màu cam */
-  border: none;
-  padding: 10px 16px;
-  font-size: 16px;
-  border-radius: 6px;
-  width: 100%;
-}
-
-.btn-primary:hover {
-  background-color: #ff5722; /* Màu cam đậm */
-}
-.donation-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.org_name {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  margin: 20px auto;
-}
-.text-dark {
-  font-weight: 200px;
 }

@@ -1,0 +1,243 @@
+/* Reset và font chính */
+.revenue-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: "Roboto", sans-serif;
+  background-color: #ffffff;
+}
+
+/* Tiêu đề chính */
+.heading {
+  font-size: 32px;
+  color: #2d3436;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Bộ lọc */
+.revenue-filter {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+  transition: transform 0.3s ease;
+}
+
+.revenue-filter:hover {
+  transform: translateY(-3px);
+}
+
+.revenue-filter form {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.revenue-input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.revenue-input:focus {
+  border-color: #2b6cb0;
+  box-shadow: 0 0 5px rgba(43, 108, 176, 0.3);
+  outline: none;
+}
+
+.revenue-btn {
+  flex: 0 0 150px; /* Đảm bảo các nút có kích thước bằng nhau */
+  background-color: #2b6cb0;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.revenue-btn:hover {
+  background-color: #1a4971;
+  transform: translateY(-2px);
+}
+
+.revenue-btn:active {
+  transform: translateY(0);
+}
+
+.revenue-btn i {
+  margin-right: 5px;
+}
+
+.revenue-btn.btn-outline-secondary {
+  background-color: transparent;
+  color: #2b6cb0;
+  border: 1px solid #2b6cb0;
+}
+
+.revenue-btn.btn-outline-secondary:hover {
+  background-color: #2b6cb0;
+  color: white;
+}
+
+/* Tổng doanh thu */
+.revenue-summary {
+  background: linear-gradient(135deg, #2b6cb0 0%, #1a4971 100%);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-summary h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.revenue-summary .text-primary {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Biểu đồ */
+.revenue-charts {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-charts h3 {
+  font-size: 22px;
+  color: #2d3436;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+canvas {
+  max-height: 400px;
+}
+
+/* Bảng dữ liệu */
+.revenue-table-wrapper {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-table th,
+.revenue-table td {
+  vertical-align: middle;
+  text-align: center;
+  font-size: 15px;
+  padding: 12px;
+}
+
+.revenue-table th {
+  background-color: #2d3436;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.revenue-table td {
+  color: #636e72;
+}
+
+.revenue-table tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease;
+}
+
+/* Phân trang */
+.revenue-pagination {
+  margin-top: 30px;
+}
+
+.revenue-pagination .revenue-page-link {
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  color: #2b6cb0;
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.revenue-pagination .revenue-page-link:hover {
+  background-color: #2b6cb0;
+  color: white;
+  border-color: #2b6cb0;
+}
+
+.revenue-pagination .revenue-page-link.active {
+  background-color: #2b6cb0;
+  color: white;
+  border-color: #2b6cb0;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .revenue-container {
+    padding: 15px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .revenue-filter form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .revenue-input,
+  .revenue-btn {
+    width: 100%;
+    max-width: none;
+    flex: none; /* Đảm bảo nút chiếm toàn bộ chiều rộng trên mobile */
+  }
+
+  .revenue-summary h3 {
+    font-size: 20px;
+  }
+
+  .revenue-summary .text-primary {
+    font-size: 24px;
+  }
+
+  .revenue-charts h3 {
+    font-size: 18px;
+  }
+
+  .revenue-table th,
+  .revenue-table td {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .revenue-pagination .revenue-page-link {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

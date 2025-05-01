@@ -19796,3 +19796,110 @@ dl li {
 .navbar-title:hover {
   color: #212529; /* Màu chữ khi hover */
 }
+
+/*  */
+
+/* Heading */
+.heading-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ff7300;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.heading-title::after {
+  content: "";
+  width: 80px;
+  height: 5px;
+  background: #8e2c03;
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}
+/* General Styling */
+/* Định dạng cho phần tiêu đề và thân */
+.header-section,
+.body-section {
+  border: 1px solid #e0e0e0; /* Viền nhẹ */
+  border-radius: 10px; /* Bo góc */
+  padding: 1.5rem; /* Khoảng cách bên trong */
+  background-color: #ffffff; /* Background trắng */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
+}
+
+/* Đảm bảo khoảng cách giữa các phần */
+.header-section {
+  margin-bottom: 2rem; /* Khoảng cách giữa tiêu đề và thân */
+  margin-top: 20px;
+}
+tr {
+  text-align: center;
+}
+.action_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.table thead th {
+  color: #fff; /* Màu chữ cho tiêu đề bảng */
+  font-weight: bold; /* Chữ đậm */
+  text-align: center; /* Căn giữa chữ */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới cho tiêu đề bảng */
+  font-size: 1.1rem; /* Kích thước chữ tiêu đề */
+  padding: 1rem; /* Khoảng cách bên trong tiêu đề bảng */
+}
+.event-table td {
+  color: #000000; /* Màu chữ cho các ô trong bảng */
+  font-size: 1rem; /* Kích thước chữ cho các ô trong bảng */
+  padding: 1rem; /* Khoảng cách bên trong các ô trong bảng */
+  border-bottom: 1px solid #dee2e6; /* Viền dưới cho các ô trong bảng */
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
+  text-align: center; /* Căn giữa theo chiều ngang */
+}
+/*  */
+
+    .pagination {
+        margin-top: 1.5rem;
+    }
+
+    .pagination-link {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+        margin: 0 4px;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .pagination-link:not(.active) {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            color: #333;
+        }
+
+            .pagination-link:not(.active):hover {
+                background-color: #e0e0e0;
+                color: #000;
+                border-color: #999;
+            }
+
+        .pagination-link.active {
+            background-color: #6c757d;
+            border: 1px solid #6c757d;
+            color: #fff;
+        }
+
+        .pagination-link i {
+            font-size: 1rem;
+        }
