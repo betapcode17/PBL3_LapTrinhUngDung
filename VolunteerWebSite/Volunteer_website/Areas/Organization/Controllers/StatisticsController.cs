@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 
@@ -6,6 +7,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
     [Route("Organization/[controller]/[action]")]
+    [Authorize("Org")]
     public class StatisticsController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -105,6 +107,9 @@ namespace Volunteer_website.Areas.Organization.Controllers
             return Json(data);
         }
         #endregion
+
+
+
         #region Số lượt quyên góp theo tháng 
         [HttpGet]
         public IActionResult GetDonationByMonth()

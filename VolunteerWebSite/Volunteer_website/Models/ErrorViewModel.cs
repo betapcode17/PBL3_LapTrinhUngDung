@@ -10,3 +10,4 @@ namespace Volunteer_website.Models
         public string ErrorDetail { get; internal set; }
     }
 }
+

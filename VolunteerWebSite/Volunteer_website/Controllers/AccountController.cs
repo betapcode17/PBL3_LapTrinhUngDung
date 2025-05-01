@@ -8,17 +8,21 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 
 namespace Volunteer_website.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly VolunteerManagementContext db;
+        private readonly VolunteerManagementContext _db;
         private readonly IMapper _mapper;
 
         public AccountController(VolunteerManagementContext context, IMapper mapper)
         {
-            this.db = context;
+            this._db = context;
             _mapper = mapper;
         }
 
@@ -31,45 +35,88 @@ namespace Volunteer_website.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterVM model)
+        public async Task<IActionResult> Register(RegisterVM model)
         {
             if (ModelState.IsValid)
             {
                 // Kiểm tra username đã tồn tại hay chưa
-                if (db.Users.Any(u => u.UserName == model.UserName))
+                if (_db.Users.Any(u => u.UserName == model.UserName))
                 {
                     ModelState.AddModelError("UserName", "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác!");
                     return View(model);
                 }
 
+                if (!Util.IsValidPhoneNumber(model.PhoneNumber!))
+                {
+                    ModelState.AddModelError("PhoneNumber", "Số điện thoại không phù hợp. Vui lòng nhập số điện thoại khác!");
+                    return View(model);
+                }
+
+                if (await _db.Volunteers.AnyAsync(v => v.PhoneNumber == model.PhoneNumber)
+                    || await _db.Organizations.AnyAsync(v => v.PhoneNumber == model.PhoneNumber))
+                {
+                    ModelState.AddModelError("PhoneNumber", "Số điện thoại này đã tồn tại. Vui lòng nhập số điện thoại khác!");
+                    return View(model);
+                }
+
+                if (await _db.Volunteers.AnyAsync(v => v.Email == model.Email) 
+                    || await _db.Organizations.AnyAsync(v => v.Email == model.Email)
+                    || await _db.Admins.AnyAsync(v => v.Email == model.Email))
+                {
+                    ModelState.AddModelError("Email", "Email đã tồn tại. Vui lòng nhập Email khác!");
+                    return View(model);
+                }
+
                 try
                 {
-                    var user = _mapper.Map<User>(model);
-                    user.UserId = Guid.NewGuid().ToString();
+                    var user = new User();
+
+                    var lastUser = await _db.Users
+                        .Where(user => user.UserId.StartsWith("U"))
+                        .OrderByDescending(user => user.UserId)
+                        .FirstOrDefaultAsync();
+                    if (lastUser == null)
+                    {
+                        user.UserId = "U0001";
+                    }
+                    else
+                    {
+                        int temp = int.Parse(lastUser.UserId.Substring(1));
+                        temp++;
+                        user.UserId = "U" + temp.ToString("D4");
+                    }
                     user.RandomKey = Util.GenerateRandomkey();
                     user.UserName = model.UserName;
                     user.Password = model.Password.ToMd5Hash(user.RandomKey);
                     user.Role = 0;
                     user.IsActive = true;
-
-                    var volunteer = _mapper.Map<Volunteer>(model);
-                    volunteer.VolunteerId = user.UserId;
                     user.CreateAt = DateOnly.FromDateTime(DateTime.Now);
-                    db.Users.Add(user);
-                    db.Volunteers.Add(volunteer);
-                    db.SaveChanges();
 
-                    TempData["SuccessMessage"] = "Đăng ký thành công!";
+                    var volunteer = new Volunteer();
+                    volunteer.VolunteerId = user.UserId;
+                    volunteer.PhoneNumber = model.PhoneNumber;
+                    volunteer.Email = model.Email;
+                    volunteer.Name = model.Name;
+                    volunteer.DateOfBirth = DateOnly.FromDateTime((DateTime)model.DateOfBirth!);
+                    volunteer.Gender = model.Gender;
+                    volunteer.ImagePath = model.ImagePath;
+                    volunteer.Address = model.Address;
+
+                    _db.Users.Add(user);
+                    _db.Volunteers.Add(volunteer);
+                    _db.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Your registration was successful!";
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Lỗi khi đăng ký: " + ex.Message);
+                    TempData["ErrorMessage"] = "Registration Error: " + ex.Message;
                 }
             }
             else
             {
-                ModelState.AddModelError("", "Dữ liệu không hợp lệ!");
+                TempData["ErrorMessage"] = "Invalid data! Please check and try again.";
             }
             return View(model);
         }
@@ -90,35 +137,35 @@ namespace Volunteer_website.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.Values.SelectMany(v => v.Errors).ToList().ForEach(error =>
-                    Console.WriteLine("Lỗi ModelState: " + error.ErrorMessage));
+                    Console.WriteLine("Error ModelState: " + error.ErrorMessage));
                 return View(model);
             }
 
-            var user = db.Users.SingleOrDefault(kh => kh.UserName == model.UserName);
+            var user = _db.Users.SingleOrDefault(kh => kh.UserName == model.UserName);
             if (user == null)
             {
-                ModelState.AddModelError("loi", "Không tìm thấy người dùng.");
+                ModelState.AddModelError("UserName", "Không tìm thấy người dùng.");
                 return View(model);
             }
 
             if (!user.IsActive)
             {
-                ModelState.AddModelError("loi", "Tài khoản đã bị khóa. Vui lòng liên hệ Admin.");
+                ModelState.AddModelError("UserName", "Tài khoản đã bị khóa. Vui lòng liên hệ Admin qua Email.");
                 return View(model);
             }
 
             if (user.Password != model.Password.ToMd5Hash(user.RandomKey))
             {
-                ModelState.AddModelError("loi", "Sai thông tin đăng nhập");
+                ModelState.AddModelError("Password", "Sai thông tin đăng nhập");
                 return View(model);
             }
 
             if (user.Role == 0)
             {
-                var volunteer = db.Volunteers.SingleOrDefault(vol => vol.VolunteerId == user.UserId);
+                var volunteer = _db.Volunteers.SingleOrDefault(vol => vol.VolunteerId == user.UserId);
                 if (volunteer == null)
                 {
-                    ModelState.AddModelError("loi", "Thông tin tình nguyện viên không tồn tại.");
+                    ModelState.AddModelError("UserName", "Thông tin tình nguyện viên không tồn tại.");
                     return View(model);
                 }
 
@@ -129,7 +176,7 @@ namespace Volunteer_website.Controllers
                     new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
                     new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
                     new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Role, user.Role.ToString()!)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -138,7 +185,7 @@ namespace Volunteer_website.Controllers
                 try
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-                    Console.WriteLine("Đăng nhập thành công");
+                    TempData["SuccessMessage"] = "You've successfully logged in!";
                 }
                 catch (Exception ex)
                 {
@@ -153,7 +200,7 @@ namespace Volunteer_website.Controllers
             }
             else if (user.Role == 1)
             {
-                var org = db.Organizations.SingleOrDefault(vol => vol.OrgId == user.UserId);
+                var org = _db.Organizations.SingleOrDefault(vol => vol.OrgId == user.UserId);
                 if (org == null)
                 {
                     ModelState.AddModelError("loi", "Thông tin tổ chức không tồn tại.");
@@ -187,11 +234,11 @@ namespace Volunteer_website.Controllers
 
                 return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     ? Redirect(returnUrl)
-                    : Redirect(Url.Action("Index", "HomeOrg", new { area = "Organization" }));
+                    : Redirect(Url.Action("Index", "Statistics", new { area = "Organization" }));
             }
-            else if(user.Role == 2)
+            else if (user.Role == 2)
             {
-                var Admin = db.Admins.SingleOrDefault(vol => vol.AdminId == user.UserId);
+                var Admin = _db.Admins.SingleOrDefault(vol => vol.AdminId == user.UserId);
                 if (Admin == null)
                 {
                     ModelState.AddModelError("loi", "Thông tin Admin không tồn tại.");
@@ -232,6 +279,76 @@ namespace Volunteer_website.Controllers
         }
 
 
+        #endregion
+
+        #region forgot password
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            var model = new ForgotPasswordVM();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
+        {
+            if(!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Something wrong please check again.";
+                return View(model);
+            }
+            var currentUser = _db.Users.FirstOrDefault(u => u.UserName == model.UserName);
+
+            if (currentUser == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                RedirectToAction("Login", "Home");
+            }
+
+            if(_db.Volunteers.Any(v => v.VolunteerId == currentUser!.UserId)) {
+                var temp = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == currentUser!.UserId);
+                if(temp!.Email != model.Email)
+                {
+                    TempData["ErrorMessage"] = "The email associated with your account is different from the one you entered.";
+                    return View(model);
+                }
+            }
+            else if (_db.Organizations.Any(v => v.OrgId == currentUser!.UserId))
+            {
+                var temp = _db.Organizations.FirstOrDefault(v => v.OrgId == currentUser!.UserId);
+                if (temp!.Email != model.Email)
+                {
+                    TempData["ErrorMessage"] = "The email associated with your account is different from the one you entered.";
+                    return View(model);
+                }
+            }
+            else if (_db.Admins.Any(v => v.AdminId == currentUser!.UserId))
+            {
+                var temp = _db.Admins.FirstOrDefault(v => v.AdminId == currentUser!.UserId);
+                if (temp!.Email != model.Email)
+                {
+                    TempData["ErrorMessage"] = "The email associated with your account is different from the one you entered.";
+                    return View(model);
+                }
+            }
+
+            try
+            {
+                var randomPassword = Util.GenerateRandomkey(6);
+                currentUser.RandomKey = Util.GenerateRandomkey();
+                currentUser.Password = randomPassword.ToMd5Hash(currentUser.RandomKey);
+                Helpers.EmailService.SendNewPasswordEmail(model.Email, randomPassword);
+                _db.Users.Update(currentUser);
+                await _db.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Send Email Success! Please check your Email";
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error: " + ex;
+                return View(model);
+            }
+        }
         #endregion
 
         #region Chỉnh sửa trang cá nhân

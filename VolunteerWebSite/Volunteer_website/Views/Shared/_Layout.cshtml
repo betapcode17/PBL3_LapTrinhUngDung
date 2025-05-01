@@ -27,6 +27,8 @@
 
     <link rel="stylesheet" href="~/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="~/css/jquery.timepicker.css" />
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 
     <link rel="stylesheet" href="~/css/flaticon.css" />
     <link rel="stylesheet" href="~/css/icomoon.css" />
@@ -34,14 +36,50 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/Footer.css" />
+    <link href="~/OrgLayout/assets/css/site.css" rel="stylesheet" />
+    <link href="~/OrgLayout/assets/js/alert.js" rel="stylesheet" />
 </head>
 <body>
-    <header>
-  
-       
-    </header>
-            @RenderBody()
+    @*<header>
 
+
+        @if (TempData.ContainsKey("SuccessMessage"))
+        {
+            <div id="customAlertSuccess" class="modern-alert success">
+                <div class="alert-icon">
+                    <span>✔</span>
+                </div>
+                <div class="alert-content">
+                    <strong>Success</strong>
+                    <p>@TempData["SuccessMessage"]</p>
+                </div>
+                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+            </div>
+        }
+
+        @if (TempData.ContainsKey("Error"))
+        {
+            <div id="customAlertError" class="modern-alert error">
+                <div class="alert-icon">
+                    <span>⚠</span>
+                </div>
+                <div class="alert-content">
+                    <strong>Error</strong>
+                    <p>@TempData["Error"]</p>
+                </div>
+                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+            </div>
+        }
+    </header>*@
+
+
+    @await Html.PartialAsync("Navbar")
+            @RenderBody()
+    @await Html.PartialAsync("Footer")
+
+
+
+     
     <script src="~/js/Navbar_user.js"></script>
     <script src="~/js/Search.js"></script>
     <script src="~/js/jquery.min.js"></script>

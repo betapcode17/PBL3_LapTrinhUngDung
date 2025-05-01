@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Diagnostics;
 using X.PagedList.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Authorize("Org")]
+
     public class EvaluationController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -350,8 +353,8 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Console.WriteLine($"Đang gửi email đến: {toEmail}...");
                 smtpClient.Send(mail);
                 Console.WriteLine("✅ Gửi email thành công.");
-
-                TempData["Success"] = $"Đã gửi email thông báo thành công đến {volunteerName}!";
+              
+                TempData["SuccessMessage"] = $"Đã gửi email thông báo thành công đến {volunteerName}!";
             }
             catch (Exception ex)
             {

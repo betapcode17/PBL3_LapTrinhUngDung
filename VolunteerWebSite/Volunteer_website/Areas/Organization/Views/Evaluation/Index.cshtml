@@ -21,20 +21,7 @@
 
     <div class="body-section border rounded p-4 bg-white">
         <!-- Hiển thị thông báo từ TempData -->
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+ 
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div class="search-container">
                 <form asp-action="Index" method="get" class="d-flex align-items-center">

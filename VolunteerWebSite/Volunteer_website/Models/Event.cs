@@ -31,7 +31,7 @@ public partial class Event
 
     public int? IsActive { get; set; }
 
-    public string? Status { get; set; } = "Pending"; // Gán giá trị mặc định là "Pending"
+    public string? Status { get; set; } = "PENDING";
 
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 

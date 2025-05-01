@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Authorize("Org")]
     public class RegistrationManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -72,7 +74,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
                 registration.Status = status;
                 _db.SaveChanges();
-
+                TempData["SuccessMessage"] = "Duyệt đơn đăng kí thành công";
                 return Json(new
                 {
                     success = true,

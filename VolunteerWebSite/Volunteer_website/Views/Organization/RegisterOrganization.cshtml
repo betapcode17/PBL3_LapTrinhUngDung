@@ -1,0 +1,71 @@
+﻿@model Volunteer_website.Models.Organization
+@{
+    ViewData["Title"] = "RegisterOrganization";
+    Layout = "_Layout";
+}
+
+<section class="ftco-section-3 img" style="background-image: url('@Url.Content("~/images/bg_3.jpg")');">
+    <div class="container org-register">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-10 bg-orange d-flex p-0 rounded shadow-lg overflow-hidden">
+                <div class="col-md-6 d-none d-md-block">
+                    <img src="~/images/bg_4.jpg" alt="volunteer-img" class="img-fluid h-100 w-100" style="object-fit: cover;" />
+                </div>
+                <div class="col-md-6 p-5 text-white">
+                    <h3 class="mb-4 fw-bold">Register as an Organization</h3>
+                    <form asp-action="RegisterOrganization" method="post" enctype="multipart/form-data">
+                        <div class="form-group mb-3">
+                            <input asp-for="Name" type="text" class="form-control" placeholder="Organization Name" required />
+                            <span asp-validation-for="Name" class="text-warning small"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Email" required />
+                            <span asp-validation-for="Email" class="text-warning small"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <input asp-for="Address" type="text" class="form-control" placeholder="Address" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Phone Number" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="file" class="form-control" id="file" name="organizationImg" />
+                        </div>
+                        <div class="form-group mb-4">
+                            <textarea asp-for="Description" class="form-control" placeholder="Organization Description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-light px-4 fw-bold">Submit Registration</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .org-register {
+        padding: 60px 0;
+    }
+
+    .bg-orange {
+        background-color: rgba(255, 102, 0, 0.85);
+    }
+
+    input.form-control,
+    textarea.form-control {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .form-control::placeholder {
+        color: #ccc;
+    }
+
+    .btn-light:hover {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+</style>

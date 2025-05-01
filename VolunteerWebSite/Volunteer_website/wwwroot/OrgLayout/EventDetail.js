@@ -1,6 +1,6 @@
 function showEventDetails(eventId) {
   $.ajax({
-    url: "/Organization/HomeOrg/GetEventDetails",
+    url: "/Admin/EventManager/GetEventDetails",
     type: "GET",
     data: { id: eventId },
     success: function (response) {
