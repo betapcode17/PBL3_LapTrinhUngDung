@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Volunteer_website.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Authorize("Org")]
     public class EventManagerController : Controller
     {
 

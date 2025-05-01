@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
     [Area("Organization")]
     [Route("Organization")]
     [Route("Organization/HomeOrg")]
+    [Authorize("Org")]
     public class HomeOrgController : Controller
     {
         private readonly VolunteerManagementContext _db;
