@@ -1,11 +1,11 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "OrgLayout";
 }
 @using System.Security.Claims
 @{
     var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-    var userName = User.Identity.Name; // Lấy từ ClaimTypes.Name
+    var userName = User.Identity!.Name; // Lấy từ ClaimTypes.Name
 }
 <!DOCTYPE html>
 <html lang="en">

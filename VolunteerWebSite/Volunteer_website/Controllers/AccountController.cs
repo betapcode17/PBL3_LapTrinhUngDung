@@ -128,7 +128,7 @@ namespace Volunteer_website.Controllers
                     new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
                     new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
                     new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Role, user.Role.ToString()!)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -188,7 +188,7 @@ namespace Volunteer_website.Controllers
                     ? Redirect(returnUrl)
                     : Redirect(Url.Action("Index", "Statistics", new { area = "Organization" }));
             }
-            else if(user.Role == 2)
+            else if (user.Role == 2)
             {
                 var Admin = db.Admins.SingleOrDefault(vol => vol.AdminId == user.UserId);
                 if (Admin == null)
