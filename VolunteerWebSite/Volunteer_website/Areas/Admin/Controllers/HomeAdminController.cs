@@ -65,65 +65,65 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Duyệt sự kiện 
+        //#region Duyệt sự kiện 
 
-        [HttpPost]
-        [Route("acceptEvent")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
-        {
-            try
-            {
-                //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
-                //Console.WriteLine(firstEvent.EventId);
-                var EventId = request.EventId;
-                var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
-                if (existingEvent == null)
-                {
-                    return Json(new { success = false, message = "Event not found" });
-                }
+        //[HttpPost]
+        //[Route("acceptEvent")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
+        //{
+        //    try
+        //    {
+        //        //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
+        //        //Console.WriteLine(firstEvent.EventId);
+        //        var EventId = request.EventId;
+        //        var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
+        //        if (existingEvent == null)
+        //        {
+        //            return Json(new { success = false, message = "Event not found" });
+        //        }
 
-                // chuyển trạng thái status
-                existingEvent.Status = "ACCEPT";
+        //        // chuyển trạng thái status
+        //        existingEvent.Status = "ACCEPT";
 
-                _db.Update(existingEvent);
-                await _db.SaveChangesAsync();
+        //        _db.Update(existingEvent);
+        //        await _db.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Event accepted successfully" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+        //        return Json(new { success = true, message = "Event accepted successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
 
-        [HttpPost]
-        [Route("rejectEvent")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
-        {
-            try
-            {
-                var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
-                if (existingEvent == null)
-                {
-                    return Json(new { success = false, message = "Event not found" });
-                }
+        //[HttpPost]
+        //[Route("rejectEvent")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
+        //{
+        //    try
+        //    {
+        //        var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
+        //        if (existingEvent == null)
+        //        {
+        //            return Json(new { success = false, message = "Event not found" });
+        //        }
 
-                // chuyển trạng thái status
-                existingEvent.Status = "REJECT";
+        //        // chuyển trạng thái status
+        //        existingEvent.Status = "REJECT";
 
-                _db.Update(existingEvent);
-                await _db.SaveChangesAsync();
+        //        _db.Update(existingEvent);
+        //        await _db.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Event rejected successfully" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-        #endregion
+        //        return Json(new { success = true, message = "Event rejected successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+        //#endregion
 
         #region Danh sách user
         [Route("Volunteers")]

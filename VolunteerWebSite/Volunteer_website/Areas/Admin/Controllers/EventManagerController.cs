@@ -9,6 +9,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize("Admin")]
+    [Route("Admin/EventManager")] 
     public class EventManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -43,6 +44,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
         {
+            Console.WriteLine("Dagoiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             try
             {
                 //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
@@ -73,6 +75,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
         {
+            Console.WriteLine("Dagoiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             try
             {
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);

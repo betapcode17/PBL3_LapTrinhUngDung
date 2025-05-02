@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Models;
+using X.PagedList.Extensions;
 
 namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize("Admin")]
     public class VolunteersController : Controller
     {
         private readonly VolunteerManagementContext _context;
@@ -19,9 +22,15 @@ namespace Volunteer_website.Areas.Admin.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int page = 1)
         {
-            return View(await _context.Volunteers.ToListAsync());
+            int pageSize = 8;
+            int PageNumber = page;
+
+            var listVolunteers =  _context.Volunteers
+                .OrderBy(v => v.VolunteerId)
+                .ToPagedList(PageNumber, pageSize);
+            return View(listVolunteers);
         }
 
         public async Task<IActionResult> Details(string id)

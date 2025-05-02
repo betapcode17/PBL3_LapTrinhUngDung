@@ -58,25 +58,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("OrgId,Name,Email,Address,PhoneNumber,ImagePath,Description")] Models.Organization organization)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(organization);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(organization);
-        }
-
         #region Duyệt tổ chức
         [HttpGet]
         public async Task<IActionResult> ApprovalOrg(int page = 1)
