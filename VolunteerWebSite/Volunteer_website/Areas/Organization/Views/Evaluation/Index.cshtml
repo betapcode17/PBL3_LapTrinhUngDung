@@ -80,7 +80,16 @@
                                     <span class="badge bg-secondary">No</span>
                                 }
                             </td>
-                            <td>@item.EvaluatedAt.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (item.EvaluatedAt != null)
+                                {
+                                    @($"{item.EvaluatedAt:dd/MM/yyyy}")
+                                }
+                                else
+                                {
+                                    @:N/A
+                                }
+                            </td>
                             <td class="action_btn text-center">
                                 <a asp-action="SendEmail" asp-controller="Evaluation" asp-route-id="@item.EvaluationId" class="btn btn-primary btn-sm">
                                     <i class="fa-solid fa-envelope"></i> Send Email
