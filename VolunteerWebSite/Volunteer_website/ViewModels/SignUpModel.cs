@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Volunteer_website.Models
+namespace Volunteer_website.ViewModels
 {
     public class SignUpModel
     {
@@ -17,7 +17,7 @@ namespace Volunteer_website.Models
 
         public DateTime? DateOfBirth { get; set; }
 
-        public string? Gender { get; set; }
+        public bool? Gender { get; set; }
 
         public string? ImagePath { get; set; }
 

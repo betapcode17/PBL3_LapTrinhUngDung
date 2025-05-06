@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var name = Context.Session.GetString("Name");
+    var email = Context.Session.GetString("Email");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -104,8 +108,9 @@
                                     <img class="avatar-img rounded-circle shadow" src="~/images/person_4.jpg" alt="avatar" />
                                 </div>
                                 <div>
-                                    <a class="h6" href="#">Trần Quốc Đạt</a>
-                                    <p class="small m-0">quocdat19991712@gmail.com</p>
+                                    <a class="h6" href="#">@(name)</a>
+                                    <p class="small m-0">@(email)</p>
+
                                 </div>
                             </div>
                             <hr />
@@ -122,6 +127,12 @@
                                 <i class="fa-solid fa-gear" style="margin-right: 10px"></i>Chỉnh sửa thông tin
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" asp-controller="Manage" asp-action="Registered_Event">
+                                <i class="fa-solid fa-calendar-days" style="margin-right: 10px"></i>Sự kiện của tôi
+                            </a>
+                        </li>
+
                         <li>
                             <a class="dropdown-item bg-danger-soft-hover" asp-controller="Account" asp-action="Logout">
                                 <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px"></i>Đăng xuất
@@ -294,10 +305,28 @@
 </body>
 </html>
 <script>
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-        });
+       document.addEventListener("DOMContentLoaded", function () {
+        const searchBtn = document.getElementById("search-btn");
+        const searchOverlay = document.getElementById("search-overlay");
+        const closeSearch = document.getElementById("close-search");
+
+        if (searchBtn && searchOverlay && closeSearch) {
+            searchBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                searchOverlay.style.display = "block";
+            });
+
+            closeSearch.addEventListener("click", function () {
+                searchOverlay.style.display = "none";
+            });
+
+            // Optional: Hide overlay if click outside the search box
+            searchOverlay.addEventListener("click", function (e) {
+                if (!e.target.closest(".search-box")) {
+                    searchOverlay.style.display = "none";
+                }
+            });
+        }
     });
+
 </script>

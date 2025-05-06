@@ -1,5 +1,5 @@
 ﻿
-@model Volunteer_website.Models.EventModel
+@model Volunteer_website.ViewModels.EventModel
 @{
     ViewData["Title"] = "Detail_Event";
     var role = Context.Session.GetString("UserRole");
@@ -252,7 +252,7 @@
                                     
                                         <td>@donation.VolunteerName</td>
                                          <td>@string.Format("{0:N0} VND", (donation.Amount ?? 0))</td> 
-                                        <td>@donation.DonationDate.ToString("HH:mm - dd/MM/yyyy")</td>
+                                        <td>@donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy")</td>
                                     </tr>
                                 }
                             }

@@ -2,9 +2,9 @@
     ViewData["Title"] = "Home Page";
 }
 @{
-    var role = Context.Session.GetString("Role");
-    Layout = role == "Admin" ? "~/Views/Shared/_AdminLayout.cshtml" :
-             role == "volunteer" ? "~/Views/Shared/User_Layout.cshtml" :
+    var role = Context.Session.GetInt32("UserRole");
+    Layout = role == 1 ? "~/Views/Shared/_AdminLayout.cshtml" :
+             role == 0 ? "~/Views/Shared/User_Layout.cshtml" :
              "~/Views/Shared/_Layout.cshtml"; 
 }
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Volunteer_website.Data;
+using Volunteer_website.ViewModels;
 using Volunteer_website.Models;
 
 namespace Volunteer_website.Controllers
@@ -30,7 +30,7 @@ namespace Volunteer_website.Controllers
             }
 
             // Kiểm tra đã đăng ký chưa
-            var existed = _context.EventVolunteers
+            var existed = _context.Registrations
              .FirstOrDefault(r => r.EventId == id && r.VolunteerId == userId );
 
             if (existed != null)
@@ -40,17 +40,18 @@ namespace Volunteer_website.Controllers
                 return RedirectToAction("Detail_Event","Home", new { id = id });
             }
 
-            var registration = new EventVolunteer
+            var registration = new Registration
             {
+                RegId = Guid.NewGuid().ToString().Substring(0, 5),
                 EventId = id,
                 VolunteerId = userId,
-                EventVolunteerDate = DateOnly.FromDateTime(DateTime.Today),
+                RegisterAt = DateOnly.FromDateTime(DateTime.Today),
                 Status = "Đang chờ duyệt" 
 
             };
             TempData["Message"] = null;
 
-            _context.EventVolunteers.Add(registration);
+            _context.Registrations.Add(registration);
             _context.SaveChanges();
 
             TempData["Message"] = "Đăng ký tham gia sự kiện thành công!";

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Volunteer_website.Data;
+using Volunteer_website.Models;
 
-namespace Volunteer_website.Models
+namespace Volunteer_website.ViewModels
 {
     public class DonationModel
     {

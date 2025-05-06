@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Volunteer_website.Models;
 
-public partial class Donation
+public partial class Registration
 {
-    public string DonationId { get; set; } = null!;
+    public string RegId { get; set; } = null!;
 
     public string? VolunteerId { get; set; }
 
     public string? EventId { get; set; }
 
-    public decimal? Amount { get; set; }
+    public string? Status { get; set; }
 
-    public string? Message { get; set; }
+    public DateOnly? RegisterAt { get; set; }
 
-    public DateTime? DonationDate { get; set; }
+    public virtual ICollection<Evaluation> Evaluations { get; set; } = new List<Evaluation>();
 
     public virtual Event? Event { get; set; }
 

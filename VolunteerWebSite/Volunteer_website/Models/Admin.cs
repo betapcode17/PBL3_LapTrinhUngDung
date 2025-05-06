@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
 public partial class Admin
 {
@@ -9,7 +9,7 @@ public partial class Admin
 
     public string? Name { get; set; }
 
-    public string? ImagePath { get; set; }
+    public string? ImgPath { get; set; }
 
-    public virtual User AdminNavigation { get; set; } = null!;
+    public string? Email { get; set; }
 }

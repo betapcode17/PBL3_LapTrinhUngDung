@@ -24,6 +24,7 @@ C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Voluntee
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\jquery.timepicker.css
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\Cause.css
+C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\icomoon.css
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\owl.theme.default.min.css
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\js\scrollax.min.js
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\magnific-popup.css
@@ -146,6 +147,7 @@ C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Voluntee
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\lib\jquery\dist\jquery.min.map
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\Cause_Detail.css
+C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\css\Registered_Event.css
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.stellar.min.js
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\wwwroot\js\jquery.min.js
@@ -177,6 +179,7 @@ wwwroot\css\Detail_Event.css
 wwwroot\css\donation.css
 wwwroot\css\flaticon.css
 wwwroot\css\Footer.css
+wwwroot\css\icomoon.css
 wwwroot\css\ionicons.min.css
 wwwroot\css\jquery.timepicker.css
 wwwroot\css\Login.css
@@ -186,6 +189,7 @@ wwwroot\css\open-iconic-bootstrap.min.css
 wwwroot\css\owl.carousel.min.css
 wwwroot\css\owl.theme.default.min.css
 wwwroot\css\Profile_Manage.css
+wwwroot\css\Registered_Event.css
 wwwroot\css\registered_events.css
 wwwroot\css\Search.css
 wwwroot\css\signUp.css

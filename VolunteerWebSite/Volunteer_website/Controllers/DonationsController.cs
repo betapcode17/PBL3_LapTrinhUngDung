@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Volunteer_website.Models;
-using Volunteer_website.Data;
+using Volunteer_website.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Filters;
 using Volunteer_website.Services;
@@ -73,7 +73,7 @@ namespace Volunteer_website.Controllers
                     donationModel.Volunteer_Id = userId;
                 }
                 string gen_id = Guid.NewGuid().ToString();
-                var donation = new Data.Donation
+                var donation = new Models.Donation
                 {
                     DonationId = gen_id,
                     EventId = donationModel.Event_id,
@@ -82,7 +82,8 @@ namespace Volunteer_website.Controllers
                     Amount = donationModel.Amount,
                     Message = donationModel.Note,
                 };
-                _logger.LogInformation($"DonationDate before save: {donation.DonationDate.ToString("yyyy-MM-dd HH:mm:ss")}");
+                _logger.LogInformation($"DonationDate before save: {donation.DonationDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null"}");
+
 
                 _context.Donations.Add(donation);
                 await _context.SaveChangesAsync();

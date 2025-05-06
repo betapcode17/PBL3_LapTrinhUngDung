@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Volunteer_website.Models
+namespace Volunteer_website.ViewModels
 {
     [Table("Event")]
     public class EventModel
@@ -25,19 +25,12 @@ namespace Volunteer_website.Models
         public int targetfund { get; set; }
         public int currentmember { get; set; }
         public int currentfund { get; set; }
+        public string? type { get; set; } // Initialize with a default value
         //public List<EventImage> Images { get; set; } = new List<EventImage>();
         public List<Donate_List> Donations { get; set; } = new List<Donate_List>();
 
     }
 
-    // Lớp để lưu thông tin hình ảnh sự kiện
-    //public class EventImage
-    //{
-    //    public string ImagePath { get; set; } = string.Empty; // Initialize with a default value
-    //    public bool IsActive { get; set; }
-    //}
-
-    //// Lớp để lưu thông tin về các khoản đóng góp
     public class Donation
     {
         public string VolunteerName { get; set; } = string.Empty; // Initialize with a default value

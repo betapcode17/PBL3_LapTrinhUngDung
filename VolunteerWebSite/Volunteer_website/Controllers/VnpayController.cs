@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Volunteer_website.Data;
+using Volunteer_website.ViewModels;
 using Volunteer_website.Models;
 using Volunteer_website.VnPay;
 using Libraries;
@@ -110,14 +110,14 @@ namespace Volunteer_website.Controllers
                         var donationData = JsonConvert.DeserializeObject<dynamic>(donationTempDataJson);
                         string gen_id = Guid.NewGuid().ToString();
 
-                        var donation = new Data.Donation
+                        var donation = new Models.Donation
                         {
                             DonationId = gen_id,
                             EventId = donationData.EventId,
                             VolunteerId = donationData.VolunteerId,
                             Amount = donationData.Amount,
                             Message = donationData.Note,
-                            DonationDate = DateTime.Now
+                            DonationDate = DateTime.Now,
                         };
 
                         _context.Donations.Add(donation);

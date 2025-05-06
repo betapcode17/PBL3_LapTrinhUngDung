@@ -117,6 +117,10 @@
       "PackagePath": "staticwebassets\\css\\Profile_Manage.css"
     },
     {
+      "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Registered_Event.css",
+      "PackagePath": "staticwebassets\\css\\Registered_Event.css"
+    },
+    {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\Search.css",
       "PackagePath": "staticwebassets\\css\\Search.css"
     },
@@ -171,6 +175,10 @@
     {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\flaticon.css",
       "PackagePath": "staticwebassets\\css\\flaticon.css"
+    },
+    {
+      "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\icomoon.css",
+      "PackagePath": "staticwebassets\\css\\icomoon.css"
     },
     {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\css\\ionicons.min.css",

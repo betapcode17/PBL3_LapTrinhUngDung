@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
-using Volunteer_website.Data;
+using Volunteer_website.ViewModels;
 using Volunteer_website.Models;
 using Volunteer_website.Services;
 namespace Volunteer_website.Controllers
@@ -53,8 +53,9 @@ namespace Volunteer_website.Controllers
                     Organization = e.Org != null ? e.Org.Name ?? "N/A" : "N/A",
                     targetmember = e.TargetMember ?? 0,
                     targetfund = e.TargetFunds.HasValue ? (int)e.TargetFunds.Value : 0,
-                    currentmember = e.EventVolunteers.Count(ev => ev.Status == "Được duyệt"),
-                    currentfund = e.Donations != null ? (int)e.Donations.Sum(d => d.Amount ?? 0) : 0
+                    currentmember = e.Registrations.Count(ev => ev.Status == "Được duyệt"),
+                    currentfund = e.Donations != null ? (int)e.Donations.Sum(d => d.Amount ?? 0) : 0,
+                    type = e.TypeEventName ?? "N/A"
                 })
                 .ToList();
 
@@ -149,7 +150,7 @@ namespace Volunteer_website.Controllers
         public IActionResult Volunteer_List()
         {
             var volunteers = (from v in _context.Volunteers
-                              join ev in _context.EventVolunteers
+                              join ev in _context.Registrations
                               on v.VolunteerId equals ev.VolunteerId
                               where ev.Status == "Đã tham gia"
                               select new Volunteer_List
@@ -158,7 +159,7 @@ namespace Volunteer_website.Controllers
                                   Name = v.Name,
                                   Email = v.Email,
                                   PhoneNumber = v.PhoneNumber,
-                                  JoinDate = ev.EventVolunteerDate
+                                  JoinDate = ev.RegisterAt
                               })
                               .Distinct()
                               .ToList();

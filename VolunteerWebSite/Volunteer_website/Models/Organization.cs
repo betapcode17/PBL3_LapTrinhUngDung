@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Volunteer_website.Data;
+namespace Volunteer_website.Models;
 
 public partial class Organization
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Volunteer_website.Models
+namespace Volunteer_website.ViewModels
 {
     public class Update_ContactModel
     {

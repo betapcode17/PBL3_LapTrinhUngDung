@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Volunteer_website.Data;
 using Volunteer_website.Models;
+using Volunteer_website.ViewModels;
 using Volunteer_website.Services;
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddControllersWithViews();
 
@@ -41,5 +42,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();

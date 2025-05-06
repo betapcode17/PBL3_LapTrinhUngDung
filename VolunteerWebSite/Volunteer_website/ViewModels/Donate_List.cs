@@ -1,4 +1,4 @@
-﻿namespace Volunteer_website.Models
+﻿namespace Volunteer_website.ViewModels
 {
     public class Donate_List
     {
@@ -7,6 +7,6 @@
         public string? Volunteer_Id { get; set; }
         public string EventId { get; set; }
         public decimal? Amount { get; set; }
-        public DateTime DonationDate { get; set; }
+        public DateTime? DonationDate { get; set; }
     }
 }
