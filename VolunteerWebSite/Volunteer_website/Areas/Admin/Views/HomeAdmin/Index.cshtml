@@ -1,0 +1,240 @@
+﻿﻿
+@using X.PagedList.Mvc.Core
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Phần tiêu đề -->
+    <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
+        <h1 class="text-center my-4 heading-title">Dashboard</h1>
+    </div>
+
+    <!-- Phần thân -->
+    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
+        <div class="container-fluid">
+            <div class="row">
+
+
+                <div class="col-md-4 col-lg-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="me-3 bg-success bg-opacity-25 rounded p-3">
+                                <i class="bi bi-person-lines-fill fs-2 text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-danger fw-bold">TOTAL VOLUNTEERS</h6>
+                                <h4 class="fw-bold"></h4>
+                                <small class="text-muted">Total number of managed volunteers.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="me-3 bg-primary bg-opacity-25 rounded p-3">
+                                <i class="bi bi-calendar-event fs-2 text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-danger fw-bold">TOTAL EVENTS</h6>
+                                <h4 class="fw-bold"></h4>
+                                <small class="text-muted">Total number of organized events.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="me-3 bg-warning bg-opacity-25 rounded p-3">
+                                <i class="bi bi-pencil-square fs-2 text-warning"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-danger fw-bold">TOTAL DONATIONS</h6>
+                                <h4 class="fw-bold"></h4>
+                                <small class="text-muted">Total number of Donations.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Number of events</h4>
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/OrgLayout/DeleteEvent.js"></script>
+<script src="~/OrgLayout/EventDetail.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const currentYear = new Date().getFullYear();
+    const Years = [];
+    // const Events = @Html.Raw(Json.Serialize(ViewBag.EventsByYear)); Sử dụng mảng từ ViewBag
+    for (let i = 5; i >= 0; i--) {
+        Years.push(currentYear - i);
+    }
+
+    const ctx = document.getElementById("barChart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Years,
+        datasets: [
+          //Number of volunteers
+          {
+            label: "",
+            data: Events,
+            backgroundColor: "rgba(255, 99, 132, 0.3)",
+            borderColor: "rgba(255, 99, 132, 1)",
+
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Year',
+              fontColor: '#6c7293',
+              fontSize: 12,
+              fontStyle: 'bold'
+            },
+            gridLines: {
+              display: true,
+              color: 'rgba(204, 204, 204, 0.1)'
+            }
+          }],
+
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Events',
+              fontColor: '#6c7293',
+              fontSize: 12,
+              fontStyle: 'bold'
+            },
+            gridLines: {
+              display: true,
+              color: 'rgba(204, 204, 204, 0.1)'
+            },
+
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+            }
+          }]
+        },
+      },
+    });
+</script>
+
+<script>
+    const currentYear = new Date().getFullYear();
+    const Years = [];
+    const Events = @Html.Raw(Json.Serialize(ViewBag.EventsByYear)); // Sử dụng mảng từ ViewBag
+    for (let i = 5; i >= 0; i--) {
+        Years.push(currentYear - i);
+    }
+
+    const ctx = document.getElementById("barChart1").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Years,
+        datasets: [
+          //Number of volunteers
+          {
+            label: "",
+            data: Events,
+            backgroundColor: "rgba(255, 99, 132, 0.3)",
+            borderColor: "rgba(255, 99, 132, 1)",
+
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Year',
+              fontColor: '#6c7293',
+              fontSize: 12,
+              fontStyle: 'bold'
+            },
+            gridLines: {
+              display: true,
+              color: 'rgba(204, 204, 204, 0.1)'
+            }
+          }],
+
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Events',
+              fontColor: '#6c7293',
+              fontSize: 12,
+              fontStyle: 'bold'
+            },
+            gridLines: {
+              display: true,
+              color: 'rgba(204, 204, 204, 0.1)'
+            },
+
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+            }
+          }]
+        },
+      },
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -37,60 +37,47 @@ body {
 
 .SignUpContainer h1 {
   position: absolute;
-  top: 0;
+  top: 40px;
   left: 50%;
-  display: flex; /*để có thể sử dụng align-items và justify-content*/
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  transform: translateX(
-    -50%
-  ); /*đưa text về giữa, kết hợp với left: 50% và absolute*/
-  background-color: #d4d4d4;
+  transform: translateX(-50%);
+  /* background-color: #d4d4d4; */
   width: 140px;
   height: 60px;
   border-radius: 0 0 20px 20px;
+  color: #ffffff;
 }
 
 .inputBox {
-  position: relative;
   display: flex;
-  flex-direction: column; /*để các phần tử con nằm dọc*/
-  margin: 30px 0; /*khoảng cách giữa các input*/
+  flex-direction: column;
+  margin-bottom: 30px;
+  margin-top: 10px;
 }
 
 .inputLabel {
   font-size: 16px;
-  position: absolute; /*để text không bị đè lên input khi nhập */
   top: 50%;
-  transform: translateY(-50%);
   left: 20px;
   color: #c6c3c3;
-  pointer-events: none; /*loại bỏ sự kiện click vào text*/
-  transition: 0.3s ease all; /*hiệu ứng chuyển động khi focus vào input*/
-}
-
-.inputField:focus ~ .inputLabel,
-.inputField:valid ~ .inputLabel {
-  top: -10px;
-  left: 20px;
-  font-size: 14px;
-  color: #ffffff;
+  pointer-events: none;
+  margin: 10px;
 }
 
 .inputField {
   width: 100%;
   height: 55px;
-  padding-top: 5px; /*khoảng cách giữa chữ và viền*/
-  background: transparent; /*nền trong suốt*/
-  border: 2px solid #c6c3c3; /* solid: đường viền đậm, #c6c3c3: màu xám nhạt*/
+  padding: 5px 20px;
+  background: transparent;
+  border: 2px solid #c6c3c3;
   border-radius: 15px;
-  color: #ffffff; /*màu chữ trắng */
+  color: #ffffff;
   font-size: 16px;
-  padding-inline: 20px; /*khoảng cách giữa chữ và viền*/
-  outline: none; /*loại bỏ viền khi click vào input*/
+  outline: none;
 }
-
 .genderBox {
   font-size: 16px;
   color: #c6c3c3;

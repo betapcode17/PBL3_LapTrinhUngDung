@@ -21,3 +21,4 @@ public partial class Registration
 
     public virtual Volunteer? Volunteer { get; set; }
 }
+

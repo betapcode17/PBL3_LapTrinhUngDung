@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
@@ -8,6 +9,7 @@ using Volunteer_website.Models;
 using Volunteer_website.Services;
 namespace Volunteer_website.Controllers
 {
+   
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,6 +24,10 @@ namespace Volunteer_website.Controllers
 
         public IActionResult Index()
         {
+            if(User.IsInRole("2"))
+            {
+                return RedirectToAction("Index", "HomeAdmin", new { area = "Admin"});
+            }
             return View();
         }
 
