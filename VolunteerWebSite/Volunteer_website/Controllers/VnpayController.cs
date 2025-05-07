@@ -10,9 +10,9 @@ namespace Volunteer_website.Controllers
     public class VNPayController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly VolunteerDbContext _context;
+        private readonly VolunteerManagementContext _context;
 
-        public VNPayController(IConfiguration configuration, VolunteerDbContext context)
+        public VNPayController(IConfiguration configuration, VolunteerManagementContext context)
         {
             _configuration = configuration;
             _context = context;

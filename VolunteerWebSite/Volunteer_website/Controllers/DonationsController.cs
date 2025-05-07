@@ -10,10 +10,10 @@ namespace Volunteer_website.Controllers
 {
     public class DonationsController : Controller
     {
-        private readonly VolunteerDbContext _context;
+        private readonly VolunteerManagementContext _context;
         private readonly ILogger<DonationsController> _logger;
         private readonly IVnPayService _vnPayService;
-        public DonationsController(VolunteerDbContext context, ILogger<DonationsController> logger, IVnPayService vnPayService)
+        public DonationsController(VolunteerManagementContext context, ILogger<DonationsController> logger, IVnPayService vnPayService)
         {
             _context = context;
             _logger = logger;

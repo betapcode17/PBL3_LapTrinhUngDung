@@ -7,9 +7,9 @@ namespace Volunteer_website.Controllers
     
     public class EventRegistrationController : Controller
     {
-        private readonly VolunteerDbContext _context;
+        private readonly VolunteerManagementContext _context;
 
-        public EventRegistrationController(VolunteerDbContext context)
+        public EventRegistrationController(VolunteerManagementContext context)
         {
             _context = context;
         }

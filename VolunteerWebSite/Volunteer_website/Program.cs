@@ -16,7 +16,7 @@ builder.Services.AddSession(options =>
 //Connect Vnpay
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
-builder.Services.AddDbContext<VolunteerDbContext>(options =>
+builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
 });

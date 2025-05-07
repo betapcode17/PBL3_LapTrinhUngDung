@@ -9,8 +9,8 @@ namespace Volunteer_website.Controllers
 {
     public class ManageController:Controller
     {
-        private readonly VolunteerDbContext _context;
-        public ManageController(VolunteerDbContext context)
+        private readonly VolunteerManagementContext _context;
+        public ManageController(VolunteerManagementContext context)
         {
             _context = context;
         }

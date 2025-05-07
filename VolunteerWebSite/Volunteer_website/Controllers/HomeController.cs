@@ -11,9 +11,9 @@ namespace Volunteer_website.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly VolunteerDbContext _context;
+        private readonly VolunteerManagementContext _context;
         private readonly IVnPayService _vnPayService;
-        public HomeController(ILogger<HomeController> logger, VolunteerDbContext context, IVnPayService vnPayService)
+        public HomeController(ILogger<HomeController> logger, VolunteerManagementContext context, IVnPayService vnPayService)
         {
             _logger = logger;
             _context = context;

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Volunteer_website.Models;
 
-public partial class VolunteerDbContext : DbContext
+public partial class VolunteerManagementContext : DbContext
 {
-    public VolunteerDbContext()
+    public VolunteerManagementContext()
     {
     }
 
-    public VolunteerDbContext(DbContextOptions<VolunteerDbContext> options)
+    public VolunteerManagementContext(DbContextOptions<VolunteerManagementContext> options)
         : base(options)
     {
     }

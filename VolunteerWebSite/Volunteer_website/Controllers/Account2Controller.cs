@@ -10,9 +10,9 @@ namespace Volunteer_website.Controllers
 {
     public class Account2controller : Controller
     {
-        private readonly VolunteerDbContext _context;
+        private readonly VolunteerManagementContext _context;
 
-        public Account2controller(VolunteerDbContext context)
+        public Account2controller(VolunteerManagementContext context)
         {
             _context = context;
         }
