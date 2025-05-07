@@ -23,7 +23,7 @@
                 <h1>Login</h1>
             </div>
 
-            @using (Html.BeginForm("SignIn", "Account", FormMethod.Post))
+            @using (Html.BeginForm("SignIn", "Account2", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
 
@@ -42,7 +42,7 @@
                 <div>
                     <a href="#">Forgot password?</a>
                     <button type="submit">Login</button>
-                    <a href="~/Account/Sign_Up">Don't have an account?</a>
+                    <a href="~/Account2/Sign_Up">Don't have an account?</a>
                 </div>
             }
         </div>

@@ -8,11 +8,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Volunteer_website.Controllers
 {
-    public class AccountController : Controller
+    public class Account2controller : Controller
     {
         private readonly VolunteerDbContext _context;
 
-        public AccountController(VolunteerDbContext context)
+        public Account2controller(VolunteerDbContext context)
         {
             _context = context;
         }

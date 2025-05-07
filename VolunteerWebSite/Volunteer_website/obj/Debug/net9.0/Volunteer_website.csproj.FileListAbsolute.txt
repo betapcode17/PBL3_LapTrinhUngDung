@@ -1002,6 +1002,7 @@ C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Voluntee
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\4c7jkdgb1q-e26wuau6cr.gz
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\5zq45j2vtk-9u7knshsau.gz
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\lqqc0vp7d9-m4e5ahxqx2.gz
+C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\ylm8w8cslz-we7dqg5gnk.gz
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\mkihr5if6r-7inezvynph.gz
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\pqyi9wp2c5-q0b4juflvm.gz
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\xodkhndtpa-tkk639inoe.gz
@@ -1136,4 +1137,3 @@ C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Voluntee
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\Volunteer_website.pdb
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\Volunteer_website.genruntimeconfig.cache
 C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\ref\Volunteer_website.dll
-C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\ylm8w8cslz-we7dqg5gnk.gz

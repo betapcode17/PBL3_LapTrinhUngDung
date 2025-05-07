@@ -24,7 +24,7 @@
             <div class="navbar-dropdown">
                 <img id="avatar" src="~/images/person_6.jpg" alt="Avatar" />
                 <div id="dropdown-menu" class="navbar-dropdown-menu">
-                    <a asp-controller="Account" asp-action="Settings">
+                    <a asp-controller="Account2" asp-action="Settings">
                         <i class="fa-solid fa-cog"></i>Cài đặt
                     </a>
                     <hr />
@@ -39,19 +39,19 @@
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-    <a asp-controller="Account" asp-action="Manage"><i class="fa-solid fa-house"></i>Trang chủ</a>
+    <a asp-controller="Account2" asp-action="Manage"><i class="fa-solid fa-house"></i>Trang chủ</a>
     <div class="sidebar-dropdown">
         <a href="#"><i class="fa-solid fa-address-card"></i>Hồ sơ</a>
         <div class="sidebar-dropdown-menu">
-            <a asp-controller="Account" asp-action="Update_Infor">
+            <a asp-controller="Account2" asp-action="Update_Infor">
                 <i class="fa-solid fa-user"></i>Thông Tin Cá Nhân
             </a>
-            <a asp-controller="Account" asp-action="Contact_Infor">
+            <a asp-controller="Account2" asp-action="Contact_Infor">
                 <i class="fa-solid fa-address-book"></i>Thông Tin Liên Hệ
             </a>
         </div>
     </div>
-    <a asp-controller="Account" asp-action="Change_PassWord"><i class="fa-solid fa-lock"></i>Bảo mật</a>
+    <a asp-controller="Account2" asp-action="Change_PassWord"><i class="fa-solid fa-lock"></i>Bảo mật</a>
 </div>
 
 <!-- Main Content -->
@@ -71,7 +71,7 @@
                 <input type="file" id="avatarUpload" class="d-none" accept="image/*" />
             </div>
 
-            <form method="post" asp-action="Update_Info" asp-controller="Account" class="mt-4">
+            <form method="post" asp-action="Update_Info" asp-controller="Account2" class="mt-4">
 
                 <div class="mb-3">
                     <label class="form-label">Tên tài khoản</label>

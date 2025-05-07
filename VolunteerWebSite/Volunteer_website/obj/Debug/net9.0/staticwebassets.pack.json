@@ -365,6 +365,10 @@
       "PackagePath": "staticwebassets\\images\\Huy&Dat.jpg"
     },
     {
+      "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\images\\Sk1.jpg",
+      "PackagePath": "staticwebassets\\images\\Sk1.jpg"
+    },
+    {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\images\\VolunteerIcon.png",
       "PackagePath": "staticwebassets\\images\\VolunteerIcon.png"
     },
@@ -519,10 +523,6 @@
     {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\images\\person_9.jpg",
       "PackagePath": "staticwebassets\\images\\person_9.jpg"
-    },
-    {
-      "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\images\\sk1.jpg",
-      "PackagePath": "staticwebassets\\images\\sk1.jpg"
     },
     {
       "Id": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\wwwroot\\images\\sk10.jpg",

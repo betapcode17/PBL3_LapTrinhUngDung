@@ -273,7 +273,7 @@ wwwroot\images\person_6.jpg
 wwwroot\images\person_7.jpg
 wwwroot\images\person_8.jpg
 wwwroot\images\person_9.jpg
-wwwroot\images\sk1.jpg
+wwwroot\images\Sk1.jpg
 wwwroot\images\sk10.jpg
 wwwroot\images\sk11.jpg
 wwwroot\images\sk2.jpg
