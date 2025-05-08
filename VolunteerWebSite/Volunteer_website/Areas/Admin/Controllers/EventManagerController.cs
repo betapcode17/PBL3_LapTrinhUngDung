@@ -44,7 +44,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
         {
-            Console.WriteLine("Dagoiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             try
             {
                 //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
@@ -75,7 +74,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
         {
-            Console.WriteLine("Dagoiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             try
             {
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
@@ -100,6 +98,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #endregion
 
         #region lấy dữ liệu event
+        [Route("GetEventDetails")]
         public async Task<IActionResult> GetEventDetails(string id)
         {
             var eventObj = await _db.Events
@@ -130,7 +129,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     dayEnd = eventObj.DayEnd,
                     targetMember = eventObj.TargetMember,
                     targetFunds = eventObj.TargetFunds,
-                    type_event_name = eventObj.TypeEventName,
+                    //type_event_name = eventObj.TypeEventName,
                     organizationName = eventObj.Org?.Name,
                     status = eventObj.Status,
                     imagePath = eventObj.ImagePath,

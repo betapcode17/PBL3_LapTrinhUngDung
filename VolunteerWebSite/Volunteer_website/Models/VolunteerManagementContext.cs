@@ -23,6 +23,8 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
+    public virtual DbSet<EventType> EventTypes { get; set; }
+
     public virtual DbSet<Organization> Organizations { get; set; }
 
     public virtual DbSet<Registration> Registrations { get; set; }
@@ -30,7 +32,6 @@ public partial class VolunteerManagementContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Volunteer> Volunteers { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -68,7 +69,9 @@ public partial class VolunteerManagementContext : DbContext
             entity.Property(e => e.Amount)
                 .HasColumnType("money")
                 .HasColumnName("amount");
-            entity.Property(e => e.DonationDate).HasColumnName("donation_date");
+            entity.Property(e => e.DonationDate)
+                .HasColumnType("datetime")
+                .HasColumnName("donation_date");
             entity.Property(e => e.EventId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -146,13 +149,39 @@ public partial class VolunteerManagementContext : DbContext
                 .HasColumnName("status");
             entity.Property(e => e.TargetFunds).HasColumnName("target_funds");
             entity.Property(e => e.TargetMember).HasColumnName("target_member");
-            entity.Property(e => e.TypeEventName)
-                .HasMaxLength(100)
-                .HasColumnName("type_event_name");
+            entity.Property(e => e.TypeEventId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("type_event_id");
 
             entity.HasOne(d => d.Org).WithMany(p => p.Events)
                 .HasForeignKey(d => d.OrgId)
                 .HasConstraintName("FK__Events__org_id__4E88ABD4");
+
+            entity.HasOne(d => d.TypeEvent).WithMany(p => p.Events)
+                .HasForeignKey(d => d.TypeEventId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Events_EventType");
+        });
+
+        modelBuilder.Entity<EventType>(entity =>
+        {
+            entity.HasKey(e => e.TypeEventId).HasName("PK__EventTyp__9AB5A4B027EAEFA3");
+
+            entity.ToTable("EventType");
+
+            entity.HasIndex(e => e.Name, "UQ_EventType_Name").IsUnique();
+
+            entity.Property(e => e.TypeEventId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("type_event_id");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Organization>(entity =>
@@ -199,7 +228,9 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("event_id");
-            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)
                 .IsUnicode(false)

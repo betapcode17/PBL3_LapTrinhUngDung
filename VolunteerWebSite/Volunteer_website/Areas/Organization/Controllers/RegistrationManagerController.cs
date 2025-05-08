@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
-    [Area("Organization")]
-    [Route("[area]/[controller]/[action]")] // Sửa lại route template
     [Authorize("Org")]
+    [Area("Organization")]
+    [Route("Organization/RegistrationManager")] // Sửa lại route template
     public class RegistrationManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -72,7 +72,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                     return Json(new { success = false, message = "Registration not found" });
                 }
 
-                registration.Status = status;
+                //registration.Status = status;
                 _db.SaveChanges();
                 TempData["SuccessMessage"] = "Duyệt đơn đăng kí thành công";
                 return Json(new
@@ -93,7 +93,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [HttpGet]
+        [Route("GetVolunteerDetails")]
         public IActionResult GetVolunteerDetails(string id)
         {
             try

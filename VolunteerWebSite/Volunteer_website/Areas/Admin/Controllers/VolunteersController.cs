@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Volunteer_website.Areas.Admin.Data;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 
@@ -33,122 +35,49 @@ namespace Volunteer_website.Areas.Admin.Controllers
             return View(listVolunteers);
         }
 
-        public async Task<IActionResult> Details(string id)
+        #region GetVolunteerDetails
+        public IActionResult GetVolunteerDetails(string id)
         {
-            if (id == null)
+            Console.WriteLine("O Dayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+            try
             {
-                return NotFound();
-            }
-
-            var volunteer = await _context.Volunteers
-                .FirstOrDefaultAsync(m => m.VolunteerId == id);
-            if (volunteer == null)
-            {
-                return NotFound();
-            }
-
-            return View(volunteer);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VolunteerId,PhoneNumber,Email,Name,DateOfBirth,Gender,ImagePath,Address")] Volunteer volunteer)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(volunteer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(volunteer);
-        }
-
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var volunteer = await _context.Volunteers.FindAsync(id);
-            if (volunteer == null)
-            {
-                return NotFound();
-            }
-            return View(volunteer);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("VolunteerId,PhoneNumber,Email,Name,DateOfBirth,Gender,ImagePath,Address")] Volunteer volunteer)
-        {
-            if (id != volunteer.VolunteerId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                var volunteer = _context.Volunteers
+                    .FirstOrDefault(v => v.VolunteerId == id);
+                Console.WriteLine(id);
+                Console.WriteLine(volunteer.VolunteerId);
+                Console.WriteLine("O Dayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+                if (volunteer == null)
                 {
-                    _context.Update(volunteer);
-                    await _context.SaveChangesAsync();
+                    return Json(new { success = false, message = "Volunteer not found" });
                 }
-                catch (DbUpdateConcurrencyException)
+
+                return Json(new
                 {
-                    if (!VolunteerExists(volunteer.VolunteerId))
+                    success = true,
+                    data = new
                     {
-                        return NotFound();
+                        volunteerId = volunteer.VolunteerId,
+                        name = volunteer.Name,
+                        email = volunteer.Email,
+                        phoneNumber = volunteer.PhoneNumber,
+                        dateOfBirth = volunteer.DateOfBirth?.ToString("dd/MM/yyyy"),
+                        gender = volunteer.Gender.HasValue ?
+                            (volunteer.Gender.Value ? "Male" : "Female") : "Not specified",
+                        imagePath = volunteer.ImagePath,
+                        address = volunteer.Address
                     }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                });
             }
-            return View(volunteer);
-        }
-
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while fetching volunteer details",
+                    error = ex.Message
+                });
             }
-
-            var volunteer = await _context.Volunteers
-                .FirstOrDefaultAsync(m => m.VolunteerId == id);
-            if (volunteer == null)
-            {
-                return NotFound();
-            }
-
-            return View(volunteer);
         }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var volunteer = await _context.Volunteers.FindAsync(id);
-            if (volunteer != null)
-            {
-                _context.Volunteers.Remove(volunteer);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool VolunteerExists(string id)
-        {
-            return _context.Volunteers.Any(e => e.VolunteerId == id);
-        }
+        #endregion
     }
 }

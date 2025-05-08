@@ -1,6 +1,7 @@
-function showVolunteerDetails(regId) {
+//tham số url có dạng /Areas/controller/action
+function showVolunteerDetails(regId, url) {
   $.ajax({
-    url: "/Organization/HomeOrg/GetVolunteerDetails",
+    url: url,
     type: "GET",
     data: { id: regId },
     success: function (response) {

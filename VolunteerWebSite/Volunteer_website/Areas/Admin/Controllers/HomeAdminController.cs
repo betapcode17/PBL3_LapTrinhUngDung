@@ -65,66 +65,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        //#region Duyệt sự kiện 
-
-        //[HttpPost]
-        //[Route("acceptEvent")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> acceptEvent([FromBody] EventRequest request)
-        //{
-        //    try
-        //    {
-        //        //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
-        //        //Console.WriteLine(firstEvent.EventId);
-        //        var EventId = request.EventId;
-        //        var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
-        //        if (existingEvent == null)
-        //        {
-        //            return Json(new { success = false, message = "Event not found" });
-        //        }
-
-        //        // chuyển trạng thái status
-        //        existingEvent.Status = "ACCEPT";
-
-        //        _db.Update(existingEvent);
-        //        await _db.SaveChangesAsync();
-
-        //        return Json(new { success = true, message = "Event accepted successfully" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = ex.Message });
-        //    }
-        //}
-
-        //[HttpPost]
-        //[Route("rejectEvent")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> rejectEvent([FromBody] EventRequest request)
-        //{
-        //    try
-        //    {
-        //        var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
-        //        if (existingEvent == null)
-        //        {
-        //            return Json(new { success = false, message = "Event not found" });
-        //        }
-
-        //        // chuyển trạng thái status
-        //        existingEvent.Status = "REJECT";
-
-        //        _db.Update(existingEvent);
-        //        await _db.SaveChangesAsync();
-
-        //        return Json(new { success = true, message = "Event rejected successfully" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = ex.Message });
-        //    }
-        //}
-        //#endregion
-
         #region Danh sách user
         [Route("Volunteers")]
         public IActionResult Volunteers(int? page)
@@ -171,7 +111,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     {
                         eventId = events.EventId,
                         orgId = events.OrgId,
-                        typeEventName = events.TypeEventName,
+                        //typeEventName = events.TypeEventName,
                         name = events.Name,
                         description = events.Description,
                         dayBegin = events.DayBegin?.ToString("dd/MM/yyyy"),
@@ -262,7 +202,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return View("CreateEvent", eventModel);
             }
 
-            if(eventModel == null)
+            if (eventModel == null)
             {
                 TempData["ErrorMessage"] = "Đã gặp lỗi không truyền được dữ liệu để xử lý.";
                 return View("CreateEvent", eventModel);
@@ -300,13 +240,13 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 eventModel.ListImg = string.Join(",", imagePaths);
             }
 
-            if(eventModel.DayBegin > eventModel.DayEnd)
+            if (eventModel.DayBegin > eventModel.DayEnd)
             {
                 TempData["ErrorMessage"] = "Đã gặp lỗi không truyền được dữ liệu để xử lý.";
                 return View("CreateEvent", eventModel);
             }
 
-            if(eventModel.TargetFunds < 0)
+            if (eventModel.TargetFunds < 0)
             {
                 TempData["ErrorMessage"] = "Target Fund cannot be negative.";
                 return View("CreateEvent", eventModel);
@@ -347,7 +287,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return RedirectToAction("Event");
             }
 
-            var eventToDelete =await _db.Events.FirstOrDefaultAsync(ev => ev.EventId == id);
+            var eventToDelete = await _db.Events.FirstOrDefaultAsync(ev => ev.EventId == id);
             if (eventToDelete != null)
             {
                 try
@@ -390,7 +330,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     return Json(new { success = false, message = "Registration not found" });
                 }
 
-                registration.Status = status;
+                //registration.Status = status;
                 _db.SaveChanges();
 
                 return Json(new

@@ -79,7 +79,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             existingEvent.Name = model.Name;
             existingEvent.TargetMember = model.TargetMember;
             existingEvent.Status = model.Status;
-            existingEvent.TypeEventName = model.TypeEventName;
+            //existingEvent.TypeEventName = model.TypeEventName;
             existingEvent.DayBegin = model.DayBegin;
             existingEvent.DayEnd = model.DayEnd;
             existingEvent.Location = model.Location;

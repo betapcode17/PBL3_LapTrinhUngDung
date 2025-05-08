@@ -2,6 +2,6 @@
 {
     public class EventRequest
     {
-        public string requi EventId { get; set; }
+        public string EventId { get; set; }
     }
 }
