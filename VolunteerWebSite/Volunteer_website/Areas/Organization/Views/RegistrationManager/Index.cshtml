@@ -188,19 +188,23 @@
             @if (Model.HasPreviousPage)
             {
                 <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })"
-                   class="pagination-link rounded me-1">«</a>
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
             }
 
             @for (int i = 1; i <= Model.PageCount; i++)
             {
                 <a href="@Url.Action("Index", new { page = i })"
-                   class="pagination-link rounded me-1 @(i == Model.PageNumber ? "active btn btn-primary" : "btn btn-outline-secondary")">@i</a>
+                   class="pagination-link @(i == Model.PageNumber ? "active" : "")">@i</a>
             }
 
             @if (Model.HasNextPage)
             {
                 <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })"
-                   class="pagination-link rounded">»</a>
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             }
         </div>
     </div>

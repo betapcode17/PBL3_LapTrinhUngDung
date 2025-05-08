@@ -106,31 +106,29 @@
             </table>
         </div>
 
-     
+
 
 
         <div class="pagination d-flex justify-content-center mt-4">
             @if (Model.HasPreviousPage)
             {
                 <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })"
-                   class="pagination-link btn btn-warning custom-small-btn rounded-pill me-1 d-flex align-items-center">
-                    <i class="fas fa-chevron-left me-1"></i>
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-left"></i>
                 </a>
             }
 
             @for (int i = 1; i <= Model.PageCount; i++)
             {
                 <a href="@Url.Action("Index", new { page = i })"
-                   class="pagination-link btn custom-small-btn rounded-pill me-1 @(i == Model.PageNumber ? "btn-orange-active" : "btn-outline-orange")">
-                    @i
-                </a>
+                   class="pagination-link @(i == Model.PageNumber ? "active" : "")">@i</a>
             }
 
             @if (Model.HasNextPage)
             {
                 <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })"
-                   class="pagination-link btn btn-warning custom-small-btn rounded-pill d-flex align-items-center">
-                    <i class="fas fa-chevron-right ms-1"></i>
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-right"></i>
                 </a>
             }
         </div>
@@ -216,52 +214,8 @@
 
 
     </script>
-    <style>
-        .custom-small-btn {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.45rem;
-            line-height: 1.2; /* Slightly better for text alignment */
-            border-radius: 999px;
-            min-width: 32px;
-            text-align: center;
-            display: inline-flex; /* Better for icon alignment if needed */
-            align-items: center;
-            justify-content: center;
-            cursor: pointer; /* Make it obvious it's clickable */
-            font-weight: 500; /* Slightly bolder text */
-            transition: all 0.2s ease-in-out; /* Smoother transition */
-        }
+    
 
-        .btn-outline-orange {
-            color: #ff9800;
-            border: 1px solid #ff9800;
-            background-color: transparent;
-            transition: all 0.2s ease-in-out;
-        }
 
-            .btn-outline-orange:hover {
-                background-color: #ff9800;
-                color: #fff;
-                transform: translateY(-1px); /* Slight lift effect */
-                box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2); /* Subtle shadow */
-            }
-
-            .btn-outline-orange:active {
-                transform: translateY(0); /* Remove lift when clicked */
-            }
-
-        .btn-orange-active {
-            background-color: #ff9800;
-            color: white;
-            border: 1px solid #ff9800;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for pressed effect */
-        }
-
-        /* Optional focus state for accessibility */
-        .btn-outline-orange:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
-        }
-    </style>
 }
 <!-- Cột phải - Thông tin -->

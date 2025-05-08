@@ -4,16 +4,18 @@
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="~/AdminLayout/assets/css/revenue.css" rel="stylesheet" />
 
 <div class="container-fluid">
-    <!-- Overview Statistics -->
-    <!-- Phần tiêu đề -->
+    <!-- Header -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
         <h1 class="text-center my-4 heading-title">DashBoard</h1>
     </div>
-    <div class="row g-4  mb-4 mt-4">
+
+    <!-- Overview Statistics -->
+    <div class="row g-4 mb-4 mt-4">
         <div class="col-md-6 col-lg-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body d-flex align-items-center">
@@ -75,127 +77,99 @@
         </div>
     </div>
 
-
-    <!-- Time-based Statistics -->
+    <!-- Charts Section -->
     <div class="row g-4 mb-4">
-        <!-- Registrations by Month/Year -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Số Lượt Đăng Ký Theo Tháng</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="registrationsChart" style="height: 300px;"></canvas>
-                </div>
+            <!-- Filter Form -->
+            <div class="revenue-filter mb-4">
+                <form asp-action="Index" method="get" class="d-flex flex-wrap gap-2">
+                    <input type="date" name="startDate" class="form-control revenue-input"
+                           value="@ViewBag.StartDate" />
+                    <input type="date" name="endDate" class="form-control revenue-input"
+                           value="@ViewBag.EndDate" />
+                    <input type="text" name="searchValue" class="form-control revenue-input"
+                           placeholder="Tìm kiếm sự kiện..." value="@ViewBag.SearchValue" />
+                    <button type="submit" class="btn revenue-btn">
+                        <i class="fas fa-search"></i> Lọc
+                    </button>
+                </form>
             </div>
-        </div>
-        <!-- Events by Quarter -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Số Lượng Sự Kiện Theo Tháng</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="eventsByMonthChart" style="height: 300px;"></canvas>
-                </div>
-            </div>
-        </div>
-        <!-- New Volunteers by Month/Quarter -->
-       
 
-    </div>
-    <div class="row g-4 mb-4">
-
-        <!-- Events by Quarter -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Số lượt quyên góp theo tháng</h5>
+            <!-- Charts -->
+            <div class="row g-4">
+                <!-- Chart 1: Số lượt đăng kí theo thời gian -->
+                <div class="col-lg-6">
+                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                        <h3>Số lượt đăng kí theo thời gian</h3>
+                        <canvas id="registrationOverTimeChart" width="400" height="150"></canvas>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <canvas id="donationChart" style="height: 300px;"></canvas>
+
+                <!-- Chart 2: Số tiền ủng hộ theo thời gian -->
+                <div class="col-lg-6">
+                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                        <h3>Số tiền ủng hộ theo thời gian</h3>
+                        <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Số lượt đăng kí theo sự kiện -->
+                <div class="col-lg-6">
+                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                        <h3>Số lượt đăng kí theo sự kiện</h3>
+                        <canvas id="registrationByEventChart" width="400" height="150"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Số tiền ủng hộ theo sự kiện -->
+                <div class="col-lg-6">
+                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                        <h3>Số tiền ủng hộ theo sự kiện</h3>
+                        <canvas id="donationByEventChart" width="400" height="150"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- New Volunteers by Month/Quarter -->
-        <!-- Registrations by Month/Year -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Số tiền quyên góp Theo Tháng</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="donationAmountChart" style="height: 300px;"></canvas>
-                </div>
-            </div>
-        </div>
 
-    </div>
-
-    <!-- Event-based Statistics -->
-    <div class="row g-4 mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Thống Kê Theo Sự Kiện</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Sự Kiện</th>
-                                <th>Lượt Đăng Ký</th>
-                                <th>Được Duyệt</th>
-                                <th>Tỉ Lệ Hoàn Thành</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Evaluation Statistics -->
-    <div class="row g-4 mb-4">
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Đánh Giá Sự Kiện</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Điểm đánh giá trung bình:</strong> @ViewBag.AverageRating</p>
-                    <p><strong>Sự kiện cao nhất:</strong> @ViewBag.HighestRatedEvent</p>
-                    <p><strong>Sự kiện thấp nhất:</strong> @ViewBag.LowestRatedEvent</p>
-                    <p><strong>Số lượt đánh giá có feedback:</strong> @ViewBag.FeedbackCount</p>
-                </div>
-            </div>
-        </div>
-        <!-- Donation Statistics -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold text-dark mb-0">Thống Kê Quyên Góp</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Sự Kiện</th>
-                                <th>Tổng Số Tiền</th>
-                                <th>Số Người Tham Gia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+            <!-- Event Summary Table -->
+            <div class="row g-4 mt-4">
+                <div class="col-12">
+                    <div class="shadow-sm p-4 bg-white rounded">
+                        <h3 class="mb-4">Thống kê tổng hợp sự kiện</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Tên sự kiện</th>
+                                        <th>Số lượt tham gia</th>
+                                        <th>Số tiền ủng hộ (VND)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.EventSummary != null && ViewBag.EventSummary.Count > 0)
+                                    {
+                                        foreach (var item in ViewBag.EventSummary)
+                                        {
+                                            <tr>
+                                                <td>@item.EventName</td>
+                                                <td>@item.RegistrationCount</td>
+                                                <td>@item.DonationAmount.ToString("N0")</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted">Không có dữ liệu</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 
 <style>
     .bg-teal {
@@ -229,194 +203,157 @@
     .text-red {
         color: #dc3545 !important;
     }
+
+    /* Định dạng chung cho phân trang */
+    .pagination {
+        margin-top: 1.5rem;
+    }
+
+    .pagination-link {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px !important;
+        margin: 0 4px;
+        transition: all 0.3s ease;
+    }
+
+        .pagination-link:not(.active) {
+            background-color: #F8F9FA;
+            border: 1px solid #CED4DA;
+            color: #6C757D;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+            .pagination-link:not(.active):hover {
+                background-color: #A3CFFA;
+                border-color: #6C757D;
+                color: #343A40;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+        .pagination-link.active {
+            background-color: #A3CFFA !important;
+            border: 1px solid #6C757D !important;
+            color: #343A40 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-link i {
+            font-size: 0.9rem;
+        }
 </style>
 
-<script>
-       async function loadRegistrationChart() {
-        const response = await fetch('/Organization/Statistics/GetRegistrationByMonth');
-        const data = await response.json();
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Lưu dữ liệu từ ViewBag vào các biến JavaScript
+        const registrationLabels = @Html.Raw(Json.Serialize(ViewBag.RegistrationStatistics?.Labels ?? new string[0]));
+        const registrationData = @Html.Raw(Json.Serialize(ViewBag.RegistrationStatistics?.Data ?? new int[0]));
 
-        // Chuẩn bị 12 tháng mặc định
-        const labels = Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`);
-        const counts = Array(12).fill(0); // Mặc định 0 lượt
+        const donationLabels = @Html.Raw(Json.Serialize(ViewBag.DonationStatistics?.Labels ?? new string[0]));
+        const donationData = @Html.Raw(Json.Serialize(ViewBag.DonationStatistics?.Data ?? new decimal[0]));
 
-        // Đổ dữ liệu thực tế vào mảng counts
-        data.forEach(item => {
-            const monthIndex = item.month - 1; // Vì tháng bắt đầu từ 1
-            counts[monthIndex] = item.count;
-        });
+        const registrationByEventLabels = @Html.Raw(Json.Serialize(ViewBag.RegistrationByEventStatistics?.Labels ?? new string[0]));
+        const registrationByEventData = @Html.Raw(Json.Serialize(ViewBag.RegistrationByEventStatistics?.Data ?? new int[0]));
 
-        const ctx = document.getElementById('registrationsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Lượt Đăng Ký',
-                    data: counts,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } }
+        const donationByEventLabels = @Html.Raw(Json.Serialize(ViewBag.DonationByEventStatistics?.Labels ?? new string[0]));
+        const donationByEventData = @Html.Raw(Json.Serialize(ViewBag.DonationByEventStatistics?.Data ?? new decimal[0]));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            function createChart(canvasId, chartType, labels, data, label, yAxisTitle, colors = {}) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) {
+                    console.error(`Canvas element '${canvasId}' not found.`);
+                    return;
+                }
+
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: chartType,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: label,
+                                data: data,
+                                borderColor: colors.borderColor || 'rgba(75, 192, 192, 1)',
+                                backgroundColor: colors.backgroundColor || 'rgba(75, 192, 192, 0.2)',
+                                tension: 0.3,
+                                fill: chartType === 'line',
+                                borderWidth: 2,
+                                pointRadius: 3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: true },
+                                tooltip: { mode: 'index', intersect: false }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: chartType === 'line' ? 'Thời gian' : 'Sự kiện'
+                                    }
+                                },
+                                y: {
+                                    title: { display: true, text: yAxisTitle },
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.error(`Failed to get 2D context for '${canvasId}'.`);
+                }
             }
+
+            createChart(
+                'registrationOverTimeChart',
+                'line',
+                registrationLabels,
+                registrationData,
+                'Số lượt đăng ký',
+                'Số lượt đăng kí (Người)',
+                { borderColor: 'rgba(75, 192, 192, 1)', backgroundColor: 'rgba(75, 192, 192, 0.2)' }
+            );
+
+            createChart(
+                'DonationOverTimeChart',
+                'line',
+                donationLabels,
+                donationData,
+                'Số tiền ủng hộ',
+                'Số tiền ủng hộ (VND)',
+                { borderColor: 'rgba(75, 192, 192, 1)', backgroundColor: 'rgba(75, 192, 192, 0.2)' }
+            );
+
+            createChart(
+                'registrationByEventChart',
+                'bar',
+                registrationByEventLabels,
+                registrationByEventData,
+                'Số lượt đăng ký',
+                'Số lượt đăng kí (Người)',
+                { borderColor: 'rgba(153, 102, 255, 1)', backgroundColor: 'rgba(153, 102, 255, 0.2)' }
+            );
+
+            createChart(
+                'donationByEventChart',
+                'bar',
+                donationByEventLabels,
+                donationByEventData,
+                'Số tiền ủng hộ',
+                'Số tiền ủng hộ (VND)',
+                { borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)' }
+            );
         });
-    }
-       window.addEventListener('DOMContentLoaded', loadRegistrationChart);
-
-
-        async function loadEventsByMonthChart() {
-            const response = await fetch('/Organization/Statistics/GetEventsByMonth');
-            const data = await response.json();
-
-            const labels = Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`);
-            const counts = Array(12).fill(0);
-
-            data.forEach(item => {
-                const index = item.month - 1;
-                counts[index] = item.count;
-            });
-
-            const ctx = document.getElementById('eventsByMonthChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số lượng sự kiện',
-                        data: counts,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
-        }
-        window.addEventListener('DOMContentLoaded', loadEventsByMonthChart);
-
-
-
-      async function loadDonationChart() {
-        try {
-            const response = await fetch('/Organization/Statistics/GetDonationByMonth');
-            const data = await response.json();
-
-            // Tạo nhãn cho 12 tháng (Tháng 1 đến Tháng 12)
-            const labels = Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`);
-
-            // Tạo mảng counts với giá trị mặc định là 0 cho 12 tháng
-            const counts = Array(12).fill(0);
-
-            // Điền dữ liệu từ API vào mảng counts
-            data.forEach(item => {
-                const index = item.month - 1; // Tháng trong dữ liệu bắt đầu từ 1, nhưng mảng bắt đầu từ 0
-                counts[index] = item.count;
-            });
-
-            const ctx = document.getElementById('donationChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số lượt quyên góp',
-                        data: counts,
-                        backgroundColor: 'rgba(255, 99, 132, 0.4)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0 // Không hiển thị số lẻ
-                            }
-                        }
-                    }
-                }
-            });
-        } catch (err) {
-            console.error("Lỗi khi tải dữ liệu quyên góp:", err);
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', loadDonationChart);
-
-
-
-    async function loadDonationAmountChart() {
-        try {
-            const response = await fetch('/Organization/Statistics/GetDonationAmountByMonth');
-            const data = await response.json();
-
-            // Tạo nhãn cho 12 tháng (Tháng 1 đến Tháng 12)
-            const labels = Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`);
-
-            // Tạo mảng amounts với giá trị mặc định là 0 cho 12 tháng
-            const amounts = Array(12).fill(0);
-
-            // Điền dữ liệu từ API vào mảng amounts
-            data.forEach(item => {
-                const index = item.month - 1; // Tháng trong dữ liệu bắt đầu từ 1, nhưng mảng bắt đầu từ 0
-                amounts[index] = item.totalAmount;
-            });
-
-            const ctx = document.getElementById('donationAmountChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Tổng số tiền quyên góp',
-                        data: amounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.4)', // Blue color
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    // Format number with commas for better readability
-                                    return value.toLocaleString('vi-VN');
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    // Format tooltip with currency symbol
-                                    let value = context.parsed.y;
-                                    return `Số tiền: ${value.toLocaleString('vi-VN')} VNĐ`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        } catch (err) {
-            console.error("Lỗi khi tải dữ liệu số tiền quyên góp:", err);
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', loadDonationAmountChart);
-     
-</script>
+    </script>
+}
