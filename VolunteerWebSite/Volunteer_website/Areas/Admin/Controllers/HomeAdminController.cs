@@ -404,38 +404,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
 
         #endregion
 
-        #region Cập nhật trạng thái người tham gia
-        [HttpGet]
-        [Route("UpdateStatus")]
-        public IActionResult UpdateStatus(string regId, bool status)
-        {
-            try
-            {
-                var registration = _db.Registrations.FirstOrDefault(r => r.RegId == regId);
-                if (registration == null)
-                {
-                    return Json(new { success = false, message = "Registration not found" });
-                }
-
-                registration.Status = status;
-                _db.SaveChanges();
-
-                return Json(new
-                {
-                    success = true,
-                    message = status ? "Registration approved" : "Registration rejected"
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = $"Error: {ex.Message}"
-                });
-            }
-        }
-        #endregion
+       
 
         #region Xem chi tiết người tham gia
         [Route("GetVolunteerDetails")]

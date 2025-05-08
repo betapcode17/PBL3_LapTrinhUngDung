@@ -73,12 +73,14 @@
                                 }
                             </td>
                             <td>
-                                <span class="badge
-                                    @(item.Status == true ? "bg-success" :
-                                      item.Status == false ? "bg-danger" : "bg-warning")">
+                                <span class="badge status-badge
+                                @(item.Status == "PENDING" ? "bg-warning" :
+                                  item.Status == "ACCEPTED" ? "bg-success" :
+                                  "bg-danger") text-white fw-semibold text-uppercase">
                                     @item.Status
                                 </span>
                             </td>
+
                             <td class="action_btn">
                                 <!-- Approve Button -->
                                 <button type="button" class="btn btn-success btn-sm"
