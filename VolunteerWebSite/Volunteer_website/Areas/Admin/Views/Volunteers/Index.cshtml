@@ -73,6 +73,9 @@
                                             onclick="showVolunteerDetails('@item.VolunteerId', '/Admin/Volunteers/GetVolunteerDetails')">
                                         <i class="fas fa-eye"></i>
                                     </button>
+                                    <a class="btn btn-success btn-sm" asp-area="Admin" asp-controller="Volunteers" asp-action="ListEventReg" asp-route-volId="@item.VolunteerId" title="List Event">
+                                        <i class="fa fa-list-alt"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }

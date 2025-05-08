@@ -42,8 +42,24 @@
                     <input asp-for="OrgId" class="form-control" value="@ViewBag.OrgId" readonly name="OrgId" "/>
                 </div>
                 <div class="col-md-3 form-group">
-                    <label asp-for="type_event_name" class="form-label">Event Type</label>
-                    @* <input asp-for="type_event_name" class="form-control" name="type_event_name"  value="@Model.TypeEventName"/> *@
+                    <label asp-for="TypeEventId" class="form-label">Event Type</label>
+                    <select class="form-control" asp-for="TypeEventId" id="TypeEventSelected" name="TypeEventId" required>
+                        <option value="">-- Select Event Type --</option>
+                    @if (ViewBag.TypeEvents != null)
+                    {
+                        @foreach (var item in ViewBag.TypeEvents)
+                        {
+                                <option value="@item.Value" @(item.Value == Model?.TypeEventId?.ToString() ? "selected" : "")>
+                                @item.Text
+                                </option>
+                        }
+                    }
+                    else
+                    {
+                            <option value="">No Event Types Available</option>
+                    }
+                    </select>
+                    <span asp-validation-for="TypeEventId" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="DayBegin" class="form-label">Start Date</label>

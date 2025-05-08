@@ -123,8 +123,8 @@ namespace Volunteer_website.Areas.Organization.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-          
-            string newId = "EVL001"; 
+
+            string newId = "EVL0001";
 
             var maxId = _db.Evaluations
                 .Select(e => e.EvaluationId)
@@ -133,11 +133,9 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             if (!string.IsNullOrEmpty(maxId))
             {
-              
                 if (int.TryParse(maxId.Substring(3), out int numericPart))
                 {
-                    
-                    newId = $"EVL{(numericPart + 1).ToString("D3")}";
+                    newId = $"EVL{(numericPart + 1).ToString("D4")}"; // Định dạng thành 4 chữ số
                 }
             }
 
@@ -153,6 +151,8 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             ViewBag.Registrations = registrations;
 
+
+           
             return View(evaluationModel);
         }
         [HttpPost]

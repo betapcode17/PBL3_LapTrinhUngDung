@@ -1,5 +1,4 @@
-﻿//
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;

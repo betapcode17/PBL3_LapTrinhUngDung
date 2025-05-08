@@ -129,7 +129,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     dayEnd = eventObj.DayEnd,
                     targetMember = eventObj.TargetMember,
                     targetFunds = eventObj.TargetFunds,
-                    //type_event_name = eventObj.TypeEventName,
+                    type_event_name = eventObj.TypeEventId,
                     organizationName = eventObj.Org?.Name,
                     status = eventObj.Status,
                     imagePath = eventObj.ImagePath,

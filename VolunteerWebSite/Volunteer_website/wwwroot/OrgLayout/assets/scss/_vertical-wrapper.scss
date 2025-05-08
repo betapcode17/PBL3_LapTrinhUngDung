@@ -1,3 +1,4 @@
+@import 'variables';
 .page-body-wrapper {
   min-height: calc(100vh - #{$navbar-height});
   @include display-flex();

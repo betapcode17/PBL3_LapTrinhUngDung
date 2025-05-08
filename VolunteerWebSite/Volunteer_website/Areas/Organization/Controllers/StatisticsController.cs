@@ -127,7 +127,35 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var eventSummaryData = StatisticsEventSummary(searchValue, startDate, endDate);
             ViewBag.EventSummary = eventSummaryData;
 
-            ViewBag.SearchValue = searchValue;
+
+
+            // Lấy tổng số lượt đăng ký dựa trên startDate và endDate
+
+
+            var totalRegistrationsByDate = _db.Registrations
+      .Where(r => eventIds.Contains(r.EventId))
+      .ToList() // Fetch data to memory
+      .Count(r => r.RegisterAt.HasValue &&
+                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= DateTime.Parse(startDateOnly.ToString("yyyy-MM-dd")) &&
+                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= DateTime.Parse(endDateOnly.ToString("yyyy-MM-dd")));
+
+            ViewBag.TotalRegistrationsByDate = totalRegistrationsByDate;
+
+
+
+            // Lấy tổng số tiền ủng hộ dựa trên startDate và endDate (giả định bảng Donations)
+       //     var totalDonationByDate = _db.Donations
+       //.Where(d => eventIds.Contains(d.EventId))
+       //.ToList() // Fetch data to memory
+       //.Sum(d => d.DonationDate.HasValue &&
+       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) <= endDateOnly.ToDateTime(TimeOnly.MinValue)
+       //          ? d.Amount ?? 0
+       //          : 0);
+
+            //ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
+
+            
 
             return View();
         }

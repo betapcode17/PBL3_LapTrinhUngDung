@@ -5,6 +5,7 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Volunteer_website.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
@@ -58,7 +59,21 @@ namespace Volunteer_website.Areas.Organization.Controllers
             {
                 return NotFound();
             }
-            ViewBag.OrgId = eventModel.OrgId; 
+            ViewBag.OrgId = eventModel.OrgId;
+            // Lấy danh sách tất cả EventType từ bảng EventTypes
+            var typeEventsList = _db.EventTypes.ToList();
+
+            // Chuyển thành danh sách SelectListItem
+            var typeEventsSelectList = typeEventsList
+                .Select(et => new SelectListItem
+                {
+                    Value = et.TypeEventId, // Giá trị gửi lên là TypeEventId
+                    Text = et.Name          // Giá trị hiển thị là Name
+                })
+                .ToList();
+
+            // Lưu vào ViewBag
+            ViewBag.TypeEvents = typeEventsSelectList;
             return View(eventModel);
         }
         [HttpPost]
@@ -79,7 +94,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             existingEvent.Name = model.Name;
             existingEvent.TargetMember = model.TargetMember;
             existingEvent.Status = model.Status;
-            //existingEvent.TypeEventName = model.TypeEventName;
+            existingEvent.TypeEventId = model.TypeEventId;
             existingEvent.DayBegin = model.DayBegin;
             existingEvent.DayEnd = model.DayEnd;
             existingEvent.Location = model.Location;
@@ -119,28 +134,40 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 .OrderByDescending(e => e.EventId)
                 .FirstOrDefault();
 
-            string newEventId = "EVT1";
+            string newEventId = "E0001"; 
             if (lastEvent != null)
             {
-                // Giả sử EventId có định dạng "EVT" + số (EVT1, EVT2, ...)
-                string lastIdNumber = lastEvent.EventId.Replace("EVT", "");
+                string lastIdNumber = lastEvent.EventId.Replace("E", "");
                 if (int.TryParse(lastIdNumber, out int number))
                 {
-                    newEventId = $"EVT{number + 1}";
+                    newEventId = $"E{number + 1:D4}"; 
                 }
-            }         
+            }
             var model = new Event
             {
                 EventId = newEventId,
                 OrgId = orgId,
             };
+            // Lấy danh sách tất cả EventType từ bảng EventTypes
+            var typeEventsList = _db.EventTypes.ToList();
 
+            // Chuyển thành danh sách SelectListItem
+            var typeEventsSelectList = typeEventsList
+                .Select(et => new SelectListItem
+                {
+                    Value = et.TypeEventId, // Giá trị gửi lên là TypeEventId
+                    Text = et.Name          // Giá trị hiển thị là Name
+                })
+                .ToList();
+
+            // Lưu vào ViewBag
+            ViewBag.TypeEvents = typeEventsSelectList;
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Event eventModel,IFormFile imagePath,IFormFileCollection? listImg)  
+        public async Task<IActionResult> Create(Event eventModel,IFormFile? imagePath,IFormFileCollection? listImg)  
         {
             if (!ModelState.IsValid)
             {
@@ -228,34 +255,73 @@ namespace Volunteer_website.Areas.Organization.Controllers
         [HttpGet]
         public async Task<IActionResult> EventDetails(string id)
         {
+           
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound("Event ID is required.");
+            }
+
             var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(id)) return NotFound();
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return Unauthorized("User organization not found.");
+            }
 
-            // Lấy chi tiết sự kiện
-            var eventDetail = await _db.Events
-                                       .Where(x => x.EventId == id && x.OrgId == orgId)
-                                       .FirstOrDefaultAsync();
+            try
+            {
+               
+                var eventDetail = await _db.Events
+                    .Where(x => x.EventId == id && x.OrgId == orgId)
+                    .FirstOrDefaultAsync();
 
-            if (eventDetail == null) return NotFound();
+                if (eventDetail == null)
+                {
+                    return NotFound("Event not found.");
+                }
 
-            
-            var registrations = _db.Registrations
-                                    .Where(r => r.EventId == id)
-                                    .OrderByDescending(r => r.RegisterAt)
-                                    .Take(10)
-                                    .ToList();
+               
+                var registrations = await _db.Registrations
+                    .Where(r => r.EventId == id)
+                    .OrderByDescending(r => r.RegisterAt)
+                    .Take(10)
+                    .Join(
+                        _db.Volunteers,
+                        r => r.VolunteerId,
+                        v => v.VolunteerId,
+                        (r, v) => new
+                        {
+                            Name = v.Name ?? "Unknown",
+                            Time = r.RegisterAt.HasValue ? r.RegisterAt.Value.ToString("dd/MM/yyyy") : "N/A"
+                        })
+                    .ToListAsync();
 
-          
-            ViewBag.Participants = registrations
-         .Select(r => new
-         {
-             Name = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == r.VolunteerId)?.Name ?? "Unknown",
-             Time = r.RegisterAt.HasValue
-                     ? r.RegisterAt.Value.ToString("dd/MM/yyyy") // Adjusted format for DateOnly
-                     : "N/A"
-         }).ToList();
+               
+                var donations = await _db.Donations
+                    .Where(d => d.EventId == id) 
+                    .OrderByDescending(d => d.DonationDate)
+                    .Take(10)
+                    .Join(
+                        _db.Volunteers,
+                        d => d.VolunteerId,
+                        v => v.VolunteerId,
+                        (d, v) => new
+                        {
+                            Name = v.Name ?? "Unknown",
+                            Amount = d.Amount, 
+                            Time = d.DonationDate.HasValue ? d.DonationDate.Value.ToString("dd/MM/yyyy") : "N/A"
+                        })
+                    .ToListAsync();
 
-            return View(eventDetail);
+              
+                ViewBag.Participants = registrations;
+                ViewBag.Donations = donations;
+
+                return View(eventDetail);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while fetching event details.");
+            }
         }
         #endregion
 

@@ -49,7 +49,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [Route("BanUser")]
         public async Task<IActionResult> BanUser([FromBody] UserRequest request)
         {
-            Console.WriteLine("Da goiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             try
             {
                 var VolunteerId = request.UserId;

@@ -38,14 +38,12 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #region GetVolunteerDetails
         public IActionResult GetVolunteerDetails(string id)
         {
-            Console.WriteLine("O Dayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
             try
             {
                 var volunteer = _context.Volunteers
                     .FirstOrDefault(v => v.VolunteerId == id);
                 Console.WriteLine(id);
-                Console.WriteLine(volunteer.VolunteerId);
-                Console.WriteLine("O Dayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+                Console.WriteLine(volunteer!.VolunteerId);
                 if (volunteer == null)
                 {
                     return Json(new { success = false, message = "Volunteer not found" });
@@ -77,6 +75,38 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     error = ex.Message
                 });
             }
+        }
+        #endregion
+
+        #region List Event Reg
+        public IActionResult ListEventReg(string volId, int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+
+            var listEvents = _context.Registrations
+                .Where(r => r.VolunteerId == volId) 
+                .Select(r => new ListEventReg
+                {
+                    EventId = r.Event!.EventId,
+                    OrgId = r.Event.OrgId,
+                    TypeEvent = r.Event.TypeEvent.Name,
+                    Name = r.Event.Name, 
+                    Description = r.Event.Description,
+                    DayBegin = r.Event.DayBegin,
+                    DayEnd = r.Event.DayEnd,
+                    Location = r.Event.Location,
+                    TargetMember = r.Event.TargetMember,
+                    TargetFunds = r.Event.TargetFunds,
+                    IsActive = r.Event.IsActive,
+                    Status = r.Event.Status
+                })
+                .OrderBy(x => x.EventId)
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewData["volId"] = volId;
+
+            return View(listEvents);
         }
         #endregion
     }
