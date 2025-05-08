@@ -47,13 +47,12 @@
                            value="@ViewBag.SearchValue" />
 
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                        <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
         </div>
 
-      
         <div class="table-responsive">
             <table class="table table-bordered table-hover event-table shadow-sm">
                 <thead class="table-dark">
@@ -61,7 +60,7 @@
                         <th>Register ID</th>
                         <th>Volunteer Name</th>
                         <th>Event Name</th>
-                        <th>Event Date</th>
+                        <th>Registation Date</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -84,9 +83,9 @@
                                 }
                             </td>
                             <td>
-                                @if (item.Event?.DayBegin != null && item.Event?.DayEnd != null)
+                                @if (item.RegisterAt != null)
                                 {
-                                    @($"{item.Event.DayBegin:dd/MM/yyyy} - {item.Event.DayEnd:dd/MM/yyyy}")
+                                    @($"{item.RegisterAt:dd/MM/yyyy}")
                                 }
                                 else
                                 {
@@ -94,22 +93,23 @@
                                 }
                             </td>
                             <td>
-                                @*<span class="badge
-                                    @(item.Status == true ? "bg-success" :
-                                      item.Status == false ? "bg-danger" : "bg-warning")">
+                                <span class="badge status-badge
+                                @(item.Status == "PENDING" ? "bg-warning" :
+                                  item.Status == "ACCEPTED" ? "bg-success" :
+                                  "bg-danger") text-white fw-semibold text-uppercase">
                                     @item.Status
-                                </span>*@
+                                </span>
                             </td>
                             <td class="action_btn">
                                 <!-- Approve Button -->
                                 <button type="button" class="btn btn-success btn-sm"
-                                        onclick="confirmAction('@item.RegId', 'approve')">
+                                        onclick="confirmAction('@item.RegId', 'ACCEPTED')">
                                     <i class="fa-solid fa-check"></i>
                                 </button>
 
                                 <!-- Reject Button -->
                                 <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="confirmAction('@item.RegId', 'reject')">
+                                        onclick="confirmAction('@item.RegId', 'REJECTED')">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
 
@@ -118,11 +118,10 @@
                                         onclick="showVolunteerDetails('@item.VolunteerId')">
                                     <i class="fas fa-eye"></i>
                                 </button>
-
                             </td>
                         </tr>
                     }
-                    <!-- Volunteer Details Modal - Redesigned -->
+                    <!-- Volunteer Details Modal -->
                     <div class="modal fade" id="volunteerDetailsModal" tabindex="-1" aria-labelledby="volunteerDetailsModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -176,7 +175,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -212,107 +210,98 @@
 @section Scripts {
     <script>
         function showVolunteerDetails(regId) {
-          $.ajax({
-            url: "/Organization/RegistrationManager/GetVolunteerDetails",
-            type: "GET",
-            data: { id: regId },
-            success: function (response) {
-              if (response && response.success && response.data) {
-                const data = response.data;
+            $.ajax({
+                url: "/Organization/RegistrationManager/GetVolunteerDetails",
+                type: "GET",
+                data: { id: regId },
+                success: function (response) {
+                    if (response && response.success && response.data) {
+                        const data = response.data;
 
-                // Cập nhật thông tin
-                $("#volunteerId").text(`ID: ${data.volunteerId || "N/A"}`);
-                $("#volunteerName").text(data.name || "N/A");
-                $("#volunteerEmail").text(data.email || "N/A");
-                $("#volunteerPhone").text(data.phoneNumber || "N/A");
-                $("#volunteerDob").text(data.dateOfBirth || "N/A");
-                $("#volunteerGender").text(data.gender || "N/A");
-                $("#volunteerAddress").text(data.address || "N/A");
+                        $("#volunteerId").text(`ID: ${data.volunteerId || "N/A"}`);
+                        $("#volunteerName").text(data.name || "N/A");
+                        $("#volunteerEmail").text(data.email || "N/A");
+                        $("#volunteerPhone").text(data.phoneNumber || "N/A");
+                        $("#volunteerDob").text(data.dateOfBirth || "N/A");
+                        $("#volunteerGender").text(data.gender || "N/A");
+                        $("#volunteerAddress").text(data.address || "N/A");
 
-                // Cập nhật hình ảnh nếu có
-                if (data.imagePath) {
-                  $("#volunteerImage").attr("src", data.imagePath);
-                } else {
-                  $("#volunteerImage").attr(
-                    "src",
-                    "https://via.placeholder.com/200?text=No+Image"
-                  );
+                        if (data.imagePath) {
+                            $("#volunteerImage").attr("src", data.imagePath);
+                        } else {
+                            $("#volunteerImage").attr(
+                                "src",
+                                "https://via.placeholder.com/200?text=No+Image"
+                            );
+                        }
+
+                        $("#volunteerDetailsModal").modal("show");
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message || "Invalid response from server.",
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: xhr.responseJSON?.message || "Unable to fetch volunteer details.",
+                    });
                 }
-
-                // Hiển thị modal
-                $("#volunteerDetailsModal").modal("show");
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: response.message || "Invalid response from server.",
-                });
-              }
-            },
-            error: function (xhr) {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: xhr.responseJSON?.message || "Unable to fetch volunteer details.",
-              });
-            },
-          });
-        }
-        function confirmAction(regId, actionType) {
-          const actionText = actionType === "approve" ? "approve" : "reject";
-          const status = actionType === "approve"; // true for approve, false for reject
-          const actionColor = actionType === "approve" ? "#28a745" : "#dc3545";
-
-          Swal.fire({
-            title: `Are you sure to ${actionText} this registration?`,
-            text: "This action cannot be undone!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: actionColor,
-            cancelButtonColor: "#6c757d",
-            confirmButtonText: `Yes, ${actionText} it!`,
-            cancelButtonText: "Cancel",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              updateRegistrationStatus(regId, status);
-            }
-          });
-        }
-        function updateRegistrationStatus(regId, status) {
-          // Kiểm tra dữ liệu đầu vào
-          if (!regId || typeof status !== "boolean") {
-            Swal.fire("Lỗi", "Dữ liệu không hợp lệ", "error");
-            return;
-          }
-
-          // Sửa URL cho đúng định dạng
-          const url = `/Organization/RegistrationManager/Update?regId=${encodeURIComponent(
-            regId
-          )}&status=${status}`;
-
-          fetch(url)
-            .then((response) => {
-              if (!response.ok) throw new Error(`Lỗi HTTP! Status: ${response.status}`);
-              return response.json();
-            })
-            .then((data) => {
-              if (data.success) {
-                Swal.fire(
-                  "Thành công",
-                  "Cập nhật trạng thái thành công",
-                  "success"
-                ).then(() => window.location.reload());
-              } else {
-                throw new Error(data.message || "Cập nhật thất bại");
-              }
-            })
-            .catch((error) => {
-              console.error("Chi tiết lỗi:", error);
-              Swal.fire("Lỗi", error.message || "Có lỗi xảy ra khi cập nhật", "error");
             });
         }
-        
 
+        function confirmAction(regId, status) {
+            const actionText = status === "ACCEPTED" ? "approve" : "reject";
+            const actionColor = status === "ACCEPTED" ? "#28a745" : "#dc3545";
 
+            Swal.fire({
+                title: `Are you sure to ${actionText} this registration?`,
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: actionColor,
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: `Yes, ${actionText} it!`,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateRegistrationStatus(regId, status);
+                }
+            });
+        }
+
+        function updateRegistrationStatus(regId, status) {
+            if (!regId || !["ACCEPTED", "REJECTED"].includes(status)) {
+                Swal.fire("Lỗi", "Dữ liệu không hợp lệ", "error");
+                return;
+            }
+
+            const url = `/Organization/RegistrationManager/Update?regId=${encodeURIComponent(regId)}&status=${status}`;
+
+            fetch(url)
+                .then((response) => {
+                    if (!response.ok) throw new Error(`Lỗi HTTP! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.success) {
+                        Swal.fire(
+                            "Thành công",
+                            "Cập nhật trạng thái thành công",
+                            "success"
+                        ).then(() => window.location.reload());
+                    } else {
+                        throw new Error(data.message || "Cập nhật thất bại");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Chi tiết lỗi:", error);
+                    Swal.fire("Lỗi", error.message || "Có lỗi xảy ra khi cập nhật", "error");
+                });
+        }
     </script>
 }

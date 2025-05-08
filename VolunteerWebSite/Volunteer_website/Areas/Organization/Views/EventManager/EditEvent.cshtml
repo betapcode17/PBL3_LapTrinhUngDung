@@ -12,7 +12,7 @@
         <hr />
         <form method="post" asp-area="Organization" asp-action="EditEvent" asp-route-id="@Model.EventId" enctype="multipart/form-data" novalidate>
             <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
+            <input asp-for="Status" type="hidden" value="@Model.Status" name="Status" />
             <div class="row mb-3">
                 <div class="col-md-3 form-group">
                     <label asp-for="EventId" class="form-label">Event ID</label>
