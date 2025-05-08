@@ -32,65 +32,87 @@
   transform: translateY(-3px);
 }
 
-.revenue-filter form {
+/* Container bao quanh form lọc và nút Xuất Excel */
+.revenue-filter .d-flex {
   display: flex;
   align-items: center;
   gap: 15px;
   flex-wrap: wrap;
 }
 
+/* Form lọc */
+.revenue-filter form.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: nowrap; /* Không cho phép xuống dòng trong form lọc */
+  margin-right: 15px; /* Khoảng cách giữa form lọc và nút Xuất Excel */
+}
+
+/* Input trong form lọc */
 .revenue-input {
   flex: 1;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 150px;
+  max-width: 200px;
+  height: 40px; /* Đồng bộ chiều cao */
   border: 1px solid #dfe6e9;
   border-radius: 8px;
-  padding: 10px;
+  padding: 0 10px;
   font-size: 15px;
   transition: border-color 0.3s ease;
 }
 
+/* Focus cho input */
 .revenue-input:focus {
   border-color: #2b6cb0;
   box-shadow: 0 0 5px rgba(43, 108, 176, 0.3);
   outline: none;
 }
 
+/* Nút trong form (Lọc và Xuất Excel) */
 .revenue-btn {
-  flex: 0 0 150px; /* Đảm bảo các nút có kích thước bằng nhau */
-  background-color: #2b6cb0;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+  height: 40px; /* Đồng bộ chiều cao với input */
+  padding: 0 20px;
   font-size: 15px;
   font-weight: 500;
+  border-radius: 8px;
+  border: none;
   color: white;
   text-align: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
 }
 
-.revenue-btn:hover {
+/* Nút "Lọc" */
+.revenue-btn.filter-btn {
+  background-color: #2b6cb0;
+}
+
+/* Hiệu ứng hover cho nút "Lọc" */
+.revenue-btn.filter-btn:hover {
   background-color: #1a4971;
   transform: translateY(-2px);
 }
 
+/* Nút "Xuất Excel" */
+.revenue-btn.export-btn {
+  background-color: #28a745; /* Màu xanh lá cây */
+}
+
+/* Hiệu ứng hover cho nút "Xuất Excel" */
+.revenue-btn.export-btn:hover {
+  background-color: #218838; /* Màu xanh lá đậm hơn */
+  transform: translateY(-2px);
+}
+
+/* Khi nhấn nút */
 .revenue-btn:active {
   transform: translateY(0);
 }
 
+/* Icon bên trong nút */
 .revenue-btn i {
   margin-right: 5px;
-}
-
-.revenue-btn.btn-outline-secondary {
-  background-color: transparent;
-  color: #2b6cb0;
-  border: 1px solid #2b6cb0;
-}
-
-.revenue-btn.btn-outline-secondary:hover {
-  background-color: #2b6cb0;
-  color: white;
 }
 
 /* Tổng doanh thu */
@@ -206,8 +228,13 @@ canvas {
     font-size: 24px;
   }
 
-  .revenue-filter form {
+  .revenue-filter .d-flex {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .revenue-filter form.filter-form {
+    flex-direction: column; /* Form lọc xuống dòng trên mobile */
     align-items: stretch;
   }
 
@@ -215,7 +242,12 @@ canvas {
   .revenue-btn {
     width: 100%;
     max-width: none;
-    flex: none; /* Đảm bảo nút chiếm toàn bộ chiều rộng trên mobile */
+    flex: none; /* Đảm bảo chiếm toàn bộ chiều rộng trên mobile */
+  }
+
+  .revenue-filter form.filter-form {
+    margin-right: 0; /* Bỏ khoảng cách trên mobile */
+    margin-bottom: 15px; /* Thêm khoảng cách giữa form lọc và nút Xuất Excel */
   }
 
   .revenue-summary h3 {
