@@ -4,7 +4,7 @@
     ViewData["Title"] = "EventDetails";
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
     var orgName = ViewBag.OrgName as string;
-    var participants = ViewBag.Participants as List<dynamic>;
+  
 }
 
 <link href="~/css/Cause_Detail.css" rel="stylesheet" />
@@ -69,7 +69,9 @@
                             ? ((double)ViewBag.RegisteredCount / Model.TargetMember) * 100
                             : 0;
                         }
-                     
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @progress%;" aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100">
+                            @($"{progress:F0}%")
+                        </div>
                     </div>
                     <p class="mb-0">
                         <i class="fa-solid fa-user-check text-success me-2"></i>
@@ -77,7 +79,7 @@
                     </p>
                 </div>
             </div>
-
+        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="donationModal" tabindex="-1" aria-labelledby="donationModalLabel" aria-hidden="true">
@@ -88,7 +90,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="/Donation/Create">
+                        <form method="post" asp-action="Create" asp-controller="Donation">
                             <input type="hidden" name="EventId" value="@Model.EventId" />
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -96,21 +98,27 @@
                                     <input type="text" name="Name" class="form-control" required />
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Email <span class="text-danger">*</span></label>
-                                    <input type="email" name="Email" class="form-control" required />
+                                    <label>Số tiền ủng hộ <span class="text-danger">*</span></label>
+                                    <input type="number" name="Amount" class="form-control" required min="1" />
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" name="Email" class="form-control" required />
+                                </div>
+                                <div class="col-md-6">
                                     <label>Số điện thoại</label>
                                     <input type="text" name="Phone" class="form-control" />
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
                                     <label>Địa chỉ</label>
                                     <input type="text" name="Address" class="form-control" />
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Tham gia</button>
+                            <button type="submit" class="btn btn-primary w-100">Ủng hộ</button>
                         </form>
                     </div>
                 </div>
@@ -123,7 +131,10 @@
                 <a class="nav-link active" data-bs-toggle="tab" href="#content">Nội dung</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#donors">Danh sách tham gia</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#participants">Danh sách tham gia</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#donations">Danh sách ủng hộ</a>
             </li>
         </ul>
 
@@ -134,7 +145,7 @@
                     <p>@Model.Description</p>
                 </div>
             </div>
-            <div id="donors" class="tab-pane fade">
+            <div id="participants" class="tab-pane fade">
                 <table class="table mt-4">
                     <thead>
                         <tr>
@@ -143,20 +154,50 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (participants != null && participants.Count > 0)
+                        @if (((IEnumerable<object>)ViewBag.Participants ?? new List<object>()).Cast<object>().Any())
                         {
-                            foreach (var p in participants)
+                            foreach (var p in ViewBag.Participants)
                             {
                                 <tr>
                                     <td>@p.Name</td>
-                                    <td>@((p.RegisteredAt as DateTime?)?.ToString("HH:mm - dd/MM/yyyy") ?? "")</td>
+                                    <td>@p.Time</td>
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
-                                <td colspan="2">Chưa có người tham gia.</td>
+                                <td colspan="2" class="text-center">Chưa có người tham gia.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="donations" class="tab-pane fade">
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Người ủng hộ</th>
+                            <th>Số tiền ủng hộ</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (((IEnumerable<object>)ViewBag.Donations ?? new List<object>()).Cast<object>().Any())
+                        {
+                            foreach (var d in ViewBag.Donations)
+                            {
+                                <tr>
+                                    <td>@d.Name</td>
+                                    <td>@d.Amount.ToString("N0") VNĐ</td>
+                                    <td>@d.Time</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">Chưa có người ủng hộ.</td>
                             </tr>
                         }
                     </tbody>
