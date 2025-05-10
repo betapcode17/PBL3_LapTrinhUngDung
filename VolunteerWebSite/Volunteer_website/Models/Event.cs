@@ -9,7 +9,7 @@ public partial class Event
 
     public string? OrgId { get; set; }
 
-    public string? TypeEventName { get; set; }
+    public string TypeEventId { get; set; } = null!;
 
     public string? Name { get; set; }
 
@@ -31,11 +31,13 @@ public partial class Event
 
     public int? IsActive { get; set; }
 
-    public string? Status { get; set; } = "PENDING";
+    public string? Status { get; set; }
 
-    public virtual ICollection<Donation>? Donations { get; set; } = new List<Donation>();
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual Organization? Org { get; set; }
 
-    public virtual ICollection<Registration>? Registrations { get; set; } = new List<Registration>();
+    public virtual ICollection<Registration> Registrations { get; set; } = new List<Registration>();
+
+    public virtual EventType TypeEvent { get; set; } = null!;
 }

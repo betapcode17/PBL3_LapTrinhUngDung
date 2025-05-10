@@ -1,15 +1,15 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model X.PagedList.IPagedList<Volunteer_website.Models.Event>
+@model X.PagedList.IPagedList<Volunteer_website.Areas.Admin.Data.ListEventReg>
 @using X.PagedList.Mvc.Core
 @Html.AntiForgeryToken()
 @{
-    ViewData["Title"] = "Event Management";
+    ViewData["Title"] = "Volunteer Manager";
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
 }
 <div class="container-fluid">
     <!-- Phần tiêu đề -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
-        <h1 class="text-center my-4 heading-title">Event Management</h1>
+        <h1 class="text-center my-4 heading-title">List Event Registrated</h1>
     </div>
     @if (TempData["SuccessMessage"] != null)
     {
@@ -55,7 +55,8 @@
                         <td>No event found</td>
                     </tr>
                 }
-                else {
+                else
+                {
                     <tbody id="dataTable">
                         @foreach (var item in Model)
                         {
@@ -88,12 +89,6 @@
                                 <td class="action_btn">
                                     <button onclick="showEventDetails('@item.EventId')" class="btn btn-info btn-sm action-btn">
                                         <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    <button onclick="confirmAccept('@item.EventId')" class="btn btn-success btn-sm action-btn">
-                                        <i class="fa-solid fa-check"></i>
-                                    </button>
-                                    <button onclick="confirmReject('@item.EventId')" class="btn btn-danger btn-sm action-btn">
-                                        <i class="fa-solid fa-xmark"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -228,26 +223,27 @@
                         </div>
 
                     </tbody>
-                }    
+                }
             </table>
         </div>
         <!-- Pagination -->
         <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
             @if (Model!.HasPreviousPage)
             {
-                <a href="@Url.Action("Event", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
+                <a href="@Url.Action("ListEventReg", new { volId = ViewData["volId"], page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
             }
 
             @for (int i = 1; i <= Model.PageCount; i++)
             {
-                <a href="@Url.Action("Event", new { page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+                <a href="@Url.Action("ListEventReg", new { volId = ViewData["volId"], page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
             }
 
             @if (Model.HasNextPage)
             {
-                <a href="@Url.Action("Event", new { page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
+                <a href="@Url.Action("ListEventReg", new { volId = ViewData["volId"], page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
             }
         </div>
+
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

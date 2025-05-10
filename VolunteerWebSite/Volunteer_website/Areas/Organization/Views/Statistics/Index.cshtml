@@ -114,6 +114,9 @@
 
         <!-- Charts -->
         <div class="row g-4">
+            <div class="revenue-summary shadow-sm p-4 bg-white rounded mb-4">
+                <h3>Tổng số lượt đăng kí : @ViewBag.TotalRegistrationsByDate </h3>
+            </div>
             <!-- Chart 1: Số lượt đăng kí theo thời gian -->
             <div class="col-lg-6">
                 <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
@@ -121,23 +124,26 @@
                     <canvas id="registrationOverTimeChart" width="400" height="150"></canvas>
                 </div>
             </div>
-
-            <!-- Chart 2: Số tiền ủng hộ theo thời gian -->
-            <div class="col-lg-6">
-                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
-                    <h3>Số tiền ủng hộ theo thời gian</h3>
-                    <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
-                </div>
-            </div>
-
-            <!-- Chart 3: Số lượt đăng kí theo sự kiện -->
+            <!-- Chart 2: Số lượt đăng kí theo sự kiện -->
             <div class="col-lg-6">
                 <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
                     <h3>Số lượt đăng kí theo sự kiện</h3>
                     <canvas id="registrationByEventChart" width="400" height="150"></canvas>
                 </div>
             </div>
+        </div>
 
+        <div class="row g-4">
+            <div class="revenue-summary shadow-sm p-4 bg-white rounded mb-4">
+                <h3>Tổng số tiền ủng hộ :  @ViewBag.TotalDonationByDate  </h3>
+            </div>
+            <!-- Chart 3: Số tiền ủng hộ theo thời gian -->
+            <div class="col-lg-6">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số tiền ủng hộ theo thời gian</h3>
+                    <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
+                </div>
+            </div>
             <!-- Chart 4: Số tiền ủng hộ theo sự kiện -->
             <div class="col-lg-6">
                 <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">

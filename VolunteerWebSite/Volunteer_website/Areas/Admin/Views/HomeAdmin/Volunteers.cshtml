@@ -3,7 +3,7 @@
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Volunteers";
+    ViewData["Title"] = "Volunteers Management";
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
 }
 <!-- SweetAlert Confirmation Modal -->
@@ -73,12 +73,11 @@
                                 }
                             </td>
                             <td>
-                                <span class="badge status-badge
-                                @(item.Status == "PENDING" ? "bg-warning" :
-                                  item.Status == "ACCEPTED" ? "bg-success" :
-                                  "bg-danger") text-white fw-semibold text-uppercase">
+                                @*<span class="badge
+                                    @(item.Status == true ? "bg-success" :
+                                      item.Status == false ? "bg-danger" : "bg-warning")">
                                     @item.Status
-                                </span>
+                                </span> *@
                             </td>
 
                             <td class="action_btn">

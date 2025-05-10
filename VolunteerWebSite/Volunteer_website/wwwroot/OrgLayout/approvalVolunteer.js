@@ -1,4 +1,4 @@
-﻿async function handleEventAction(EventId, endPoint) {
+﻿async function handleUserAction( UserId, endPoint) {
     try {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -12,7 +12,7 @@
 
                     "RequestVerificationToken": token // Thêm token vào header
                 },
-                body: JSON.stringify({ EventId }) // Gửi EventId trong body
+                body: JSON.stringify({ UserId }) // Gửi UserId trong body
             }
         );
 
@@ -37,33 +37,32 @@
     }
 }
 
-function confirmAccept(EventId) {
-    console.log(EventId),
+function BanUser(UserId) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, accept!',
+        confirmButtonText: 'Yes, Ban!',
         cancelButtonText: 'No, cancel!',
     }).then((result) => {
         if (result.isConfirmed) {
-            handleEventAction(EventId, "/Admin/EventManager/acceptEvent");
+            handleUserAction(UserId, "/Admin/Users/BanUser");
         }
     });
 }
 
-function confirmReject(EventId) {
+function UnBanUser(UserId) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, Reject!',
+        confirmButtonText: 'Yes, UnBan!',
         cancelButtonText: 'No, cancel!',
     }).then((result) => {
         if (result.isConfirmed) {
-            handleEventAction(EventId, "/Admin/EventManager/rejectEvent");
+            handleUserAction(UserId, "/Admin/Users/UnBanUser");
         }
     });
 }
