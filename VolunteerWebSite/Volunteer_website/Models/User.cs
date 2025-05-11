@@ -18,4 +18,6 @@ public partial class User
     public bool IsActive { get; set; }
 
     public DateOnly? CreateAt { get; set; }
+
+
 }

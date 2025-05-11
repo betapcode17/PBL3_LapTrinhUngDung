@@ -5,6 +5,9 @@ using System.Web.Helpers;
 using Volunteer_website.ViewModels;
 using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Volunteer_website.Controllers
 {
@@ -20,16 +23,124 @@ namespace Volunteer_website.Controllers
         {
             return View();
         }
+       
+        [HttpGet]
         public IActionResult Update_Infor()
         {
-            return View();
-        }
+            var volunteerId = HttpContext.Session.GetString("UserId");
 
+            if (volunteerId == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy người dùng.";
+                return RedirectToAction("Manage");
+            }
+
+            var volunteer = _context.Volunteers.FirstOrDefault(v => v.VolunteerId == volunteerId);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == volunteerId); 
+            if (volunteer == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy dữ liệu người dùng.";
+                return RedirectToAction("Manage");
+            }
+
+            var model = new Update_ContactModel
+            {
+                UserName = user.UserName,
+                VolunteerId = volunteer.VolunteerId,
+                Name = volunteer.Name,
+                PhoneNumber = volunteer.PhoneNumber,
+                Email = volunteer.Email,
+                Address = volunteer.Address,
+                DateOfBirth = volunteer.DateOfBirth,
+                Gender = volunteer.Gender,
+                AvatarPath = volunteer.ImagePath,
+                AvatarFile = null, 
+                
+            };
+          
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update_Infor(Update_ContactModel model, IFormFile avatarFile)
+        {
+            var volunteer = _context.Volunteers.FirstOrDefault(v => v.VolunteerId == model.VolunteerId);
+
+            if (volunteer == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy tình nguyện viên.";
+                return RedirectToAction("Update_Infor");
+            }
+       
+            if (avatarFile != null && avatarFile.Length > 0)
+            {
+                // Kiểm tra kích thước file (5MB)
+                if (avatarFile.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("", "File ảnh không được vượt quá 5MB");
+                    return View(model);
+                }
+
+                // Kiểm tra loại file
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var extension = Path.GetExtension(avatarFile.FileName).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("", "Chỉ chấp nhận file ảnh (JPG, PNG, GIF)");
+                    return View(model);
+                }
+                var uploadsFolder = Path.Combine("wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(avatarFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await avatarFile.CopyToAsync(stream);
+                }
+
+                volunteer.ImagePath = $"~/uploads/{fileName}";
+            }
+
+            volunteer.Name = model.Name;
+            volunteer.Gender = model.Gender ?? false;
+            volunteer.DateOfBirth = model.DateOfBirth;
+            try
+            {
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân thành công!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật: " + ex.Message;
+            }
+            return RedirectToAction("Update_Infor");
+        }
         [HttpGet]
         public IActionResult Contact_Infor()
-        {       
-            return View();
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }      
+            var volunteer = _context.Volunteers.FirstOrDefault(v => v.VolunteerId == userId);
+            if (volunteer == null)
+            {
+                return NotFound(); // hoặc Redirect hoặc View thông báo lỗi
+            }
+            var model = new Update_ContactModel
+            {
+
+                Name = volunteer.Name,
+                PhoneNumber = volunteer.PhoneNumber,
+                Email = volunteer.Email,
+                Address = volunteer.Address
+            };
+
+            return View(model);
         }
+
 
 
         [HttpPost]
@@ -53,7 +164,7 @@ namespace Volunteer_website.Controllers
 
                 if (string.IsNullOrEmpty(VolunteerId))
                 {
-                    return RedirectToAction("SignIn", "Account");
+                    return RedirectToAction("SignIn", "Account2");
                 }
 
                 try
@@ -80,7 +191,7 @@ namespace Volunteer_website.Controllers
                     TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật.";
                 }
 
-                return RedirectToAction("Manage", new { id = VolunteerId });
+                return RedirectToAction("Contact_Infor", new { id = VolunteerId });
             }
 
             return View(updatedVolunteer);
@@ -91,10 +202,60 @@ namespace Volunteer_website.Controllers
             return HttpContext.Session.GetString("VolunteerId");
         }
 
-        public IActionResult Change_Password()
+        public string HashPassword(string password)
+        {
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                }
+         }
+
+        [HttpGet]
+        public IActionResult Change_PassWord()
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Change_PassWord(Change_Password Temp)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                ViewBag.ErrorMessage = "Bạn chưa đăng nhập.";
+                return RedirectToAction("SignIn", "Account2");
+            }
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "Không tìm thấy người dùng.";
+                return View("Change_PassWord");
+            }
+
+            Console.WriteLine("UserId: " + userId); // Debugging line
+            Console.WriteLine("OldPassword (entered): " + Temp.OldPassword); // Debugging line
+
+            if (!Crypto.VerifyHashedPassword(user.Password, Temp.OldPassword))
+            {
+                ViewBag.ErrorMessage = "Mật khẩu cũ không đúng";
+                return View("Change_PassWord");
+            }
+
+            if (Temp.NewPassword != Temp.ConfirmPassword)
+            {
+                ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp";
+                return View("Change_PassWord");
+            }
+
+            user.Password = Crypto.HashPassword(Temp.NewPassword);
+            _context.SaveChanges();
+            ViewBag.Message = "Đổi mật khẩu thành công";
+
+            return View("Change_PassWord");
+        }
+
+
         [HttpGet]
         public IActionResult Sign_Up()
         {
@@ -195,12 +356,13 @@ namespace Volunteer_website.Controllers
                 
 
                     var user = _context.Users.FirstOrDefault(u => u.UserId == account.UserId);
-                    int role = user?.Role ?? 0; // nếu không có thì mặc định luôn volunteer
+                    var vol = _context.Volunteers.FirstOrDefault(u => u.VolunteerId == account.UserId);
+                    int role = user?.Role ?? 0; 
 
-                    HttpContext.Session.SetString("UserId", account.UserId.ToString());
+                    HttpContext.Session.SetString("UserId", account.UserId);
                     HttpContext.Session.SetInt32("UserRole", role);
                     HttpContext.Session.SetString("Name", account.UserName);
-                    //HttpContext.Session.SetString("Email", account);
+                    HttpContext.Session.SetString("Email", vol.Email);
                     return RedirectToAction("IndexUser", "Home");
                 }
              

@@ -74,11 +74,12 @@
                             </td>
                             <td>
                                 <span class="badge
-                                    @(item.Status == true ? "bg-success" :
-                                      item.Status == false ? "bg-danger" : "bg-warning")">
+                                    @(item.Status == "Approved" ? "bg-success" :
+                                      item.Status == "Rejected" ? "bg-danger" : "bg-warning")">
                                     @item.Status
                                 </span>
                             </td>
+
                             <td class="action_btn">
                                 <!-- Approve Button -->
                                 <button type="button" class="btn btn-success btn-sm"

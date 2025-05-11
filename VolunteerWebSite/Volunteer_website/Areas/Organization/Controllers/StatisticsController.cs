@@ -207,18 +207,16 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #region Thống kê số tiền Donation theo thời gian
         public List<dynamic> StatisticsDonationByTime(string searchValue = "", string? startDate = null, string? endDate = null)
         {
-            DateOnly startDateOnly, endDateOnly;
+            DateTime startDateTime, endDateTime;
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
-                startDateOnly = DateOnly.Parse(startDate);
-                endDateOnly = DateOnly.Parse(endDate);
+                startDateTime = DateTime.Parse(startDate);
+                endDateTime = DateTime.Parse(endDate);
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                endDateTime = DateTime.Now;
+                startDateTime = endDateTime.AddDays(-30);
             }
 
             var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -238,29 +236,21 @@ namespace Volunteer_website.Areas.Organization.Controllers
             Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
-                .Where(r => eventIds.Contains(r.EventId) && r.DonationDate.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                .Where(r =>
-                {
-                    // Fixing the CS1503 error by converting DateOnly to DateTime before using it
-                    var donationDate = r.DonationDate!.Value.ToDateTime(TimeOnly.MinValue);
-                  
-                    // Fixing the CS0019 errors by converting DateOnly to DateTime before comparison
-                    var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
-                    var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
-                    return donationDate >= startDateTime && donationDate <= endDateTime;
-                })
+                .Where(r => eventIds.Contains(r.EventId)
+                    && r.DonationDate.HasValue
+                    && r.DonationDate.Value >= startDateTime
+                    && r.DonationDate.Value <= endDateTime)
                 .GroupBy(r => new
                 {
                     Year = r.DonationDate!.Value.Year,
                     Month = r.DonationDate.Value.Month,
-                    Day = r.DonationDate.Value.Day // Thêm Day vào GroupBy
+                    Day = r.DonationDate.Value.Day
                 })
                 .Select(g => new
                 {
                     Year = g.Key.Year,
                     Month = g.Key.Month,
-                    Day = g.Key.Day, // Thêm Day vào kết quả
+                    Day = g.Key.Day,
                     TotalAmount = g.Sum(d => d.Amount ?? 0)
                 })
                 .OrderBy(x => x.Year)
@@ -272,6 +262,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return data.Select(x => (dynamic)x).ToList();
         }
+
         #endregion
 
 
@@ -342,18 +333,16 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #region Số tiền ủng hộ theo sự kiện
         public List<dynamic> StatisticsDonationByEvent(string searchValue = "", string? startDate = null, string? endDate = null)
         {
-            DateOnly startDateOnly, endDateOnly;
+            DateTime startDateTime, endDateTime;
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
-                startDateOnly = DateOnly.Parse(startDate);
-                endDateOnly = DateOnly.Parse(endDate);
+                startDateTime = DateTime.Parse(startDate);
+                endDateTime = DateTime.Parse(endDate);
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                endDateTime = DateTime.Now;
+                startDateTime = endDateTime.AddDays(-30);
             }
 
             var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -373,9 +362,10 @@ namespace Volunteer_website.Areas.Organization.Controllers
             Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
-                .Where(d => eventIds.Contains(d.EventId) && d.DonationDate.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                .Where(d => d.DonationDate!.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
+                .Where(d => eventIds.Contains(d.EventId)
+                    && d.DonationDate.HasValue
+                    && d.DonationDate.Value >= startDateTime
+                    && d.DonationDate.Value <= endDateTime)
                 .GroupBy(d => d.EventId)
                 .Join(_db.Events,
                       donateGroup => donateGroup.Key,
@@ -383,7 +373,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                       (donateGroup, evt) => new
                       {
                           EventName = evt.Name ?? "Sự kiện không tên",
-                          TotalAmount = donateGroup.Sum(d => d.Amount ?? 0) // Tính tổng số tiền ủng hộ
+                          TotalAmount = donateGroup.Sum(d => d.Amount ?? 0)
                       })
                 .OrderBy(x => x.EventName)
                 .ToList();
@@ -392,24 +382,24 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return data.Select(x => (dynamic)x).ToList();
         }
+
         #endregion
 
 
         #region Bảng thống kê tổng quát
         public List<dynamic> StatisticsEventSummary(string searchValue = "", string? startDate = null, string? endDate = null)
         {
-            DateOnly startDateOnly, endDateOnly;
+            DateTime startDateTime, endDateTime;
+
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
-                startDateOnly = DateOnly.Parse(startDate);
-                endDateOnly = DateOnly.Parse(endDate);
+                startDateTime = DateTime.Parse(startDate);
+                endDateTime = DateTime.Parse(endDate);
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                endDateTime = DateTime.Now;
+                startDateTime = endDateTime.AddDays(-30);
             }
 
             var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -428,23 +418,26 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             var events = eventQuery.ToList();
 
-            // Fix for CS8714: Ensure that the key used in ToDictionary is not nullable.  
+            // Đếm số lượt đăng ký
             var registrationCounts = _db.Registrations
-               .Where(r => events.Select(e => e.EventId).Contains(r.EventId))
-               .AsEnumerable()
-               .Where(r => r.RegisterAt.HasValue && r.RegisterAt.Value >= startDateOnly && r.RegisterAt.Value <= endDateOnly)
-               .GroupBy(r => r.EventId)
-               .Select(g => new { EventId = g.Key ?? string.Empty, Count = g.Count() })
-               .ToDictionary(g => g.EventId, g => g.Count);
+                .Where(r => events.Select(e => e.EventId).Contains(r.EventId))
+                .AsEnumerable()
+                .Where(r => r.RegisterAt.HasValue
+                            && r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime
+                            && r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime)
+                .GroupBy(r => r.EventId)
+                .Select(g => new { EventId = g.Key ?? string.Empty, Count = g.Count() })
+                .ToDictionary(g => g.EventId, g => g.Count);
 
-            // Fix for CS8714: Ensure that the key used in ToDictionary is not nullable.  
+            // Tính tổng số tiền ủng hộ (dùng DateTime)
             var donationAmounts = _db.Donations
-               .Where(d => events.Select(e => e.EventId).Contains(d.EventId))
-               .AsEnumerable()
-               .Where(d => d.DonationDate.HasValue && d.DonationDate.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
-               .GroupBy(d => d.EventId)
-               .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
-               .ToDictionary(g => g.EventId, g => g.TotalAmount);
+                .Where(d => events.Select(e => e.EventId).Contains(d.EventId)
+                            && d.DonationDate.HasValue
+                            && d.DonationDate.Value >= startDateTime
+                            && d.DonationDate.Value <= endDateTime)
+                .GroupBy(d => d.EventId)
+                .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
+                .ToDictionary(g => g.EventId, g => g.TotalAmount);
 
             // Kết hợp dữ liệu
             var data = events.Select(e => new
@@ -460,6 +453,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return data.Select(x => (dynamic)x).ToList();
         }
+
         #endregion
     }
 }

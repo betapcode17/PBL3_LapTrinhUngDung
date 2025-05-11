@@ -39,7 +39,7 @@
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-    <a asp-controller="Account2" asp-action="Manage"><i class="fa-solid fa-house"></i>Trang chủ</a>
+    <a asp-controller="Home" asp-action="IndexUser"><i class="fa-solid fa-house"></i>Trang chủ</a>
     <div class="sidebar-dropdown">
         <a href="#"><i class="fa-solid fa-address-card"></i>Hồ sơ</a>
         <div class="sidebar-dropdown-menu">
@@ -52,6 +52,9 @@
         </div>
     </div>
     <a asp-controller="Account2" asp-action="Change_PassWord"><i class="fa-solid fa-lock"></i>Bảo mật</a>
+    <a asp-controller="Manage" asp-action="Registered_Event" class="active">
+        <i class="fa-solid fa-calendar-check"></i>Sự kiện đã đăng ký
+    </a>
 </div>
 
 <!-- Main Content -->
@@ -60,41 +63,63 @@
         <div class="card p-4 shadow-sm">
             <h3 class="mb-3">Thông Tin Cá Nhân</h3>
             <p class="text-muted">Quản lý thông tin cá nhân của bạn.</p>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
-            <div class="text-center">
-                <label for="avatarUpload">
-                    <div class="avatar-container">
-                        <img id="profile-avatar" src="~/images/bg_6.jpg" class="rounded-circle" alt="Avatar" />
-                        <div class="overlay">Thay đổi</div>
-                    </div>
-                </label>
-                <input type="file" id="avatarUpload" class="d-none" accept="image/*" />
-            </div>
-
-            <form method="post" asp-action="Update_Info" asp-controller="Account2" class="mt-4">
-
+            <form method="post" asp-action="Update_Infor" asp-controller="Account2"
+                  enctype="multipart/form-data" class="mt-4">
+                <input type="hidden" asp-for="VolunteerId" />
+                <div class="text-center">
+                    <label for="avatarUpload">
+                        <div class="avatar-container">
+                            <img id="profile-avatar"
+                                 src="@Url.Content(Model.AvatarPath ?? "~/images/bg_6.jpg")"
+                                 class="rounded-circle" alt="Avatar" />
+							
+                            <div class="overlay">Thay đổi</div>
+                        </div>
+                    </label>
+                    <input type="file" id="avatarUpload" class="d-none" accept="image/*" name="avatarFile" />
+                </div>
                 <div class="mb-3">
-                    <label class="form-label">Tên tài khoản</label>
-                    <input type="text" class="form-control" value="codeismylife" disabled />
+                    <label asp-for="UserName" class="form-label">Tên tài khoản</label>
+                    <input asp-for="UserName" class="form-control" disabled />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-danger">* Tên hiển thị</label>
-                    <input type="text" class="form-control" name="DisplayName" value="Trần Quốc Đạt" />
+                    <label asp-for="Name" class="form-label text-danger"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label text-danger">* Ngày sinh</label>
-                        <input type="date" class="form-control" name="BirthDate" value="2005-12-17" />
+                        <label asp-for="DateOfBirth" class="form-label text-danger"></label>
+                        <input asp-for="DateOfBirth" class="form-control"
+                               type="date"
+                               value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label text-danger">* Giới tính</label>
-                        <select class="form-control" name="Gender">
-                            <option selected>Nam</option>
-                            <option>Nữ</option>
-                            <option>Khác</option>
+                        <label asp-for="Gender" class="form-label text-danger"></label>
+                        <select class="form-control" asp-for="Gender">
+                            <option value="false" selected="@(Model.Gender == false)">Nam</option>
+                            <option value="true" selected="@(Model.Gender == true)">Nữ</option>
                         </select>
+
+                        <span asp-validation-for="Gender" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -103,6 +128,7 @@
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
@@ -115,5 +141,15 @@
     menuToggle.addEventListener("click", () => {
         sidebar.classList.toggle("collapsed");
         mainContent.classList.toggle("shifted");
+    });
+        document.getElementById('avatarUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-avatar').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
     });
 </script>

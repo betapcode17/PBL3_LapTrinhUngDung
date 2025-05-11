@@ -407,7 +407,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #region Cập nhật trạng thái người tham gia
         [HttpGet]
         [Route("UpdateStatus")]
-        public IActionResult UpdateStatus(string regId, bool status)
+        public IActionResult UpdateStatus(string regId, string status)
         {
             try
             {
@@ -423,7 +423,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return Json(new
                 {
                     success = true,
-                    message = status ? "Registration approved" : "Registration rejected"
+                    message = status == "Approved" ? "Registration approved" : "Registration rejected"
                 });
             }
             catch (Exception ex)
@@ -435,6 +435,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 });
             }
         }
+
         #endregion
 
         #region Xem chi tiết người tham gia

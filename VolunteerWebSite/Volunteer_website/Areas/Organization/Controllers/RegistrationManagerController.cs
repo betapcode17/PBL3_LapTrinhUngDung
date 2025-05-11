@@ -72,9 +72,12 @@ namespace Volunteer_website.Areas.Organization.Controllers
                     return Json(new { success = false, message = "Registration not found" });
                 }
 
-                registration.Status = status;
+                
+                registration.Status = status ? "Approved" : "Rejected";
                 _db.SaveChanges();
+
                 TempData["SuccessMessage"] = "Duyệt đơn đăng kí thành công";
+
                 return Json(new
                 {
                     success = true,
@@ -90,6 +93,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 });
             }
         }
+
         #endregion
 
         #region Xem chi tiết người tham gia

@@ -404,3 +404,5 @@ wwwroot/OrgLayout/.history/
  ../../DataBase/
 
 Helpers/ConstantHelper.cs
+Dependencies/
+Properties/

@@ -2,16 +2,23 @@
 using Volunteer_website.Models;
 using Volunteer_website.ViewModels;
 using Volunteer_website.Services;
+using Volunteer_website.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Configure Entity Framework Core
-builder.Services.AddDbContext<VolunteerManagementContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB")));
 
+builder.Services.AddDbContext<VolunteerManagementContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
+});
 // Configure AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -71,10 +78,7 @@ builder.Services.AddSession(options =>
 //Connect Vnpay
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
-builder.Services.AddDbContext<VolunteerManagementContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
-});
+
 
 var app = builder.Build();
 
@@ -87,9 +91,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // Đảm bảo phục vụ các tệp tĩnh từ wwwroot
-
-app.UseSession();
 app.UseRouting();
+app.UseSession();
+
 
 app.UseAuthentication();
 app.UseAuthorization();

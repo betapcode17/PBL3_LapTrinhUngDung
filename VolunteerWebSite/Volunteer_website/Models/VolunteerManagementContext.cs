@@ -242,6 +242,8 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("user_name");
+           
+
         });
 
         modelBuilder.Entity<Volunteer>(entity =>
