@@ -49,11 +49,13 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                @if (Model == null)
+                @if (Model == null || !Model.Any())
                 {
-                    <tr>
-                        <td>No event found</td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">No event found</td>
+                        </tr>
+                    </tbody>
                 }
                 else {
                     <tbody id="dataTable">

@@ -1,5 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model X.PagedList.IPagedList<Volunteer_website.Areas.Admin.Data.ListEventReg>
+@model X.PagedList.IPagedList<Volunteer_website.Areas.Admin.Data.ListEvent>
 @using X.PagedList.Mvc.Core
 @Html.AntiForgeryToken()
 @{
@@ -44,16 +44,19 @@
                         <th>Event Name</th>
                         <th>Date</th>
                         <th>Location</th>
+                        <th>Members</th>
+                        <th>Funds</th>
                         <th>Is active</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                @if (Model == null)
+                @if (Model == null || !Model.Any())
                 {
-                    <tr>
-                        <td>No event found</td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">No event found</td>
+                        </tr>
+                    </tbody>
                 }
                 else
                 {
@@ -67,25 +70,8 @@
                                 <td>@item.Name</td>
                                 <td>@dayBegin - @dayEnd</td>
                                 <td>@item.Location</td>
-                                <td>
-                                    <span class="badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
-                                        @(item.IsActive == 0 ? "Active" : "Inactive")
-                                    </span>
-                                </td>
-                                <td>
-                                    @if (item.Status == "PENDING")
-                                    {
-                                        <span class="badge bg-warning text-dark">PENDING</span>
-                                    }
-                                    else if (item.Status == "ACCEPT")
-                                    {
-                                        <span class="badge bg-success">ACCEPT</span>
-                                    }
-                                    else if (item.Status == "REJECT")
-                                    {
-                                        <span class="badge bg-danger">REJECT</span>
-                                    }
-                                </td>
+                                <td>@item.CurrentMember/@item.TargetMember</td>
+                                <td>@item.CurrentFunds/@item.TargetFunds</td>
                                 <td class="action_btn">
                                     <button onclick="showEventDetails('@item.EventId')" class="btn btn-info btn-sm action-btn">
                                         <i class="fa-solid fa-eye"></i>
