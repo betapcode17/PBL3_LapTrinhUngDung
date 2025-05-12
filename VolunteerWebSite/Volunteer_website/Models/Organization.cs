@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Volunteer_website.Models;
 
 public partial class Organization
 {
-    public string? OrgId { get; set; } = null!;
+    public string OrgId { get; set; } = null!;
 
     public string? Name { get; set; }
 

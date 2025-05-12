@@ -9,7 +9,7 @@ using Volunteer_website.Models;
 using Volunteer_website.Services;
 namespace Volunteer_website.Controllers
 {
-   
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

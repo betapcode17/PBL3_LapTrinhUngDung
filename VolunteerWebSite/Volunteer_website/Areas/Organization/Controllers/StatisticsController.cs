@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using Volunteer_website.Models;
 
 namespace Volunteer_website.Areas.Organization.Controllers
@@ -18,7 +19,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             _db = db;
         }
         [HttpGet]
-        [HttpGet]
+       
         public IActionResult Index(string searchValue = "", string? startDate = null, string? endDate = null)
         {
             var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -126,7 +127,35 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var eventSummaryData = StatisticsEventSummary(searchValue, startDate, endDate);
             ViewBag.EventSummary = eventSummaryData;
 
-            ViewBag.SearchValue = searchValue;
+
+
+            // Lấy tổng số lượt đăng ký dựa trên startDate và endDate
+
+
+            var totalRegistrationsByDate = _db.Registrations
+      .Where(r => eventIds.Contains(r.EventId))
+      .ToList() // Fetch data to memory
+      .Count(r => r.RegisterAt.HasValue &&
+                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= DateTime.Parse(startDateOnly.ToString("yyyy-MM-dd")) &&
+                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= DateTime.Parse(endDateOnly.ToString("yyyy-MM-dd")));
+
+            ViewBag.TotalRegistrationsByDate = totalRegistrationsByDate;
+
+
+
+            // Lấy tổng số tiền ủng hộ dựa trên startDate và endDate (giả định bảng Donations)
+       //     var totalDonationByDate = _db.Donations
+       //.Where(d => eventIds.Contains(d.EventId))
+       //.ToList() // Fetch data to memory
+       //.Sum(d => d.DonationDate.HasValue &&
+       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) <= endDateOnly.ToDateTime(TimeOnly.MinValue)
+       //          ? d.Amount ?? 0
+       //          : 0);
+
+            //ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
+
+            
 
             return View();
         }
@@ -236,10 +265,21 @@ namespace Volunteer_website.Areas.Organization.Controllers
             Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
-                .Where(r => eventIds.Contains(r.EventId)
-                    && r.DonationDate.HasValue
-                    && r.DonationDate.Value >= startDateTime
-                    && r.DonationDate.Value <= endDateTime)
+                .Where(r => eventIds.Contains(r.EventId) && r.DonationDate.HasValue)
+                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
+                //a đạt xử lý
+                //.Where(r =>
+                //{
+                //    // Fixing the CS1503 error by converting DateOnly to DateTime before using it
+                //    //a đạt xử lý
+                //    //var donationDate = r.DonationDate!.Value.ToDateTime(TimeOnly.MinValue);
+                  
+                //    // Fixing the CS0019 errors by converting DateOnly to DateTime before comparison
+                //    var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
+                //    var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
+
+                //    return donationDate >= startDateTime && donationDate <= endDateTime;
+                //})
                 .GroupBy(r => new
                 {
                     Year = r.DonationDate!.Value.Year,
@@ -362,10 +402,9 @@ namespace Volunteer_website.Areas.Organization.Controllers
             Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
-                .Where(d => eventIds.Contains(d.EventId)
-                    && d.DonationDate.HasValue
-                    && d.DonationDate.Value >= startDateTime
-                    && d.DonationDate.Value <= endDateTime)
+                .Where(d => eventIds.Contains(d.EventId) && d.DonationDate.HasValue)
+                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
+                //.Where(d => d.DonationDate!.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
                 .GroupBy(d => d.EventId)
                 .Join(_db.Events,
                       donateGroup => donateGroup.Key,
@@ -431,13 +470,12 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             // Tính tổng số tiền ủng hộ (dùng DateTime)
             var donationAmounts = _db.Donations
-                .Where(d => events.Select(e => e.EventId).Contains(d.EventId)
-                            && d.DonationDate.HasValue
-                            && d.DonationDate.Value >= startDateTime
-                            && d.DonationDate.Value <= endDateTime)
-                .GroupBy(d => d.EventId)
-                .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
-                .ToDictionary(g => g.EventId, g => g.TotalAmount);
+               .Where(d => events.Select(e => e.EventId).Contains(d.EventId))
+               .AsEnumerable()
+               //.Where(d => d.DonationDate.HasValue && d.DonationDate.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
+               .GroupBy(d => d.EventId)
+               .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
+               .ToDictionary(g => g.EventId, g => g.TotalAmount);
 
             // Kết hợp dữ liệu
             var data = events.Select(e => new
@@ -453,7 +491,81 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             return data.Select(x => (dynamic)x).ToList();
         }
+        [HttpGet]
+        public IActionResult ExportEventSummaryReport(string searchValue = "", string? startDate = null, string? endDate = null)
+        {
+            Console.WriteLine($"ExportEventSummaryReport called with searchValue: {searchValue}, startDate: {startDate}, endDate: {endDate}");
 
+            // Lấy dữ liệu từ StatisticsEventSummary  
+            var data = StatisticsEventSummary(searchValue, startDate, endDate);
+
+            // Create an instance of EPPlusLicense to call the method  
+            var license = new EPPlusLicense();
+            license.SetNonCommercialOrganization("VolunteerWebsite"); // Đặt tên tổ chức phi thương mại (tùy chọn)  
+
+            // Tạo file Excel bằng EPPlus  
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Thống kê sự kiện");
+
+                // Định dạng tiêu đề  
+                worksheet.Cells[1, 1].Value = "Thống kê tổng hợp sự kiện";
+                worksheet.Cells[1, 1, 1, 3].Merge = true;
+                worksheet.Cells[1, 1].Style.Font.Size = 16;
+                worksheet.Cells[1, 1].Style.Font.Bold = true;
+                worksheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+
+                // Thêm dòng thời gian (từ ngày ... đến ngày ...)
+                string formattedStartDate = string.IsNullOrEmpty(startDate) ? DateTime.Now.AddDays(-30).ToString("dd/MM/yyyy") : DateOnly.Parse(startDate).ToString("dd/MM/yyyy");
+                string formattedEndDate = string.IsNullOrEmpty(endDate) ? DateTime.Now.ToString("dd/MM/yyyy") : DateOnly.Parse(endDate).ToString("dd/MM/yyyy");
+                worksheet.Cells[2, 1].Value = $"Thống kê từ ngày {formattedStartDate} đến ngày {formattedEndDate}";
+                worksheet.Cells[2, 1, 2, 3].Merge = true;
+                worksheet.Cells[2, 1].Style.Font.Size = 12;
+                worksheet.Cells[2, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+
+                // Định dạng tiêu đề cột  
+                worksheet.Cells[3, 1].Value = "Tên sự kiện";
+                worksheet.Cells[3, 2].Value = "Số lượt tham gia";
+                worksheet.Cells[3, 3].Value = "Số tiền ủng hộ (VND)";
+                worksheet.Cells[3, 1, 3, 3].Style.Font.Bold = true;
+                worksheet.Cells[3, 1, 3, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells[3, 1, 3, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                worksheet.Cells[3, 1, 3, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                // Đổ dữ liệu vào bảng  
+                int row = 4;
+                foreach (var item in data)
+                {
+                    worksheet.Cells[row, 1].Value = item.EventName;
+                    worksheet.Cells[row, 2].Value = item.RegistrationCount;
+                    worksheet.Cells[row, 3].Value = item.DonationAmount;
+                    worksheet.Cells[row, 3].Style.Numberformat.Format = "#,##0"; // Định dạng số tiền  
+                    row++;
+                }
+
+                // Tự động điều chỉnh độ rộng cột  
+                worksheet.Cells[3, 1, row - 1, 3].AutoFitColumns();
+
+                // Thêm viền cho bảng  
+                worksheet.Cells[3, 1, row - 1, 3].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                worksheet.Cells[3, 1, row - 1, 3].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                worksheet.Cells[3, 1, row - 1, 3].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                worksheet.Cells[3, 1, row - 1, 3].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+                // Xuất file  
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                string excelName = $"ThongKeSuKien_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            }
+        }
         #endregion
+
+
+
     }
 }

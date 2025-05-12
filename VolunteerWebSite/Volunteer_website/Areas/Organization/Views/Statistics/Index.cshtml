@@ -1,4 +1,5 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewData["Title"] = "Thống kê tổng quát";
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
 }
@@ -79,98 +80,121 @@
 
     <!-- Charts Section -->
     <div class="row g-4 mb-4">
-            <!-- Filter Form -->
-            <div class="revenue-filter mb-4">
-                <form asp-action="Index" method="get" class="d-flex flex-wrap gap-2">
+        <!-- Filter Form and Export Button -->
+        <div class="revenue-filter">
+            <div class="d-flex align-items-center gap-15px flex-wrap">
+                <!-- Form lọc -->
+                <form asp-action="Index" method="get" class="filter-form">
                     <input type="date" name="startDate" class="form-control revenue-input"
                            value="@ViewBag.StartDate" />
                     <input type="date" name="endDate" class="form-control revenue-input"
                            value="@ViewBag.EndDate" />
                     <input type="text" name="searchValue" class="form-control revenue-input"
                            placeholder="Tìm kiếm sự kiện..." value="@ViewBag.SearchValue" />
-                    <button type="submit" class="btn revenue-btn">
+                    <button type="submit" class="revenue-btn filter-btn">
                         <i class="fas fa-search"></i> Lọc
                     </button>
                 </form>
+
+                <!-- Form xuất Excel -->
+                <form asp-area="Organization"
+                      asp-controller="Statistics"
+                      asp-action="ExportEventSummaryReport"
+                      method="get"
+                      class="d-inline">
+                    <input type="hidden" name="searchValue" value="@ViewBag.SearchValue" />
+                    <input type="hidden" name="startDate" value="@ViewBag.StartDate" />
+                    <input type="hidden" name="endDate" value="@ViewBag.EndDate" />
+                    <button type="submit" class="revenue-btn export-btn">
+                        <i class="fas fa-file-excel"></i> Xuất Excel
+                    </button>
+                </form>
             </div>
+        </div>
 
-            <!-- Charts -->
-            <div class="row g-4">
-                <!-- Chart 1: Số lượt đăng kí theo thời gian -->
-                <div class="col-lg-6">
-                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
-                        <h3>Số lượt đăng kí theo thời gian</h3>
-                        <canvas id="registrationOverTimeChart" width="400" height="150"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart 2: Số tiền ủng hộ theo thời gian -->
-                <div class="col-lg-6">
-                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
-                        <h3>Số tiền ủng hộ theo thời gian</h3>
-                        <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart 3: Số lượt đăng kí theo sự kiện -->
-                <div class="col-lg-6">
-                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
-                        <h3>Số lượt đăng kí theo sự kiện</h3>
-                        <canvas id="registrationByEventChart" width="400" height="150"></canvas>
-                    </div>
-                </div>
-
-                <!-- Chart 4: Số tiền ủng hộ theo sự kiện -->
-                <div class="col-lg-6">
-                    <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
-                        <h3>Số tiền ủng hộ theo sự kiện</h3>
-                        <canvas id="donationByEventChart" width="400" height="150"></canvas>
-                    </div>
+        <!-- Charts -->
+        <div class="row g-4">
+            <div class="revenue-summary shadow-sm p-4 bg-white rounded mb-4">
+                <h3>Tổng số lượt đăng kí : @ViewBag.TotalRegistrationsByDate </h3>
+            </div>
+            <!-- Chart 1: Số lượt đăng kí theo thời gian -->
+            <div class="col-lg-6">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số lượt đăng kí theo thời gian</h3>
+                    <canvas id="registrationOverTimeChart" width="400" height="150"></canvas>
                 </div>
             </div>
+            <!-- Chart 2: Số lượt đăng kí theo sự kiện -->
+            <div class="col-lg-6">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số lượt đăng kí theo sự kiện</h3>
+                    <canvas id="registrationByEventChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
 
-            <!-- Event Summary Table -->
-            <div class="row g-4 mt-4">
-                <div class="col-12">
-                    <div class="shadow-sm p-4 bg-white rounded">
-                        <h3 class="mb-4">Thống kê tổng hợp sự kiện</h3>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Tên sự kiện</th>
-                                        <th>Số lượt tham gia</th>
-                                        <th>Số tiền ủng hộ (VND)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (ViewBag.EventSummary != null && ViewBag.EventSummary.Count > 0)
-                                    {
-                                        foreach (var item in ViewBag.EventSummary)
-                                        {
-                                            <tr>
-                                                <td>@item.EventName</td>
-                                                <td>@item.RegistrationCount</td>
-                                                <td>@item.DonationAmount.ToString("N0")</td>
-                                            </tr>
-                                        }
-                                    }
-                                    else
+        <div class="row g-4">
+            <div class="revenue-summary shadow-sm p-4 bg-white rounded mb-4">
+                <h3>Tổng số tiền ủng hộ :  @ViewBag.TotalDonationByDate  </h3>
+            </div>
+            <!-- Chart 3: Số tiền ủng hộ theo thời gian -->
+            <div class="col-lg-6">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số tiền ủng hộ theo thời gian</h3>
+                    <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+            <!-- Chart 4: Số tiền ủng hộ theo sự kiện -->
+            <div class="col-lg-6">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số tiền ủng hộ theo sự kiện</h3>
+                    <canvas id="donationByEventChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Summary Table -->
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <div class="shadow-sm p-4 bg-white rounded">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">Thống kê tổng hợp sự kiện</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Tên sự kiện</th>
+                                    <th>Số lượt tham gia</th>
+                                    <th>Số tiền ủng hộ (VND)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.EventSummary != null && ViewBag.EventSummary.Count > 0)
+                                {
+                                    foreach (var item in ViewBag.EventSummary)
                                     {
                                         <tr>
-                                            <td colspan="3" class="text-center text-muted">Không có dữ liệu</td>
+                                            <td>@item.EventName</td>
+                                            <td>@item.RegistrationCount</td>
+                                            <td>@item.DonationAmount.ToString("N0")</td>
                                         </tr>
                                     }
-                                </tbody>
-                            </table>
-                        </div>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Không có dữ liệu</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
+    </div>
 <style>
     .bg-teal {
         background-color: #20c997 !important;

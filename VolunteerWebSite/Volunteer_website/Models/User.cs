@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Volunteer_website.Models;
@@ -18,6 +18,4 @@ public partial class User
     public bool IsActive { get; set; }
 
     public DateOnly? CreateAt { get; set; }
-
-
 }

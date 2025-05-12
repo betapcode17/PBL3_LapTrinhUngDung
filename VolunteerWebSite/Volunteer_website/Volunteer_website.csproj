@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="EPPlus" Version="8.0.3" />
     <PackageReference Include="FluentAssertions" Version="8.2.0" />
     <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
@@ -46,6 +47,10 @@
 
   <ItemGroup>
     <Folder Include="Views\Volunteer\" />
+	  <Folder Include="Areas\Admin\Models\" />
+	  <Folder Include="Areas\Organization\Data\" />
+	  <Folder Include="Areas\Organization\Models\" />
+	  <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

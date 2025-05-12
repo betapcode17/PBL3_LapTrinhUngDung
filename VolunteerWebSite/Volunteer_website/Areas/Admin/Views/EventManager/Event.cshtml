@@ -1,7 +1,7 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model X.PagedList.IPagedList<Volunteer_website.Models.Event>
 @using X.PagedList.Mvc.Core
-
+@Html.AntiForgeryToken()
 @{
     ViewData["Title"] = "Event Management";
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
@@ -49,9 +49,13 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                @if (Model == null)
+                @if (Model == null || !Model.Any())
                 {
-                    <p>No events available.</p>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">No event found</td>
+                        </tr>
+                    </tbody>
                 }
                 else {
                     <tbody id="dataTable">

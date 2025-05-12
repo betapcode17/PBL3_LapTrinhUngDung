@@ -1,5 +1,4 @@
-﻿//
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
@@ -7,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
-    [Area("Organization")]
-    [Route("[area]/[controller]/[action]")] // Sửa lại route template
     [Authorize("Org")]
+    [Area("Organization")]
+    [Route("Organization/RegistrationManager")] // Sửa lại route template
     public class RegistrationManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -62,26 +61,31 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
         #region Cập nhật trạng thái người tham gia
         [HttpGet]
-        public IActionResult Update(string regId, bool status)
+        public IActionResult Update(string regId, string status)
         {
             try
             {
+                // Validate status
+                if (!new[] { "PENDING", "ACCEPTED", "REJECTED" }.Contains(status.ToUpper()))
+                {
+                    return Json(new { success = false, message = "Invalid status value" });
+                }
+
                 var registration = _db.Registrations.FirstOrDefault(r => r.RegId == regId);
                 if (registration == null)
                 {
                     return Json(new { success = false, message = "Registration not found" });
                 }
 
-                
-                registration.Status = status ? "Approved" : "Rejected";
+                registration.Status = status.ToUpper();
                 _db.SaveChanges();
-
-                TempData["SuccessMessage"] = "Duyệt đơn đăng kí thành công";
-
+                TempData["SuccessMessage"] = "Cập nhật trạng thái đăng ký thành công";
                 return Json(new
                 {
                     success = true,
-                    message = status ? "Registration approved" : "Registration rejected"
+                    message = status.ToUpper() == "ACCEPTED" ? "Registration approved" :
+                              status.ToUpper() == "REJECTED" ? "Registration rejected" :
+                              "Registration status updated"
                 });
             }
             catch (Exception ex)
@@ -97,7 +101,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [HttpGet]
+        [Route("GetVolunteerDetails")]
         public IActionResult GetVolunteerDetails(string id)
         {
             try
