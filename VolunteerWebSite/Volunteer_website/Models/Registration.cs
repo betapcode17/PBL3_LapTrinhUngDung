@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Volunteer_website.Models;
@@ -11,11 +11,11 @@ public partial class Registration
 
     public string? EventId { get; set; }
 
-    public string? Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public DateOnly? RegisterAt { get; set; }
 
-    public virtual ICollection<Evaluation>? Evaluations { get; set; } = new List<Evaluation>();
+    public virtual ICollection<Evaluation> Evaluations { get; set; } = new List<Evaluation>();
 
     public virtual Event? Event { get; set; }
 

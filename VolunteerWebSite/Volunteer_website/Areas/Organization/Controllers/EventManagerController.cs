@@ -320,6 +320,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine("ERROR: " + ex);
                 return StatusCode(500, "An error occurred while fetching event details.");
             }
         }

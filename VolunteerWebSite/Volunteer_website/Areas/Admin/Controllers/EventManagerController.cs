@@ -9,6 +9,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize("Admin")]
+    [Route("Admin/EventManager")] 
     public class EventManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -97,6 +98,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #endregion
 
         #region lấy dữ liệu event
+        [Route("GetEventDetails")]
         public async Task<IActionResult> GetEventDetails(string id)
         {
             var eventObj = await _db.Events

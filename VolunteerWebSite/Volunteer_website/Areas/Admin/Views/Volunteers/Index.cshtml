@@ -1,72 +1,165 @@
-﻿@model IEnumerable<Volunteer_website.Models.Volunteer>
-
+﻿@model X.PagedList.IPagedList<Volunteer_website.Models.Volunteer>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Volunteers Management";
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <!-- Phần tiêu đề -->
+    <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
+        <h1 class="text-center my-4 heading-title">Organization Management</h1>
+    </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VolunteerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VolunteerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VolunteerId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Phần thân -->
+    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
+        <!-- Search Bar and Create Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div class="search-container">
+                <label for="searchBox">Search: </label>
+                <input type="text" id="searchBox" class="form-control search-input" placeholder="Search events..." onkeyup="search()">
+            </div>
+        </div>
+        <!-- Event List Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover event-table shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                @if (Model == null)
+                {
+                    <tr>
+                        <td>Không có tổ chức nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    <tbody id="dataTable">
+                        @foreach (var item in Model)
+                        {
+                            var Gender = item.Gender == true? "Men" : "Women";
+                            <tr>
+                                <td>@item.VolunteerId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.Address</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>@Gender</td>
+                                <td class="action_btn">
+                                    <button type="button" class="btn btn-info btn-sm view-volunteer-btn"
+                                            data-reg-id="@item.VolunteerId"
+                                            onclick="showVolunteerDetails('@item.VolunteerId', '/Admin/Volunteers/GetVolunteerDetails')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-success btn-sm" asp-area="Admin" asp-controller="Volunteers" asp-action="ListEventReg" asp-route-volId="@item.VolunteerId" title="List Event">
+                                        <i class="fa fa-list-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+            <!-- Volunteer Details Modal - Redesigned -->
+            <div class="modal fade" id="volunteerDetailsModal" tabindex="-1" aria-labelledby="volunteerDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title fs-4" id="volunteerDetailsModalLabel">
+                                <i class="bi bi-person-badge me-2"></i>VOLUNTEER DETAILS
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="row">
+                                <!-- Volunteer Image Column -->
+                                <div class="col-md-4 text-center mb-3 mb-md-0">
+                                    <div id="volunteerImageContainer" class="border rounded p-2 bg-light">
+                                        <img id="volunteerImage" src="https://via.placeholder.com/200" alt="Volunteer Photo"
+                                             class="img-fluid rounded" style="max-height: 200px;">
+                                        <div class="mt-2">
+                                            <span id="volunteerId" class="badge bg-info text-dark">ID: N/A</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Volunteer Details Column -->
+                                <div class="col-md-8">
+                                    <div class="volunteer-details-grid">
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-person-fill me-2"></i>Name:</span>
+                                            <span id="volunteerName" class="detail-value">N/A</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-envelope-fill me-2"></i>Email:</span>
+                                            <span id="volunteerEmail" class="detail-value">N/A</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-telephone-fill me-2"></i>Phone:</span>
+                                            <span id="volunteerPhone" class="detail-value">N/A</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-calendar-event me-2"></i>Date of Birth:</span>
+                                            <span id="volunteerDob" class="detail-value">N/A</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-gender-ambiguous me-2"></i>Gender:</span>
+                                            <span id="volunteerGender" class="detail-value">N/A</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="bi bi-geo-alt-fill me-2"></i>Address:</span>
+                                            <span id="volunteerAddress" class="detail-value">N/A</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
+            @if (Model!.HasPreviousPage)
+            {
+                <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
+            }
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <a href="@Url.Action("Index", new { page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
+            }
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/OrgLayout/volunteer.js"></script>
+<script src="~/OrgLayout/Search.js"></script>

@@ -98,6 +98,7 @@ public class CalendarController : Controller
         {
             // Log the exception (e.g., using a logging framework like Serilog or ILogger)
             // _logger.LogError(ex, "Error updating event with ID: {EventId}", eventId);
+            Console.WriteLine("ERROR: " + ex);
             return Json(new { success = false, message = "Đã xảy ra lỗi khi cập nhật sự kiện. Vui lòng thử lại." });
         }
     }

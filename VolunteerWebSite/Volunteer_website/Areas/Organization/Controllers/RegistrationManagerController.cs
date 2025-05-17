@@ -1,5 +1,4 @@
-﻿//
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
@@ -7,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
-    [Area("Organization")]
-    [Route("[area]/[controller]/[action]")] // Sửa lại route template
     [Authorize("Org")]
+    [Area("Organization")]
+    [Route("Organization/RegistrationManager")] // Sửa lại route template
     public class RegistrationManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -101,7 +100,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [HttpGet]
+        [Route("GetVolunteerDetails")]
         public IActionResult GetVolunteerDetails(string id)
         {
             try

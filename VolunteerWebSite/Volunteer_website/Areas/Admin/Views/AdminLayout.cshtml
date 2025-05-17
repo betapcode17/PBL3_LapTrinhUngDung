@@ -137,7 +137,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="Admin" asp-controller="HomeAdmin" asp-action="Volunteers">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Volunteers" asp-action="Index">
                             <span class="menu-title">Volunteers</span>
                             <i class="mdi mdi-account-heart menu-icon"></i>
                         </a>
@@ -151,9 +151,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="ManageDonation.html">
-                            <span class="menu-title">Donation</span>
-                            <i class="mdi mdi-hand-heart menu-icon"></i>
+                        <a class="nav-link" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                            <span class="menu-title">Users</span>
+                            <i class="mdi mdi-account menu-icon"></i>
                         </a>
                     </li>
                 </ul>
@@ -192,21 +192,3 @@
     <!-- End custom js for this page -->
 </body>
 </html>
-
-@section Scripts {
-    <script>
-        function searchEvents() {
-            var input = document.getElementById("searchBox").value.toLowerCase();
-            var rows = document.getElementById("eventTable").getElementsByTagName("tr");
-
-            for (var i = 0; i < rows.length; i++) {
-                var name = rows[i].getElementsByTagName("td")[1]?.innerText.toLowerCase();
-                if (name && name.includes(input)) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
-        }
-    </script>
-}
