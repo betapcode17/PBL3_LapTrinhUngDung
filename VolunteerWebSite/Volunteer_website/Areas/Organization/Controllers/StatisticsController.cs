@@ -129,15 +129,16 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
 
 
-            // Lấy tổng số lượt đăng ký dựa trên startDate và endDate
-
+            // Fix for CS1061: Replace the incorrect usage of `ToDateTime` with `DateTime` conversion methods.  
+            // The `ToDateTime` method does not exist for `DateTime` or `DateOnly`. Use `DateOnly.ToDateTime` instead.
 
             var totalRegistrationsByDate = _db.Registrations
-      .Where(r => eventIds.Contains(r.EventId))
-      .ToList() // Fetch data to memory
-      .Count(r => r.RegisterAt.HasValue &&
-                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= DateTime.Parse(startDateOnly.ToString("yyyy-MM-dd")) &&
-                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= DateTime.Parse(endDateOnly.ToString("yyyy-MM-dd")));
+               .Where(r => eventIds.Contains(r.EventId))
+               .ToList() // Fetch data to memory
+               .Count(r => r.RegisterAt.HasValue &&
+                             r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+            r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= endDateOnly.ToDateTime(TimeOnly.MinValue));
+
 
             ViewBag.TotalRegistrationsByDate = totalRegistrationsByDate;
 
@@ -145,13 +146,13 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             // Lấy tổng số tiền ủng hộ dựa trên startDate và endDate (giả định bảng Donations)
             var totalDonationByDate = _db.Donations
-       .Where(d => eventIds.Contains(d.EventId))
-       .ToList() // Fetch data to memory
-       .Sum(d => d.DonationDate.HasValue &&
-                 d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
-                 d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) <= endDateOnly.ToDateTime(TimeOnly.MinValue)
-                 ? d.Amount ?? 0
-                 : 0);
+   .Where(d => eventIds.Contains(d.EventId))
+   .ToList() // Fetch data to memory
+   .Sum(d => d.DonationDate.HasValue &&
+             d.DonationDate.Value >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+             d.DonationDate.Value <= endDateOnly.ToDateTime(TimeOnly.MinValue)
+             ? d.Amount ?? 0
+             : 0);
 
             ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
 
@@ -272,7 +273,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 .Where(r =>
                 {
                     // Fixing the CS1503 error by converting DateOnly to DateTime before using it
-                    var donationDate = r.DonationDate!.Value.ToDateTime(TimeOnly.MinValue);
+                    var donationDate = r.DonationDate!.Value;
                   
                     // Fixing the CS0019 errors by converting DateOnly to DateTime before comparison
                     var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
@@ -404,7 +405,8 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var data = _db.Donations
                 .Where(d => eventIds.Contains(d.EventId) && d.DonationDate.HasValue)
                 .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                .Where(d => d.DonationDate!.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
+                .Where(d => d.DonationDate!.Value >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+                d.DonationDate.Value <= endDateOnly.ToDateTime(TimeOnly.MinValue))
                 .GroupBy(d => d.EventId)
                 .Join(_db.Events,
                       donateGroup => donateGroup.Key,
@@ -470,7 +472,9 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var donationAmounts = _db.Donations
                .Where(d => events.Select(e => e.EventId).Contains(d.EventId))
                .AsEnumerable()
-               .Where(d => d.DonationDate.HasValue && d.DonationDate.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
+               .Where(d => d.DonationDate.HasValue &&
+               d.DonationDate.Value >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
+               d.DonationDate.Value <= endDateOnly.ToDateTime(TimeOnly.MinValue))
                .GroupBy(d => d.EventId)
                .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
                .ToDictionary(g => g.EventId, g => g.TotalAmount);

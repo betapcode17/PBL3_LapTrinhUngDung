@@ -15,7 +15,7 @@ public partial class Registration
 
     public DateOnly? RegisterAt { get; set; }
 
-    public virtual ICollection<Evaluation>? Evaluations { get; set; } = new List<Evaluation>();
+    public virtual ICollection<Evaluation> Evaluations { get; set; } = new List<Evaluation>();
 
     public virtual Event? Event { get; set; }
 
