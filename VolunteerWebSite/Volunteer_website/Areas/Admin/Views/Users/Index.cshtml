@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Volunteer_website.Models.User>
+﻿@model X.PagedList.IPagedList<Volunteer_website.Models.User>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Users Management";
@@ -101,6 +101,22 @@
                 }
             </table>
         </div>
+    </div>
+    <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
+        @if (Model!.HasPreviousPage)
+        {
+            <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
+        }
+
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <a href="@Url.Action("Index", new { page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
+        }
     </div>
 </div>
 

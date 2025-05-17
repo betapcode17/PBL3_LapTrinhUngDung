@@ -84,14 +84,36 @@ namespace Volunteer_website.Areas.Admin.Controllers
             int pageSize = 8;
             int pageNumber = page ?? 1;
 
+            // Lấy danh sách các EventId mà volunteer này đã đăng ký
+            var eventIds = _context.Registrations
+                .Where(r => r.VolunteerId == volId)
+                .Select(r => r.EventId)
+                .ToList();
+
+            // Đếm số lượng thành viên cho từng EventId trong danh sách trên
+            var memberCounts = _context.Registrations
+                .Where(r => eventIds.Contains(r.EventId))
+                .GroupBy(r => r.EventId)
+                .Select(g => new { EventId = g.Key, MemberCount = g.Count() })
+                .Where(x => x.EventId != null)
+                .ToDictionary(x => x.EventId!, x => x.MemberCount);
+
+            // Tính tổng amount cho từng EventId trong danh sách trên
+            var totalAmounts = _context.Donations
+                .Where(d => eventIds.Contains(d.EventId))
+                .GroupBy(d => d.EventId)
+                .Select(g => new { EventId = g.Key, TotalAmount = g.Sum(d => d.Amount ?? 0) })
+                .Where(x => x.EventId != null)
+                .ToDictionary(x => x.EventId!, x => x.TotalAmount);
+
             var listEvents = _context.Registrations
-                .Where(r => r.VolunteerId == volId) 
-                .Select(r => new ListEventReg
+                .Where(r => r.VolunteerId == volId)
+                .Select(r => new ListEvent
                 {
                     EventId = r.Event!.EventId,
                     OrgId = r.Event.OrgId,
-                    TypeEvent = r.Event.TypeEvent.Name,
-                    Name = r.Event.Name, 
+                    TypeEvent = r.Event.TypeEvent!.Name,
+                    Name = r.Event.Name,
                     Description = r.Event.Description,
                     DayBegin = r.Event.DayBegin,
                     DayEnd = r.Event.DayEnd,
@@ -99,10 +121,13 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     TargetMember = r.Event.TargetMember,
                     TargetFunds = r.Event.TargetFunds,
                     IsActive = r.Event.IsActive,
-                    Status = r.Event.Status
+                    Status = r.Event.Status,
+                    CurrentMember = memberCounts.ContainsKey(r.Event.EventId) ? memberCounts[r.Event.EventId] : 0,
+                    CurrentFunds = totalAmounts.ContainsKey(r.Event.EventId) ? totalAmounts[r.Event.EventId] : 0
                 })
                 .OrderBy(x => x.EventId)
                 .ToPagedList(pageNumber, pageSize);
+
 
             ViewData["volId"] = volId;
 

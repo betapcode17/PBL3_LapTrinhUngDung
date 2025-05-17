@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Areas.Admin.Data;
 using Volunteer_website.Models;
+using X.PagedList.Extensions;
 
 namespace Volunteer_website.Areas.Admin.Controllers
 {
@@ -20,27 +21,17 @@ namespace Volunteer_website.Areas.Admin.Controllers
         {
             _context = context;
         }
+
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int page = 1)
         {
-            return View(await _context.Users.ToListAsync());
-        }
+            int pageSize = 8;
+            int PageNumber = page;
 
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            var listUsers = _context.Users
+                .OrderBy(v => v.UserId)
+                .ToPagedList(PageNumber, pageSize);
+            return View(listUsers);
         }
 
         #region Ban and Unban user
@@ -64,7 +55,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 _context.Update(existingUser);
                 await _context.SaveChangesAsync();
 
-                return Json(new { success = true, message = "User Unban successfully" });
+                return Json(new { success = true, message = "User Ban successfully" });
             }
             catch (Exception ex)
             {

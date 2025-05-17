@@ -10,6 +10,7 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using MyCommerce.Models;
 using X.PagedList;
+using Volunteer_website.Areas.Admin.Data;
 
 namespace Volunteer_website.Areas.Admin.Controllers
 {
@@ -31,6 +32,13 @@ namespace Volunteer_website.Areas.Admin.Controllers
             int pageSize = 8;
             int pageNumber = page;
 
+            var numberEvents = _context.Events
+                .GroupBy(org => org.OrgId)
+                .Select(g => new { orgId = g.Key, eventCount = g.Count() })
+                .ToDictionary(x => x.orgId!, x => x.eventCount);
+
+            ViewBag.NumberEvents = numberEvents;
+
             var lstOrg = _context.Organizations.AsNoTracking()
                             .OrderBy(x => x.OrgId)
                             .ToPagedList(pageNumber, pageSize);
@@ -42,7 +50,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
-            { 
+            {
                 return NotFound();
             }
 
@@ -70,16 +78,16 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     .AsNoTracking()
                     .Where(org => !_context.Users.Any(user => user.UserId == org.OrgId))
                     .OrderBy(x => x.OrgId);
-            
+
             // 2. Đếm tổng số bản ghi
             int totalCount = await query.CountAsync();
-            
+
             // 3. Lấy dữ liệu cho trang hiện tại
             var organizationsWithoutUsers = await query
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-            
+
             // 4. Tạo StaticPagedList
             var pagedResults = new StaticPagedList<Models.Organization>(
                 organizationsWithoutUsers, pageNumber, pageSize, totalCount);
@@ -90,7 +98,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RejectApprovalOrg(string id)
         {
-            if(id == null)
+            if (id == null)
             {
                 TempData["ErrorMessage"] = "Lỗi dữ liệu đầu vào không phù hợp.";
                 return RedirectToAction("ApprovalOrg");
@@ -124,12 +132,12 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 return RedirectToAction("ApprovalOrg");
             }
 
-            if(currentOrg.Email == null) 
+            if (currentOrg.Email == null)
             {
                 TempData["ErrorMessage"] = "Không tìm thấy email của tổ chức.";
                 return RedirectToAction("ApprovalOrg");
             }
-                // Kiểm tra xem user đã tồn tại chưa
+            // Kiểm tra xem user đã tồn tại chưa
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
             if (existingUser == null)
             {
@@ -160,7 +168,7 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 existingUser.IsActive = true;
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
-                
+
                 TempData["SuccessMessage"] = "Đã kích hoạt tài khoản tổ chức thành công!";
             }
 
@@ -168,88 +176,43 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        public async Task<IActionResult> Edit(string id)
+        #region danh sách sự kiện
+        public IActionResult ListEvent(string id, int? page)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
 
-            var organization = await _context.Organizations.FindAsync(id);
-            if (organization == null)
-            {
-                return NotFound();
-            }
-            return View(organization);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, 
-            [Bind("OrgId,Name,Email,Address,PhoneNumber,ImagePath,Description")] Models.Organization organization)
-        {
-            if (id != organization.OrgId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+            // Lấy danh sách event của tổ chức
+            var events = _context.Events
+                .Where(e => e.OrgId == id)
+                .OrderBy(e => e.EventId)
+                .Select(e => new ListEvent
                 {
-                    _context.Update(organization);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrganizationExists(organization.OrgId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(organization);
+                    EventId = e.EventId,
+                    OrgId = e.OrgId,
+                    TypeEvent = e.TypeEvent!.Name,
+                    Name = e.Name,
+                    Description = e.Description,
+                    DayBegin = e.DayBegin,
+                    DayEnd = e.DayEnd,
+                    Location = e.Location,
+                    TargetMember = e.TargetMember,
+                    TargetFunds = e.TargetFunds,
+                    IsActive = e.IsActive,
+                    Status = e.Status,
+                    // Tính CurrentMember và CurrentFunds nếu cần
+                    CurrentMember = e.Registrations != null ? e.Registrations.Count : 0,
+                    CurrentFunds = e.Donations != null ? e.Donations.Sum(d => d.Amount) : 0
+                })
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewData["id"] = id;
+
+            return View(events);
         }
+        #endregion
 
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var organization = await _context.Organizations
-                .FirstOrDefaultAsync(m => m.OrgId == id);
-            if (organization == null)
-            {
-                return NotFound();
-            }
-
-            return View(organization);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var organization = await _context.Organizations.FindAsync(id);
-            if (organization != null)
-            {
-                _context.Organizations.Remove(organization);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool OrganizationExists(string id)
-        {
-            return _context.Organizations.Any(e => e.OrgId == id);
-        }
+        #region
+        #endregion
     }
 }
