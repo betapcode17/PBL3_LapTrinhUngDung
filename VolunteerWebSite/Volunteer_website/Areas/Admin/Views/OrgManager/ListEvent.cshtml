@@ -70,7 +70,9 @@
                                 <td>@dayBegin - @dayEnd</td>
                                 <td>@item.Location</td>
                                 <td>@item.CurrentMember/@item.TargetMember</td>
-                                <td>@item.CurrentFunds/@item.TargetFunds</td>
+                                <td>
+                                    @(item.CurrentFunds?.ToString("N0") ?? "0")/@(item.TargetFunds?.ToString("N0") ?? "0") VNĐ
+                                </td>
                                 <td class="action_btn">
                                     <button onclick="showEventDetails('@item.EventId')" class="btn btn-info btn-sm action-btn">
                                         <i class="fa-solid fa-eye"></i>
