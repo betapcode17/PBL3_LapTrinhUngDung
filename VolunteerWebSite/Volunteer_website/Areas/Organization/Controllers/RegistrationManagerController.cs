@@ -1,5 +1,4 @@
-﻿//
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Volunteer_website.Areas.Organization.Controllers
 {
     [Area("Organization")]
-    [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Route("Organization/[controller]/[action]")]
     [Authorize("Org")]
     public class RegistrationManagerController : Controller
     {
@@ -20,7 +19,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         }
 
         #region Danh sách người đăng kí tham gia
-        public IActionResult Index(int? page, string searchValue)
+        public IActionResult Index(int? page, string? searchValue)
         {
             int pageSize = 8;
             int pageNumber = page ?? 1;
@@ -62,12 +61,14 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
         #region Cập nhật trạng thái người tham gia
         [HttpGet]
-        public IActionResult Update(string regId, string status)
+        public IActionResult Update(string regId, string? status)
         {
             try
             {
+
                 // Validate status
-                if (!new[] { "PENDING", "ACCEPTED", "REJECTED" }.Contains(status.ToUpper()))
+
+                if (!new[] { "PENDING", "ACCEPTED", "REJECTED" }.Contains(status?.ToUpper() ?? string.Empty))
                 {
                     return Json(new { success = false, message = "Invalid status value" });
                 }
@@ -101,7 +102,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [HttpGet]
+        [Route("GetVolunteerDetails")]
         public IActionResult GetVolunteerDetails(string id)
         {
             try

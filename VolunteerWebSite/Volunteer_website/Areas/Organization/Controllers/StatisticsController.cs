@@ -154,7 +154,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
              ? d.Amount ?? 0
              : 0);
 
-            ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
+            //ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
 
             
 

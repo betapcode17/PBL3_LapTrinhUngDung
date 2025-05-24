@@ -5,7 +5,7 @@ using Volunteer_website.Models;
 
 namespace Volunteer_website.Controllers
 {
-   
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

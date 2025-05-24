@@ -31,6 +31,7 @@ namespace Volunteer_website.Helpers
             }
             catch (Exception ex)
             {
+                Console.WriteLine("ERROR: " + ex);
                 return false;
             }
             return true;
