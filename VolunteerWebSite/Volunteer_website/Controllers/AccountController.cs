@@ -9,9 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
-using Microsoft.AspNet.Identity;
-using System.Data.Entity;
 
 namespace Volunteer_website.Controllers
 {
