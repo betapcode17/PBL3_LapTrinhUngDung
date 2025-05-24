@@ -21,7 +21,7 @@
                 <h1>@ViewData["Title"]</h1>
             </div>
 
-            @using (Html.BeginForm("Sign_Up", "Account2", FormMethod.Post))
+            @using (Html.BeginForm("Sign_Up", "Profile", FormMethod.Post))
             {
                 @Html.ValidationSummary(true)
 
@@ -76,7 +76,7 @@
 
                 <div>
                     <button type="submit">Sign Up</button>
-                    <a href="@Url.Action("SignIn", "Account2")">Already have an Account?</a>
+                    <a href="@Url.Action("SignIn", "Profile")">Already have an Account?</a>
                 </div>
             }
         </div>

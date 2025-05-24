@@ -11,11 +11,11 @@ using System.Text;
 
 namespace Volunteer_website.Controllers
 {
-    public class Account2controller : Controller
+    public class ProfileController : Controller
     {
         private readonly VolunteerManagementContext _context;
 
-        public Account2controller(VolunteerManagementContext context)
+        public ProfileController(VolunteerManagementContext context)
         {
             _context = context;
         }

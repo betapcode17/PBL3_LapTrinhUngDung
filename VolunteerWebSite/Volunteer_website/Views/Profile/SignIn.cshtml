@@ -1,4 +1,5 @@
-﻿@model Volunteer_website.ViewModel.LoginVM
+﻿@using Volunteer_website.ViewModels
+@model LoginVM
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Login";
@@ -33,7 +34,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
-            <form asp-action="SignIn" asp-controller="Account2" method="post" asp-route-returnurl="@(ViewBag.ReturnUrl ?? string.Empty)">
+            <form asp-action="SignIn" asp-controller="Profile" method="post" asp-route-returnurl="@(ViewBag.ReturnUrl ?? string.Empty)">
                 <div class="inputBox">
                     <label asp-for="UserName" class="inputLabel"></label>
                     <input type="text" asp-for="UserName" class="inputField" placeholder=" " required />
@@ -59,7 +60,7 @@
                 align-items: center;
                 text-align: center;
               ">
-                    <a asp-action="Sign_Up" asp-controller="Account2">Don't have an account?</a>
+                    <a asp-action="Sign_Up" asp-controller="Profile">Don't have an account?</a>
                 </div>
             </form>
         </div>

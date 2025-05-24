@@ -31,11 +31,11 @@
                 <div class="navbar-dropdown">
                     <img id="avatar" src="~/images/person_6.jpg" alt="Avatar" />
                     <div id="dropdown-menu" class="navbar-dropdown-menu">
-                        <a asp-controller="Account2" asp-action="Update_Infor">
+                        <a asp-controller="Profile" asp-action="Update_Infor">
                             <i class="fa-solid fa-user"></i>Thông tin cá nhân
                         </a>
 
-                        <a asp-controller="Account2" asp-action="Settings">
+                        <a asp-controller="Profile" asp-action="Settings">
                             <i class="fa-solid fa-cog"></i>Cài đặt
                         </a>
 
@@ -57,15 +57,15 @@
         <div class="sidebar-dropdown">
             <a href="#"><i class="fa-solid fa-address-card"></i>Hồ sơ</a>
             <div class="sidebar-dropdown-menu">
-                <a asp-controller="Account2" asp-action="Update_Infor">
+                <a asp-controller="Profile" asp-action="Update_Infor">
                     <i class="fa-solid fa-user"></i>Thông Tin Cá Nhân
                 </a>
-                <a asp-controller="Account2" asp-action="Contact_Infor">
+                <a asp-controller="Profile" asp-action="Contact_Infor">
                     <i class="fa-solid fa-address-book"></i>Thông Tin Liên Hệ
                 </a>
             </div>
         </div>
-        <a asp-controller="Account2" asp-action="Change_PassWord"><i class="fa-solid fa-lock"></i>Bảo mật</a>
+        <a asp-controller="Profile" asp-action="Change_PassWord"><i class="fa-solid fa-lock"></i>Bảo mật</a>
         <a asp-controller="Manage" asp-action="Registered_Event" class="active">
             <i class="fa-solid fa-calendar-check"></i>Sự kiện đã đăng ký
         </a>
@@ -94,7 +94,7 @@
             }
 
 
-                <form asp-action="Contact_Infor" asp-controller="Account2" method="post">
+                <form asp-action="Contact_Infor" asp-controller="Profile" method="post">
                 <input type="hidden" asp-for="VolunteerId" value="@Model.VolunteerId" />
 
                 <div class="mb-3">
