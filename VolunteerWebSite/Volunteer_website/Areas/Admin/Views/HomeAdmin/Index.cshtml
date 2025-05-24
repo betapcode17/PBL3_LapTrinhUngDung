@@ -4,234 +4,199 @@
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
 }
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link href="~/AdminLayout/assets/css/revenue.css" rel="stylesheet" />
+
 <div class="container-fluid">
     <!-- Phần tiêu đề -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
         <h1 class="text-center my-4 heading-title">Dashboard</h1>
     </div>
 
-    <!-- Phần thân -->
-    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4 col-lg-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="me-3 bg-success bg-opacity-25 rounded p-3">
-                                <i class="bi bi-person-lines-fill fs-2 text-success"></i>
-                            </div>
-                            <div>
-                                <h6 class="text-danger fw-bold">TOTAL VOLUNTEERS</h6>
-                                <h4 class="fw-bold"></h4>
-                                <small class="text-muted">Total number of managed volunteers.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-md-4 col-lg-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="me-3 bg-primary bg-opacity-25 rounded p-3">
-                                <i class="bi bi-calendar-event fs-2 text-primary"></i>
-                            </div>
-                            <div>
-                                <h6 class="text-danger fw-bold">TOTAL EVENTS</h6>
-                                <h4 class="fw-bold"></h4>
-                                <small class="text-muted">Total number of organized events.</small>
-                            </div>
-                        </div>
+    <div class="row g-4 mb-4 mt-4">
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3 bg-success bg-opacity-25 rounded p-3">
+                        <i class="bi bi-person-lines-fill fs-2 text-success"></i>
                     </div>
-                </div>
-
-                <div class="col-md-4 col-lg-4">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="me-3 bg-warning bg-opacity-25 rounded p-3">
-                                <i class="bi bi-pencil-square fs-2 text-warning"></i>
-                            </div>
-                            <div>
-                                <h6 class="text-danger fw-bold">TOTAL DONATIONS</h6>
-                                <h4 class="fw-bold"></h4>
-                                <small class="text-muted">Total number of Donations.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Number of events</h4>
-                            <div class="chart-container">
-                                <canvas id="barChart"></canvas>
-                            </div>
-                        </div>
+                    <div>
+                        <h6 class="text-danger fw-bold">TOTAL VOLUNTEERS</h6>
+                        <h4 class="fw-bold">@ViewBag.Volunteers</h4>
+                        <small class="text-muted">Total number of managed volunteers.</small>
                     </div>
                 </div>
             </div>
-
         </div>
 
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3 bg-primary bg-opacity-25 rounded p-3">
+                        <i class="bi bi-calendar-event fs-2 text-primary"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-danger fw-bold">TOTAL EVENTS</h6>
+                        <h4 class="fw-bold">@ViewBag.Events</h4>
+                        <small class="text-muted">Total number of organized events.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3 bg-warning bg-opacity-25 rounded p-3">
+                        <i class="bi bi-pencil-square fs-2 text-warning"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-danger fw-bold">TOTAL DONATIONS</h6>
+                        <h4 class="fw-bold">@ViewBag.Donations.ToString("N0") VNĐ</h4>
+                        <small class="text-muted">Total amount of donations received.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row g-4 mb-4">
+        <!-- Filter Form and Export Button -->
+        <div class="revenue-filter">
+            <div class="d-flex align-items-center gap-15px flex-wrap">
+                <!-- Form lọc -->
+                <form asp-action="Index" method="get" class="filter-form">
+                    <input type="date" name="startDate" class="form-control revenue-input"
+                           value="@ViewBag.StartDate" />
+                    <input type="date" name="endDate" class="form-control revenue-input"
+                           value="@ViewBag.EndDate" />
+                    <button type="submit" class="revenue-btn filter-btn">
+                        <i class="fas fa-search"></i> Lọc
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row g-4">
+            <!-- Chart 1: Số lượt đăng kí theo thời gian -->
+            <div class="col-lg-12">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số lượt đăng kí theo thời gian</h3>
+                    <canvas id="registrationOverTimeChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Chart 2: Số số sự kiện diễn ra theo thời gian -->
+            <div class="col-lg-12">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số sự kiện diễn ra</h3>
+                    <canvas id="EventIsActiveChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Chart 3: Số tiền ủng hộ theo thời gian -->
+            <div class="col-lg-12">
+                <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
+                    <h3>Số tiền ủng hộ theo thời gian</h3>
+                    <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="~/OrgLayout/DeleteEvent.js"></script>
-<script src="~/OrgLayout/EventDetail.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-    const currentYear = new Date().getFullYear();
-    const Years = [];
-    // const Events = @Html.Raw(Json.Serialize(ViewBag.EventsByYear)); Sử dụng mảng từ ViewBag
-    for (let i = 5; i >= 0; i--) {
-        Years.push(currentYear - i);
-    }
+<!-- External Scripts -->
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Registration Statistics
+            const registrationLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.RegistrationStatistics?.Labels ?? Array.Empty<string>()));
+            const registrationData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.RegistrationStatistics?.Data ?? Array.Empty<int>()));
 
-    const ctx = document.getElementById("barChart").getContext("2d");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: Years,
-        datasets: [
-          //Number of volunteers
-          {
-            label: "",
-            data: Events,
-            backgroundColor: "rgba(255, 99, 132, 0.3)",
-            borderColor: "rgba(255, 99, 132, 1)",
+            // Donation Statistics
+            const donationLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DonationStatistics?.Labels ?? Array.Empty<string>()));
+            const donationData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DonationStatistics?.Data ?? Array.Empty<decimal>()));
 
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        legend: {
-          display: false,
-        },
-        scales: {
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Year',
-              fontColor: '#6c7293',
-              fontSize: 12,
-              fontStyle: 'bold'
-            },
-            gridLines: {
-              display: true,
-              color: 'rgba(204, 204, 204, 0.1)'
+            // Registration By Event Statistics
+            const eventLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.EventIsActiveStatistics?.Labels ?? Array.Empty<string>()));
+            const eventData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.EventIsActiveStatistics?.Data ?? Array.Empty<int>()));
+
+            function createChart(canvasId, type, labels, dataSet, label, yAxisTitle, colors = {}) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) {
+                    console.error(`Canvas '${canvasId}' not found.`);
+                    return;
+                }
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: dataSet,
+                            borderColor: colors.borderColor || 'rgba(75, 192, 192, 1)',
+                            backgroundColor: colors.backgroundColor || 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.3,
+                            fill: type === 'line',
+                            borderWidth: 2,
+                            pointRadius: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: true },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: type === 'line' ? 'Thời gian' : 'Sự kiện'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: yAxisTitle
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
             }
-          }],
 
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Events',
-              fontColor: '#6c7293',
-              fontSize: 12,
-              fontStyle: 'bold'
-            },
-            gridLines: {
-              display: true,
-              color: 'rgba(204, 204, 204, 0.1)'
-            },
-
-            ticks: {
-              beginAtZero: true,
-              min: 0,
-            }
-          }]
-        },
-      },
-    });
-</script>
-
-<script>
-    const currentYear = new Date().getFullYear();
-    const Years = [];
-    const Events = @Html.Raw(Json.Serialize(ViewBag.EventsByYear)); // Sử dụng mảng từ ViewBag
-    for (let i = 5; i >= 0; i--) {
-        Years.push(currentYear - i);
-    }
-
-    const ctx = document.getElementById("barChart1").getContext("2d");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: Years,
-        datasets: [
-          //Number of volunteers
-          {
-            label: "",
-            data: Events,
-            backgroundColor: "rgba(255, 99, 132, 0.3)",
-            borderColor: "rgba(255, 99, 132, 1)",
-
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        legend: {
-          display: false,
-        },
-        scales: {
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Year',
-              fontColor: '#6c7293',
-              fontSize: 12,
-              fontStyle: 'bold'
-            },
-            gridLines: {
-              display: true,
-              color: 'rgba(204, 204, 204, 0.1)'
-            }
-          }],
-
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Events',
-              fontColor: '#6c7293',
-              fontSize: 12,
-              fontStyle: 'bold'
-            },
-            gridLines: {
-              display: true,
-              color: 'rgba(204, 204, 204, 0.1)'
-            },
-
-            ticks: {
-              beginAtZero: true,
-              min: 0,
-            }
-          }]
-        },
-      },
-    });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // draw charts
+            createChart(
+                'registrationOverTimeChart', 'line',
+                registrationLabels, registrationData,
+                'Số lượt đăng ký', 'Số lượt đăng ký (Người)',
+                { borderColor: 'rgba(75,192,192,1)', backgroundColor: 'rgba(75,192,192,0.2)' }
+            );
+            createChart(
+                'DonationOverTimeChart', 'line',
+                donationLabels, donationData,
+                'Số tiền ủng hộ', 'Số tiền ủng hộ (VND)',
+                { borderColor: 'rgba(75,192,192,1)', backgroundColor: 'rgba(75,192,192,0.2)' }
+            );
+            createChart(
+                'EventIsActiveChart', 'line',
+                eventLabels, eventData,
+                'Số lượt đăng ký', 'Số lượt đăng ký (sự kiện)',
+                { borderColor: 'rgba(153,102,255,1)', backgroundColor: 'rgba(153,102,255,0.2)' }
+            );
+        });
+    </script>
+}
