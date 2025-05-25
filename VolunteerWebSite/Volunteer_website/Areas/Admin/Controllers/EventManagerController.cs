@@ -18,11 +18,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
             _db = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         #region Hiển thị sự kiện
         [Route("Event")]
         public IActionResult Event(int? page)
@@ -46,8 +41,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         {
             try
             {
-                //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
-                //Console.WriteLine(firstEvent.EventId);
                 var EventId = request.EventId;
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
                 if (existingEvent == null)
@@ -139,6 +132,35 @@ namespace Volunteer_website.Areas.Admin.Controllers
                     totalAmount = donations.Sum(d => d.Amount ?? 0)
                 }
             });
+        }
+        #endregion
+
+
+        #region Danh Sach Doantion
+        [Route("ListVolunteerDonation")]
+        public IActionResult ListVolunteerDonation(string id, int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+
+            var ListVolunteerDonate = _db.Donations
+                .Where(r => r.EventId == id)
+                .ToPagedList(pageNumber, pageSize);
+            return View(ListVolunteerDonate);
+        }
+        #endregion
+
+        #region Danh sách volunteer
+        [Route("ListVolunteerRegistrationm")]
+        public IActionResult ListVolunteerRegistration(string id, int? page)
+        {
+            int pageSize = 8;
+            int pageNumber = page ?? 1;
+
+            var ListVolunteerRegis = _db.Registrations
+                .Where(r => r.EventId == id)
+                .ToPagedList(pageNumber, pageSize);
+            return View(ListVolunteerRegis);
         }
         #endregion
     }
