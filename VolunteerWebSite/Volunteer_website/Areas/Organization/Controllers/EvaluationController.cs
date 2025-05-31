@@ -8,7 +8,7 @@ using System.Diagnostics;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template

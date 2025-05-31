@@ -1,4 +1,6 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Volunteer_website.Models.VolunteerManagementContext _db
+@using Microsoft.EntityFrameworkCore // Thêm namespace này để sử dụng AsNoTracking
 @{
     ViewData["Title"] = "OrgLayout";
 }
@@ -6,56 +8,56 @@
 @{
     var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var userName = User.Identity!.Name; // Lấy từ ClaimTypes.Name
+    var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    // Lấy ảnh của tổ chức từ cơ sở dữ liệu
+    string orgImagePath = null;
+    if (!string.IsNullOrEmpty(orgId))
+    {
+        var org = await _db.Organizations
+            .AsNoTracking() // Sử dụng AsNoTracking sau khi import namespace
+            .FirstOrDefaultAsync(o => o.OrgId == orgId);
+        orgImagePath = org?.ImagePath ?? "~/OrgLayout/assets/images/faces/face1.jpg"; // Ảnh mặc định nếu không có
+    }
+    else
+    {
+        orgImagePath = "~/OrgLayout/assets/images/faces/face1.jpg"; // Ảnh mặc định nếu không có OrgId
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Purple Admin</title>
     <!-- plugins:css -->
-  
-    <link rel="stylesheet"
-          href="~/OrgLayout/assets/vendors/mdi/css/materialdesignicons.min.css" />
-   
+    <link rel="stylesheet" href="~/OrgLayout/assets/vendors/mdi/css/materialdesignicons.min.css" />
     <!-- endinject -->
     <!-- Plugin css for this page -->
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
-     
     <link rel="stylesheet" href="~/OrgLayout/assets/css/style.css" />
-    @* <link rel="stylesheet" href="~/OrgLayout/ManageEvent.css"> *@
     <link href="~/OrgLayout/CreateEvent.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/OrgLayout/Modal.css">
     <!-- End layout styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
     <!-- Nhúng Material Design Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css">
-    
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSV7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="~/OrgLayout/VolunteerDetails.css" rel="stylesheet" />
     <!-- Include Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="~/OrgLayout/DeleteEvent.js" rel="stylesheet" />
-     <link href="~/OrgLayout/EventDetails.css" rel="stylesheet" />
+    <link href="~/OrgLayout/EventDetails.css" rel="stylesheet" />
     <link href="~/OrgLayout/assets/css/site.css" rel="stylesheet" />
     <link href="~/OrgLayout/assets/js/alert.js" rel="stylesheet" />
-     
 </head>
 <body>
-
     @if (TempData.ContainsKey("SuccessMessage"))
     {
         <div id="customAlertSuccess" class="modern-alert success">
@@ -84,7 +86,6 @@
         </div>
     }
 
-
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -93,34 +94,27 @@
                     <img src="~/OrgLayout/assets/images/VolunteerIcon.png"
                          alt="Logo"
                          class="navbar-logo" />
-                    <a class="navbar-title" >DUTERS</a>
+                    <a class="navbar-title">DUTERS</a>
                 </div>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
-                <button class="navbar-toggler navbar-toggler align-self-center"
-                        type="button"
-                        data-toggle="minimize">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item nav-profile dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           id="profileDropdown"
-                           href="#"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img">
-                                <img src="~/OrgLayout/assets/images/faces/face1.jpg" alt="image" />
+                                <img src="~/@orgImagePath" alt="image" />
                                 <span class="availability-status online"></span>
                             </div>
                             <div class="nav-profile-text">
                                 <p class="mb-1 text-black">@userName</p>
                             </div>
                         </a>
-                        <div class="dropdown-menu navbar-dropdown"
-                             aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
+                        <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Profile">
+                                <i class="mdi mdi-cached me-2 text-success"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">
@@ -129,9 +123,7 @@
                         </div>
                     </li>
                 </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-                        type="button"
-                        data-toggle="offcanvas">
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>
                 </button>
             </div>
@@ -144,7 +136,7 @@
                     <li class="nav-item nav-profile">
                         <a href="#" class="nav-link">
                             <div class="nav-profile-image">
-                                <img src="~/OrgLayout/assets/images/faces/face1.jpg" alt="profile" />
+                                <img src="~/@orgImagePath" alt="profile" />
                                 <span class="login-status online"></span>
                                 <!--change to offline or busy as needed-->
                             </div>
@@ -156,26 +148,23 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a    class="nav-link" asp-action="Index" asp-controller="Statistics">
+                        <a class="nav-link" asp-action="Index" asp-controller="Statistics">
                             <span class="menu-title">Dashboard</span>
                             <i class="mdi mdi-view-dashboard menu-icon"></i>
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a asp-area="Organization" asp-controller="EventManager" asp-action="Index" class="nav-link">
                             <span class="menu-title">Events</span>
                             <i class="mdi mdi-calendar-multiple menu-icon"></i>
                         </a>
                     </li>
-
                     <li class="nav-item">
-                        <a asp-area="Organization" asp-controller="RegistrationManager" asp-action="Index" class="nav-link" >
-                            <span class="menu-title">Volunteers</span>
+                        <a asp-area="Organization" asp-controller="RegistrationManager" asp-action="Index" class="nav-link">
+                            <span class="menu-title">Registration</span>
                             <i class="mdi mdi-account-group menu-icon"></i>
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Organization" asp-controller="DonationManager" asp-action="Index">
                             <span class="menu-title">Donation</span>
@@ -187,22 +176,19 @@
                             <span class="menu-title">Evaluation</span>
                             <i class="mdi mdi-star-check menu-icon"></i>
                         </a>
-                     
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Organization" asp-controller="Calendar" asp-action="Index">
                             <span class="menu-title">Calendar</span>
                             <i class="mdi mdi-star-check menu-icon"></i>
                         </a>
-
                     </li>
-                  
                 </ul>
             </nav>
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                  @RenderBody()
+                    @RenderBody()
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
@@ -215,7 +201,6 @@
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="~/AdminLayout/assets/vendors/js/vendor.bundle.base.js"></script>
-  
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <script src="~/AdminLayout/assets/vendors/chart.js/Chart.min.js"></script>
@@ -236,7 +221,7 @@
 @RenderSection("Scripts", required: false)
 @section Scripts {
     <script>
-               function searchTable(searchBoxId, tableId, columnIndex) {
+        function searchTable(searchBoxId, tableId, columnIndex) {
             var input = document.getElementById(searchBoxId).value.toLowerCase();
             var table = document.getElementById(tableId);
             var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
@@ -255,3 +240,7 @@
         }
     </script>
 }
+
+
+
+

@@ -1,0 +1,30 @@
+﻿@model List<Volunteer_website.Controllers.Article>
+
+<h2>Tin tức từ nhiều nguồn về Từ Thiện, Tình Nguyện, và Tấm Gương Vượt Khó</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <p class="text-danger">@ViewBag.ErrorMessage</p>
+}
+else if (Model.Any())
+{
+    <div class="row">
+        @foreach (var article in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text">@article.Description</p>
+                        <p class="card-text"><small class="text-muted">Nguồn: @article.Source | Thời gian: @article.PublishedAt</small></p>
+                        <a href="@article.Url" target="_blank" class="btn btn-primary">Đọc thêm</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Không có bài viết nào để hiển thị.</p>
+}

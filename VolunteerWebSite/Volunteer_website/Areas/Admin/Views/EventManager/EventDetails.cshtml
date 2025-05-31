@@ -2,18 +2,15 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "EventDetails";
-    Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
     var orgName = ViewBag.OrgName as string;
-  
 }
-
 <link href="~/css/Cause_Detail.css" rel="stylesheet" />
 <section class="ftco-section">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <img src="~/@Model.ImagePath" alt="@Model.Name" class="banner-img" />
-              
+                <img src="@Model.ImagePath" alt="@Model.Name" class="banner-img" />
                 @if (!string.IsNullOrEmpty(Model.ListImg))
                 {
                     var imgs = Model.ListImg.Split(',');
