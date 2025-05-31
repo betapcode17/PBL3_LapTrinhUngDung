@@ -17,7 +17,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB"));
 });
 // Configure AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
