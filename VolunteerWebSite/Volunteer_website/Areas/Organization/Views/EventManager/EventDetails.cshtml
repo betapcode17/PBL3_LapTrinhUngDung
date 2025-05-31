@@ -12,7 +12,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <img src="@Model.ImagePath" alt="@Model.Name" class="banner-img" />
+                <img src="~/@Model.ImagePath" alt="@Model.Name" class="banner-img" />
+              
                 @if (!string.IsNullOrEmpty(Model.ListImg))
                 {
                     var imgs = Model.ListImg.Split(',');

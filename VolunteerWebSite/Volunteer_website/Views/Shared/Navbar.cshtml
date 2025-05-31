@@ -25,19 +25,19 @@
                     <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-controller="Event" asp-action="Index" class="nav-link">Events</a>
+                    <a asp-controller="Home" asp-action="Events" class="nav-link">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-controller="Fundraising" asp-action="Index" class="nav-link">Fundraising</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Volunteer" asp-action="Index" class="nav-link">Volunteers</a>
+                    <a asp-controller="Home" asp-action="Volunteer_List" class="nav-link">Volunteers</a>
                 </li>
                 <li class="nav-item">
                     <a asp-controller="Blog" asp-action="Index" class="nav-link">News</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-controller="About" asp-action="Index" class="nav-link">About Us</a>
+                    <a asp-controller="Map" asp-action="Index" class="nav-link">Maps</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="AboutUs" class="nav-link">About Us</a>
                 </li>
             </ul>
 
@@ -99,7 +99,7 @@
                             <hr />
                         </li>
                         <li>
-                            <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                            <a class="dropdown-item" asp-controller="Profile" asp-action="Manage">
                                 <i class="fa-solid fa-user" style="margin-right: 10px"></i>
                                 Profile
                             </a>

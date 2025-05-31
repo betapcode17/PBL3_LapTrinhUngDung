@@ -13,6 +13,7 @@
 <script src="~/OrgLayout/volunteer.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <div class="container-fluid">
     <!-- Phần tiêu đề -->
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
@@ -66,7 +67,7 @@
                         <th>Amount</th>
                         <th>Message</th>
                         <th>Donation Date</th>
-
+                        <th>Action</th> <!-- Cột Action -->
                     </tr>
                 </thead>
                 <tbody id="eventTable">
@@ -77,11 +78,10 @@
                             <td>
                                 @{
                                     var volunteer = ViewBag.Volunteers?[item.VolunteerId] as Volunteer;
-                                    @volunteer?.Name
+                                    <span class="volunteer-name" data-volunteer-id="@item.VolunteerId">@(volunteer?.Name ?? "N/A")</span>
                                 }
                             </td>
                             <td>
-
                                 @{
                                     var eventItem = ViewBag.Events[item.EventId] as Event;
                                     @eventItem?.Name
@@ -99,68 +99,75 @@
                                     @:N/A
                                 }
                             </td>
+                            <td>
+                                <button class="btn btn-info btn-sm view-volunteer-details"
+                                        data-volunteer-id="@item.VolunteerId"
+                                        onclick="viewVolunteerDetails('@item.VolunteerId')">
+                                    <i class="bi bi-eye me-1"></i> View Details
+                                </button>
+                            </td>
                         </tr>
                     }
-                    <!-- Volunteer Details Modal - Redesigned -->
-                    <div class="modal fade" id="volunteerDetailsModal" tabindex="-1" aria-labelledby="volunteerDetailsModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title fs-4" id="volunteerDetailsModalLabel">
-                                        <i class="bi bi-person-badge me-2"></i>VOLUNTEER DETAILS
-                                    </h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body p-4">
-                                    <div class="row">
-                                        <!-- Volunteer Image Column -->
-                                        <div class="col-md-4 text-center mb-3 mb-md-0">
-                                            <div id="volunteerImageContainer" class="border rounded p-2 bg-light">
-                                                <img id="volunteerImage" src="https://via.placeholder.com/200" alt="Volunteer Photo"
-                                                     class="img-fluid rounded" style="max-height: 200px;">
-                                                <div class="mt-2">
-                                                    <span id="volunteerId" class="badge bg-info text-dark">ID: N/A</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                </tbody>
+            </table>
+        </div>
 
-                                        <!-- Volunteer Details Column -->
-                                        <div class="col-md-8">
-                                            <div class="volunteer-details-grid">
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-person-fill me-2"></i>Name:</span>
-                                                    <span id="volunteerName" class="detail-value">N/A</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-envelope-fill me-2"></i>Email:</span>
-                                                    <span id="volunteerEmail" class="detail-value">N/A</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-telephone-fill me-2"></i>Phone:</span>
-                                                    <span id="volunteerPhone" class="detail-value">N/A</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-calendar-event me-2"></i>Date of Birth:</span>
-                                                    <span id="volunteerDob" class="detail-value">N/A</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-gender-ambiguous me-2"></i>Gender:</span>
-                                                    <span id="volunteerGender" class="detail-value">N/A</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label"><i class="bi bi-geo-alt-fill me-2"></i>Address:</span>
-                                                    <span id="volunteerAddress" class="detail-value">N/A</span>
-                                                </div>
-                                            </div>
-                                        </div>
+        <!-- Volunteer Details Modal - Redesigned -->
+        <div class="modal fade" id="volunteerDetailsModal" tabindex="-1" aria-labelledby="volunteerDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fs-4" id="volunteerDetailsModalLabel">
+                            <i class="bi bi-person-badge me-2"></i>VOLUNTEER DETAILS
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row">
+                            <!-- Volunteer Image Column -->
+                            <div class="col-md-4 text-center mb-3 mb-md-0">
+                                <div id="volunteerImageContainer" class="border rounded p-2 bg-light">
+                                    <img id="volunteerImage" src="https://via.placeholder.com/200" alt="Volunteer Photo"
+                                         class="img-fluid rounded" style="max-height: 200px;">
+                                    <div class="mt-2">
+                                        <span id="volunteerId" class="badge bg-info text-dark">ID: N/A</span>
                                     </div>
                                 </div>
+                            </div>
 
+                            <!-- Volunteer Details Column -->
+                            <div class="col-md-8">
+                                <div class="volunteer-details-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-person-fill me-2"></i>Name:</span>
+                                        <span id="volunteerName" class="detail-value">N/A</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-envelope-fill me-2"></i>Email:</span>
+                                        <span id="volunteerEmail" class="detail-value">N/A</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-telephone-fill me-2"></i>Phone:</span>
+                                        <span id="volunteerPhone" class="detail-value">N/A</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-calendar-event me-2"></i>Date of Birth:</span>
+                                        <span id="volunteerDob" class="detail-value">N/A</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-gender-ambiguous me-2"></i>Gender:</span>
+                                        <span id="volunteerGender" class="detail-value">N/A</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label"><i class="bi bi-geo-alt-fill me-2"></i>Address:</span>
+                                        <span id="volunteerAddress" class="detail-value">N/A</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
 
         <!-- Pagination -->
@@ -187,8 +194,44 @@
                 </a>
             }
         </div>
-
     </div>
 </div>
 
+<script>
+    // Hàm viewVolunteerDetails để hiển thị thông tin tình nguyện viên qua AJAX
+    function viewVolunteerDetails(volunteerId) {
+        $.ajax({
+            url: '/Organization/DonationManager/GetVolunteerDetails?id=' + volunteerId,
+            type: 'GET',
+            success: function (volunteer) {
+                if (volunteer) {
+                    // Cập nhật thông tin vào modal
+                    $('#volunteerId').text('ID: ' + volunteerId);
+                    $('#volunteerName').text(volunteer.Name || 'N/A');
+                    $('#volunteerEmail').text(volunteer.Email || 'N/A');
+                    $('#volunteerPhone').text(volunteer.Phone || 'N/A');
+                    $('#volunteerDob').text(volunteer.DateOfBirth ? new Date(volunteer.DateOfBirth).toLocaleDateString() : 'N/A');
+                    $('#volunteerGender').text(volunteer.Gender || 'N/A');
+                    $('#volunteerAddress').text(volunteer.Address || 'N/A');
+                    $('#volunteerImage').attr('src', volunteer.ImageUrl || 'https://via.placeholder.com/200');
 
+                    // Hiển thị modal
+                    $('#volunteerDetailsModal').modal('show');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Volunteer not found!'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load volunteer details: ' + error
+                });
+            }
+        });
+    }
+</script>

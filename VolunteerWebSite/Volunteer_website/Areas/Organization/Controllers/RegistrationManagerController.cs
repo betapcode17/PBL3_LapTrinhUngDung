@@ -4,7 +4,7 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
     [Route("Organization/[controller]/[action]")]
@@ -103,45 +103,21 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [Route("GetVolunteerDetails")]
+        [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
         {
-            try
+            if (string.IsNullOrEmpty(id))
             {
-                var volunteer = _db.Volunteers
-                    .FirstOrDefault(v => v.VolunteerId == id);
-
-                if (volunteer == null)
-                {
-                    return Json(new { success = false, message = "Volunteer not found" });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        volunteerId = volunteer.VolunteerId,
-                        name = volunteer.Name,
-                        email = volunteer.Email,
-                        phoneNumber = volunteer.PhoneNumber,
-                        dateOfBirth = volunteer.DateOfBirth?.ToString("dd/MM/yyyy"),
-                        gender = volunteer.Gender.HasValue ?
-                            (volunteer.Gender.Value ? "Male" : "Female") : "Not specified",
-                        imagePath = volunteer.ImagePath,
-                        address = volunteer.Address
-                    }
-                });
+                return NotFound("Volunteer ID is required.");
             }
-            catch (Exception ex)
+
+            var volunteer = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == id);
+            if (volunteer == null)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = "An error occurred while fetching volunteer details",
-                    error = ex.Message
-                });
+                return NotFound($"Volunteer with ID {id} not found.");
             }
+
+            return Json(volunteer); // Trả về dữ liệu dưới dạng JSON
         }
         #endregion
     }
