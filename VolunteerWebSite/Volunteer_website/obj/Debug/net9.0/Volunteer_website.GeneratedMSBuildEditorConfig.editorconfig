@@ -200,20 +200,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxNYW5hZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Profile/SignIn.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxTaWduSW4uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Profile/Sign_Up.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxTaWduX1VwLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Profile/Update_Infor.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxVcGRhdGVfSW5mb3IuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Profile/Volunteer_Change.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxWb2x1bnRlZXJfQ2hhbmdlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Shared/Error.cshtml]
@@ -226,10 +214,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Shared/Navbar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXE5hdmJhci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Shared/User_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFVzZXJfTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Shared/_ValidationScriptsPartial.cshtml]

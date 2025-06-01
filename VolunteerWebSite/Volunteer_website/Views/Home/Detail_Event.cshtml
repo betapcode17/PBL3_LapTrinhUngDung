@@ -66,8 +66,7 @@
                 <div class="col-md-6">
                     <div class="donation-card">
                         <h4 class="text-center text-danger mb-3">@Model.Name</h4>
-                        <div class="d-flex align-items-center mb-3">
-                            <!-- Thêm Logo tổ chức gây quỹ nếu có -->                   
+                        <div class="d-flex align-items-center mb-3">           
                             @if (!string.IsNullOrEmpty(Model.OrganizationImagePath))
                             {
                                 <img src="@Url.Content(Model.OrganizationImagePath)" alt="@Model.Organization" width="40" class="me-2" />

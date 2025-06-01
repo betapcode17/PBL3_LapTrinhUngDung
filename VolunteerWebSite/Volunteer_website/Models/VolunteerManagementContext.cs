@@ -33,11 +33,12 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Volunteer> Volunteers { get; set; }
 
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.AdminId).HasName("PK__Admin__43AA41413BE1844B");
+            entity.HasKey(e => e.AdminId).HasName("PK__Admin__43AA414114095B57");
 
             entity.ToTable("Admin");
 
@@ -58,7 +59,7 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.DonationId).HasName("PK__Donation__296B91DC6EA62E67");
+            entity.HasKey(e => e.DonationId).HasName("PK__Donation__296B91DCFEC00132");
 
             entity.ToTable("Donation");
 
@@ -86,24 +87,30 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.EventId)
-                .HasConstraintName("FK__Donation__event___5535A963");
+                .HasConstraintName("FK__Donation__event___5629CD9C");
 
             entity.HasOne(d => d.Volunteer).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.VolunteerId)
-                .HasConstraintName("FK__Donation__volunt__5441852A");
+                .HasConstraintName("FK__Donation__volunt__5535A963");
         });
 
         modelBuilder.Entity<Evaluation>(entity =>
         {
-            entity.HasKey(e => e.EvaluationId).HasName("PK__Evaluati__36AE68F37590C2C3");
+            entity.HasKey(e => e.EvaluationId).HasName("PK__Evaluati__36AE68F3553373A3");
+
+            entity.ToTable("Evaluation");
 
             entity.Property(e => e.EvaluationId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
-                .HasDefaultValueSql("(newid())");
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("evaluation_id");
             entity.Property(e => e.EvaluatedAt)
                 .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime")
+                .HasColumnName("evaluated_at");
+            entity.Property(e => e.Feedback).HasColumnName("feedback");
+            entity.Property(e => e.IsCompleted).HasColumnName("is_completed");
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -111,12 +118,13 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Reg).WithMany(p => p.Evaluations)
                 .HasForeignKey(d => d.RegId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Evaluations_Registrations");
         });
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.EventId).HasName("PK__Events__2370F72730443B4B");
+            entity.HasKey(e => e.EventId).HasName("PK__Events__2370F727D63CDE58");
 
             entity.Property(e => e.EventId)
                 .HasMaxLength(50)
@@ -156,7 +164,7 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Org).WithMany(p => p.Events)
                 .HasForeignKey(d => d.OrgId)
-                .HasConstraintName("FK__Events__org_id__4E88ABD4");
+                .HasConstraintName("FK__Events__org_id__52593CB8");
 
             entity.HasOne(d => d.TypeEvent).WithMany(p => p.Events)
                 .HasForeignKey(d => d.TypeEventId)
@@ -166,7 +174,7 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<EventType>(entity =>
         {
-            entity.HasKey(e => e.TypeEventId).HasName("PK__EventTyp__9AB5A4B027EAEFA3");
+            entity.HasKey(e => e.TypeEventId).HasName("PK__EventTyp__9AB5A4B0DAFD5528");
 
             entity.ToTable("EventType");
 
@@ -186,7 +194,7 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<Organization>(entity =>
         {
-            entity.HasKey(e => e.OrgId).HasName("PK__Organiza__F6AD80122B2F786B");
+            entity.HasKey(e => e.OrgId).HasName("PK__Organiza__F6AD8012CEEE1CFC");
 
             entity.ToTable("Organization");
 
@@ -218,7 +226,9 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<Registration>(entity =>
         {
-            entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772CF42390A");
+            entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772D4A1B9A0");
+
+            entity.ToTable("Registration");
 
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
@@ -228,6 +238,7 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("event_id");
+            entity.Property(e => e.RegisterAt).HasColumnName("register_at");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -238,21 +249,22 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.Registrations)
                 .HasForeignKey(d => d.EventId)
-                .HasConstraintName("FK__Registrat__event__4CA06362");
+                .HasConstraintName("FK__Registrat__event__52593CB8");
 
             entity.HasOne(d => d.Volunteer).WithMany(p => p.Registrations)
                 .HasForeignKey(d => d.VolunteerId)
-                .HasConstraintName("FK__Registrat__volun__4BAC3F29");
+                .HasConstraintName("FK__Registrat__volun__5165187F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F238B2648");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FE8CBE2DF");
 
             entity.Property(e => e.UserId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("user_id");
+            entity.Property(e => e.CreateAt).HasColumnName("create_at");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
@@ -260,19 +272,21 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("password");
-            entity.Property(e => e.RandomKey).HasMaxLength(255);
+            entity.Property(e => e.RandomKey)
+                .HasMaxLength(255)
+                .HasColumnName("random_key");
             entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.UserName)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("user_name");
-           
-
         });
 
         modelBuilder.Entity<Volunteer>(entity =>
         {
-            entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__0FE766B15290ACBB");
+            entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__0FE766B188AB9535");
+
+            entity.ToTable("Volunteer");
 
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)

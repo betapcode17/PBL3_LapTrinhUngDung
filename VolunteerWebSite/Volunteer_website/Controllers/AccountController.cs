@@ -168,14 +168,17 @@ namespace Volunteer_website.Controllers
 
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, volunteer.VolunteerId),
                     new Claim(ClaimTypes.Name, volunteer.Name ?? ""),
                     new Claim(ClaimTypes.Email, volunteer.Email ?? ""),
                     new Claim(ClaimTypes.MobilePhone, volunteer.PhoneNumber ?? ""),
                     new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
                     new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
-                    new Claim(ClaimTypes.Role, user.Role.ToString()!)
+                    new Claim(ClaimTypes.Role, user.Role.ToString()!),
+                    new Claim("ImagePath", volunteer.ImagePath ?? "default.jpg")
+                    
                 };
-
+                
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.ViewModels;
 using Volunteer_website.Models;
+using System.Security.Claims;
 
 namespace Volunteer_website.Controllers
 {
@@ -22,11 +23,11 @@ namespace Volunteer_website.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(string id)
         {
-            var userId = HttpContext.Session.GetString("UserId");
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
-                return RedirectToAction("SignIn", "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             // Kiểm tra đã đăng ký chưa

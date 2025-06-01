@@ -33,11 +33,11 @@ public partial class Event
 
     public string? Status { get; set; }
 
-    public virtual ICollection<Donation>? Donations { get; set; } = new List<Donation>();
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual Organization? Org { get; set; }
 
-    public virtual ICollection<Registration>? Registrations { get; set; } = new List<Registration>();
+    public virtual ICollection<Registration> Registrations { get; set; } = new List<Registration>();
 
-    public virtual EventType? TypeEvent { get; set; } = null!;
+    public virtual EventType TypeEvent { get; set; } = null!;
 }

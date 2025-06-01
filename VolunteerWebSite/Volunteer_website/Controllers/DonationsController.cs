@@ -6,6 +6,7 @@ using Volunteer_website.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Filters;
 using Volunteer_website.Services;
+
 namespace Volunteer_website.Controllers
 {
     public class DonationsController : Controller
@@ -13,45 +14,16 @@ namespace Volunteer_website.Controllers
         private readonly VolunteerManagementContext _context;
         private readonly ILogger<DonationsController> _logger;
         private readonly IVnPayService _vnPayService;
-        public DonationsController(VolunteerManagementContext context, ILogger<DonationsController> logger, IVnPayService vnPayService)
+        private readonly EmailService _emailService;
+
+        public DonationsController(VolunteerManagementContext context, ILogger<DonationsController> logger, IVnPayService vnPayService, EmailService emailService)
         {
             _context = context;
             _logger = logger;
             _vnPayService = vnPayService;
+            _emailService = emailService;
         }
 
-        //// GET: Donations/Create
-        //[Authorize]
-        //public IActionResult Create(int eventId)
-        //{
-        //    // Get the event from database
-        //    var eventModel = _context.Events.Find(eventId);
-        //    if (eventModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var model = new DonationModel
-        //    {
-        //        EventId = eventId
-        //    };
-
-        //    // Pre-fill user info for all authenticated users
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var user = _context.Volunteers.Find(userId);
-
-        //    if (user != null)
-        //    {
-        //        model.Name = user.Name;
-        //        model.Email = user.Email;
-        //        model.Phone = user.PhoneNumber;
-        //        model.Address = user.Address;
-        //    }
-
-        //    return View(model);
-        //}
-
-        // POST: Donations/Create for Volunteer
         [OnlyVolunteer]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,14 +36,14 @@ namespace Volunteer_website.Controllers
 
             try
             {
-                // Lấy thông tin người dùng từ session
-                var userId = HttpContext.Session.GetString("UserId");
-                var role = HttpContext.Session.GetString("UserRole");
-               
-                if (role == "volunteer" && !string.IsNullOrEmpty(userId))
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (role == "0" && !string.IsNullOrEmpty(userId))
                 {
                     donationModel.Volunteer_Id = userId;
                 }
+
                 string gen_id = Guid.NewGuid().ToString();
                 var donation = new Models.Donation
                 {
@@ -84,9 +56,36 @@ namespace Volunteer_website.Controllers
                 };
                 _logger.LogInformation($"DonationDate before save: {donation.DonationDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? "null"}");
 
-
                 _context.Donations.Add(donation);
                 await _context.SaveChangesAsync();
+
+                // Lấy thông tin sự kiện và người dùng để gửi email
+                var eventModel = await _context.Events.FirstOrDefaultAsync(e => e.EventId == donationModel.Event_id);
+                var volunteer = await _context.Volunteers.FirstOrDefaultAsync(v => v.VolunteerId == donationModel.Volunteer_Id);
+
+                if (volunteer != null && !string.IsNullOrEmpty(volunteer.Email))
+                {
+                    // Tạo nội dung email
+                    string subject = "Cảm ơn bạn đã ủng hộ sự kiện!";
+                    string body = $@"
+                            <h3>Xin chào {volunteer.Name},</h3>
+                            <p>Cảm ơn bạn đã ủng hộ sự kiện <strong>{eventModel?.Name}</strong>!</p>
+                            <p><strong>Số tiền ủng hộ:</strong> {string.Format("{0:N0} VND", donationModel.Amount)}</p>
+                            <p><strong>Thời gian ủng hộ:</strong> {donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy")}</p>
+                            <p><strong>Lời nhắn:</strong> {donationModel.Note ?? "Không có lời nhắn"}</p>
+                            <p>Chúng tôi rất trân trọng sự đóng góp của bạn để giúp sự kiện thành công!</p>
+                            <p>Trân trọng,<br>Đội ngũ Volunteer Website</p>";
+
+                    try
+                    {
+                        await _emailService.SendEmailAsync(volunteer.Email, subject, body);
+                    }
+                    catch (Exception emailEx)
+                    {
+                        _logger.LogError(emailEx, $"Không gửi được email tới {volunteer.Email}");
+                        TempData["Error"] = "Đã tạo donation nhưng không gửi được email xác nhận.";
+                    }
+                }
 
                 TempData["Message"] = "Cảm ơn bạn đã đóng góp cho sự kiện!";
                 return RedirectToAction("Detail_Event", "Home", new { id = donationModel.Event_id });
@@ -99,20 +98,60 @@ namespace Volunteer_website.Controllers
             }
         }
 
-        
-        public IActionResult Index()
-        {
-            
-
-            return View();
-        }
         [HttpGet]
-        public IActionResult PaymentCallbackVnpay()
+        public async Task<IActionResult> PaymentCallbackVnpay()
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
+            _logger.LogInformation($"PaymentCallbackVnpay: TransactionId={response.TransactionId}, Success={response.Success}");
 
-            return Json(response);
+            var donation = _context.Donations
+                .Include(d => d.Volunteer)
+                .Include(d => d.Event)
+                .FirstOrDefault(d => d.DonationId == response.TransactionId);
+
+            if (response.Success && donation != null && donation.EventId != null)
+            {
+                if (donation.Volunteer != null && !string.IsNullOrEmpty(donation.Volunteer.Email))
+                {
+                    string subject = "Cảm ơn bạn đã ủng hộ sự kiện!";
+                    string body = $@"
+                    <h3>Xin chào {donation.Volunteer.Name},</h3>
+                    <p>Cảm ơn bạn đã ủng hộ sự kiện <strong>{donation.Event?.Name}</strong>!</p>
+                    <p><strong>Số tiền ủng hộ:</strong> {string.Format("{0:N0} VND", donation.Amount)}</p>
+                    <p><strong>Thời gian ủng hộ:</strong> {donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy")}</p>
+                    <p><strong>Lời nhắn:</strong> {donation.Message ?? "Không có lời nhắn"}</p>
+                    <p>Chúng tôi rất trân trọng sự đóng góp của bạn để giúp sự kiện thành công!</p>
+                    <p>Trân trọng,<br>Đội ngũ Volunteer Website</p>";
+
+                    try
+                    {
+                        await _emailService.SendEmailAsync(donation.Volunteer.Email, subject, body);
+                        _logger.LogInformation($"Email sent successfully to {donation.Volunteer.Email}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Failed to send email to {donation.Volunteer.Email}");
+                        TempData["Error"] = "Thanh toán thành công nhưng không gửi được email xác nhận.";
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning($"No valid volunteer or email for DonationId={response.TransactionId}");
+                    TempData["Error"] = "Thanh toán thành công nhưng không tìm thấy thông tin người ủng hộ.";
+                }
+
+                TempData["Message"] = "Thanh toán thành công! Cảm ơn bạn đã ủng hộ.";
+                return RedirectToAction("Detail_Event", "Home", new { id = donation.EventId });
+            }
+
+            _logger.LogWarning($"Payment failed or invalid donation for TransactionId={response.TransactionId}");
+            TempData["Error"] = "Thanh toán không thành công. Vui lòng thử lại.";
+            var fallbackEventId = donation?.EventId ?? "";
+            return RedirectToAction("Detail_Event", "Home", new { id = fallbackEventId });
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

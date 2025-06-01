@@ -6,6 +6,8 @@
     var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var userName = User.Identity.Name; // Lấy từ ClaimTypes.Name
 }
+<!-- Thêm jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
@@ -25,7 +27,7 @@
                     <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a asp-controller="Event" asp-action="Index" class="nav-link">Events</a>
+                    <a asp-controller="Home" asp-action="Events" class="nav-link">Events</a>
                 </li>
                 <li class="nav-item">
                     <a asp-controller="Fundraising" asp-action="Index" class="nav-link">Fundraising</a>
@@ -60,13 +62,13 @@
                             </button>
                         </div>
                     </div>
-                    <button id="close-search">&times;</button>
+                    <button id="close-search">×</button>
                 </div>
 
                 <a class="icon d-flex align-items-center justify-content-center position-relative"
-                   asp-controller="Event" asp-action="RegisteredEvents">
+                   asp-controller="Manage" asp-action="Registered_Event">
                     <i class="fa-solid fa-hands-holding-child"></i>
-                    <span class="badge-notify">3</span>
+                    <span class="badge-notify">0</span>
                 </a>
             </div>
 
@@ -76,9 +78,10 @@
                 <div class="dropdown" style="margin-left: 20px">
                     <div class="avatar-container">
                         <img class="avatar-img rounded-circle"
-                             src="~/images/person_4.jpg"
+                             src="@Url.Content(User.FindFirst("ImagePath")?.Value ?? "~/images/default.jpg")"
                              alt="avatar"
                              id="profileDropdown" />
+
                     </div>
 
                     <ul class="dropdown-menu dropdown-animation shadow pt-3" aria-labelledby="profileDropdown">
@@ -87,9 +90,10 @@
                             <div class="d-flex align-items-center">
                                 <!-- Avatar -->
                                 <div class="avatar me-3">
-                                    <img class="avatar-img rounded-circle shadow"
-                                         src="~/images/person_4.jpg"
-                                         alt="avatar" />
+                                    <img class="avatar-img rounded-circle"
+                                 src="@Url.Content(User.FindFirst("ImagePath")?.Value ?? "~/images/default.jpg")"
+                                 alt="avatar"
+                                 id="profileDropdown" />
                                 </div>
                                 <div>
                                     <a class="h6" href="#">@userName</a>
@@ -99,16 +103,25 @@
                             <hr />
                         </li>
                         <li>
-                            <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
-                                <i class="fa-solid fa-user" style="margin-right: 10px"></i>
-                                Profile
+                            <a class="dropdown-item" asp-controller="Profile" asp-action="Update_Infor">
+                                <i class="fa-solid fa-user" style="margin-right: 10px"></i>Xem hồ sơ
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" asp-controller="Profile" asp-action="Contact_Infor">
+                                <i class="fa-solid fa-gear" style="margin-right: 10px"></i>Chỉnh sửa thông tin  
                             </a>
                         </li>
                         <li>
+                            <a class="dropdown-item" asp-controller="Manage" asp-action="Registered_Event">
+                                <i class="fa-solid fa-calendar-days" style="margin-right: 10px"></i>Sự kiện của tôi
+                            </a>
+                        </li>
+
+                        <li>
                             <a class="dropdown-item bg-danger-soft-hover" asp-controller="Account" asp-action="Logout">
-                                <i class="fa-solid fa-arrow-right-from-bracket"
-                                   style="margin-right: 10px"></i>
-                                <i class="bi bi-power fa-fw me-2"></i>Logout
+                                <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px"></i>Đăng xuất
                             </a>
                         </li>
                     </ul>
@@ -142,3 +155,23 @@
     </div>
 </nav>
 <!-- END nav -->
+
+<!-- Script AJAX để cập nhật số lượng -->
+<script>
+$(document).ready(function() {
+    updateRegisteredCount();
+
+    // Cập nhật mỗi 5 giây (có thể bỏ nếu không cần cập nhật tự động)
+    setInterval(updateRegisteredCount, 5000);
+
+    function updateRegisteredCount() {
+        $.get("/Manage/GetRegisteredEventCount", function(data) {
+            if (data.count !== undefined) {
+                $(".badge-notify").text(data.count);
+            }
+        }).fail(function() {
+            $(".badge-notify").text("0"); // Nếu lỗi, hiển thị 0
+        });
+    }
+});
+</script>

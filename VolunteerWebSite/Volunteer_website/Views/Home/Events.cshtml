@@ -1,14 +1,13 @@
-﻿
+﻿@using System.Security.Claims
 @model List<Volunteer_website.ViewModels.EventModel>
 @{
     ViewData["Title"] = "Events";
-    var role = Context.Session.GetInt32("UserRole");
-    Layout = (role == 0) ? "~/Views/Shared/User_Layout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <head>
     <link rel="stylesheet" href="~/css/Cause.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
 </head>
 
 <div class="hero-wrap" style="background-image: url('@Url.Content("~/images/bg_1.jpg")');" data-stellar-background-ratio="0.5">
@@ -25,27 +24,6 @@
         </div>
     </div>
 </div>
-
-<pre>
-
-</pre>
-@* <div class="event-filter-container container"> *@
-@*     <!-- Hàng 1: Các tab lọc trạng thái --> *@
-@*     <div class="event-filter-tabs d-flex gap-2 mb-3"> *@
-@*         <button class="tab-btn active" data-filter="ongoing">Đang diễn ra</button> *@
-@*         <button class="tab-btn" data-filter="upcoming">Sắp diễn ra</button> *@
-@*         <button class="tab-btn" data-filter="ended">Đã kết thúc</button> *@
-@*     </div> *@
-
-@*     <!-- Hàng 2: Thanh tìm kiếm, căn trái đúng lề --> *@
-@*     <div class="search-box mb-3"> *@
-@*         <input type="text" id="eventSearch" placeholder="Bạn muốn tìm gì?"> *@
-@*         <i class="fa fa-search search-icon"></i> *@
-@*     </div> *@
-@* </div> *@
-
-
-
 
 <section class="ftco-section pt-3">
     <div class="container">
@@ -169,40 +147,37 @@
         </div>
 
         <!-- Phân trang -->
-
         <div class="row mt-5">
             <div class="col text-center">
                 <div class="block-27">
-                    <ul>
-                        <li><a href="#">&#60;</a></li>
-                        <li class="active"><span>1</span></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&#62;</a></li>
+                    <ul id="pagination">
+                        <!-- Pagination items will be dynamically generated here -->
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<script>
-       document.addEventListener('DOMContentLoaded', function () {
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const eventCards = document.querySelectorAll('.event-card');
-        const searchInputs = {
-            eventName: document.getElementById('eventNameSearch'),
-            organization: document.getElementById('organizationSearch'),
-            startDateFrom: document.getElementById('startDateFrom'),
-            startDateTo: document.getElementById('startDateTo'),
-            eventType: document.getElementById('eventTypeFilter')
-        };
-        const applyFilterBtn = document.getElementById('applyFilter');
-        const resetFilterBtn = document.getElementById('resetFilter');
-        let currentFilter = "ongoing";
 
-            function applyAllFilters() {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const eventCards = document.querySelectorAll('.event-card');
+    const searchInputs = {
+        eventName: document.getElementById('eventNameSearch'),
+        organization: document.getElementById('organizationSearch'),
+        startDateFrom: document.getElementById('startDateFrom'),
+        startDateTo: document.getElementById('startDateTo'),
+        eventType: document.getElementById('eventTypeFilter')
+    };
+    const applyFilterBtn = document.getElementById('applyFilter');
+    const resetFilterBtn = document.getElementById('resetFilter');
+    const paginationContainer = document.getElementById('pagination');
+    let currentFilter = "ongoing";
+    let currentPage = 1;
+    const itemsPerPage = 6; // Adjust this number based on how many events per page
+
+    function applyAllFilters(page = 1) {
         const query = {
             eventName: searchInputs.eventName.value.toLowerCase(),
             organization: searchInputs.organization.value.toLowerCase(),
@@ -211,16 +186,14 @@
             eventType: searchInputs.eventType.value
         };
 
-        eventCards.forEach(card => {
+        // Collect all matching cards
+        const matchingCards = Array.from(eventCards).filter(card => {
             const status = card.getAttribute('data-status');
             const title = card.querySelector('.card-title').textContent.toLowerCase();
             const org = card.querySelector('.org-info span:first-child').textContent.toLowerCase();
             const dateBegin = new Date(card.getAttribute('data-date-begin'));
-
-            // Cần thêm thuộc tính data-date-end vào thẻ event-card
             const dateEndAttr = card.getAttribute('data-date-end');
             const dateEnd = dateEndAttr ? new Date(dateEndAttr) : null;
-
             const eventType = card.getAttribute('data-event-type');
 
             // Status filter
@@ -230,22 +203,16 @@
             const matchesName = title.includes(query.eventName);
             const matchesOrg = org.includes(query.organization);
 
-            // Date range filter - đơn giản hóa
+            // Date range filter
             let matchesDate = true;
             if (query.startDateFrom && query.startDateTo) {
-                // Sự kiện thỏa mãn nếu HOẶC ngày bắt đầu HOẶC ngày kết thúc nằm trong khoảng
                 matchesDate = (
-                    // Ngày bắt đầu nằm trong khoảng
                     (dateBegin >= query.startDateFrom && dateBegin <= query.startDateTo) ||
-
-                    // Ngày kết thúc nằm trong khoảng
                     (dateEnd && dateEnd >= query.startDateFrom && dateEnd <= query.startDateTo)
                 );
             } else if (query.startDateFrom) {
-                // Chỉ có ngày bắt đầu lọc được chọn
                 matchesDate = dateBegin >= query.startDateFrom || (dateEnd && dateEnd >= query.startDateFrom);
             } else if (query.startDateTo) {
-                // Chỉ có ngày kết thúc lọc được chọn
                 matchesDate = dateBegin <= query.startDateTo || (dateEnd && dateEnd <= query.startDateTo);
             }
 
@@ -255,49 +222,120 @@
                 matchesType = eventType === query.eventType;
             }
 
-            // Combine all filters
-            if (matchesStatus && matchesName && matchesOrg && matchesDate && matchesType) {
-                card.style.display = 'block';
+            return matchesStatus && matchesName && matchesOrg && matchesDate && matchesType;
+        });
+
+        // Calculate pagination
+        const totalItems = matchingCards.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        currentPage = Math.min(page, Math.max(1, totalPages));
+
+        // Show/hide cards based on current page
+        eventCards.forEach(card => card.style.display = 'none');
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        matchingCards.slice(startIndex, endIndex).forEach(card => {
+            card.style.display = 'block';
+        });
+
+        // Update pagination UI
+        updatePagination(totalPages);
+    }
+
+    function updatePagination(totalPages) {
+        paginationContainer.innerHTML = '';
+
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.innerHTML = '<a href="#"><</a>';
+        prevLi.classList.add('pagination-btn');
+        if (currentPage === 1) {
+            prevLi.classList.add('disabled');
+        } else {
+            prevLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    applyAllFilters(currentPage);
+                }
+            });
+        }
+        paginationContainer.appendChild(prevLi);
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${i}</span>`;
+            li.classList.add('pagination-btn');
+            if (i === currentPage) {
+                li.classList.add('active');
             } else {
-                card.style.display = 'none';
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    applyAllFilters(currentPage);
+                });
             }
+            paginationContainer.appendChild(li);
+        }
+
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.innerHTML = '<a href="#">></a>';
+        nextLi.classList.add('pagination-btn');
+        if (currentPage === totalPages || totalPages === 0) {
+            nextLi.classList.add('disabled');
+        } else {
+            nextLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    applyAllFilters(currentPage);
+                }
+            });
+        }
+        paginationContainer.appendChild(nextLi);
+    }
+
+    // Tab buttons functionality
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.getAttribute('data-filter');
+            currentPage = 1; // Reset to first page when changing filters
+            applyAllFilters();
+        });
+    });
+
+    // Apply filter button
+    if (applyFilterBtn) {
+        applyFilterBtn.addEventListener('click', () => {
+            currentPage = 1; // Reset to first page when applying filters
+            applyAllFilters();
         });
     }
 
-        // Tab buttons functionality
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.getAttribute('data-filter');
-                applyAllFilters();
-            });
+    // Reset filter button
+    if (resetFilterBtn) {
+        resetFilterBtn.addEventListener('click', function () {
+            // Clear all inputs
+            searchInputs.eventName.value = '';
+            searchInputs.organization.value = '';
+            searchInputs.startDateFrom.value = '';
+            searchInputs.startDateTo.value = '';
+            searchInputs.eventType.value = '';
+            currentPage = 1; // Reset to first page
+            // Reset to default tab
+            document.querySelector('.tab-btn[data-filter="ongoing"]').click();
         });
+    }
 
-        // Apply filter button
-        if (applyFilterBtn) {
-            applyFilterBtn.addEventListener('click', applyAllFilters);
-        }
-
-        // Reset filter button
-        if (resetFilterBtn) {
-            resetFilterBtn.addEventListener('click', function() {
-                // Clear all inputs
-                searchInputs.eventName.value = '';
-                searchInputs.organization.value = '';
-                searchInputs.startDateFrom.value = '';
-                searchInputs.startDateTo.value = '';
-                searchInputs.eventType.value = '';
-
-                // Reset to default tab
-                document.querySelector('.tab-btn[data-filter="ongoing"]').click();
-            });
-        }
-
-        // Initialize with ongoing events
-        document.querySelector('.tab-btn[data-filter="ongoing"]').click();
-    });
+    // Initialize with ongoing events
+    document.querySelector('.tab-btn[data-filter="ongoing"]').click();
+});
 </script>
+
 <style>
     .search-box {
         position: relative;
@@ -305,15 +343,15 @@
         min-width: 200px;
     }
 
-        .search-box input {
-            width: 100%;
-            padding: 10px 38px 10px 16px;
-            border: none;
-            border-radius: 25px;
-            background-color: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            font-size: 14px;
-        }
+    .search-box input {
+        width: 100%;
+        padding: 10px 38px 10px 16px;
+        border: none;
+        border-radius: 25px;
+        background-color: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        font-size: 14px;
+    }
 
     .search-icon {
         position: absolute;
@@ -338,17 +376,16 @@
         transition: all 0.3s ease;
     }
 
+    .tab-btn.active {
+        color: orangered;
+        border-color: #8000ff;
+        background-color: #eee;
+    }
 
-        .tab-btn.active {
-            color: orangered;
-            border-color: #8000ff;
-            background-color: #eee;
-        }
-        /* Style cho thanh tìm kiếm */
-        .tab-btn:hover {
-            background-color: #f0f0f0;
-            color: #000;
-        }
+    .tab-btn:hover {
+        background-color: #f0f0f0;
+        color: #000;
+    }
 
     .event-filter-tabs {
         display: flex;
@@ -362,24 +399,25 @@
         justify-content: center;
         box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* thêm nhẹ shadow nếu thích */
     }
+
     /* Loc */
     .filter-box {
         position: relative;
         width: 100%;
     }
 
-        .filter-box input,
-        .filter-box select {
-            width: 100%;
-            padding: 10px 38px 10px 16px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            background-color: white;
-            font-size: 14px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
+    .filter-box input,
+    .filter-box select {
+        width: 100%;
+        padding: 10px 38px 10px 16px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        background-color: white;
+        font-size: 14px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
 
     .date-range-box {
         display: flex;
@@ -387,19 +425,19 @@
         gap: 8px;
     }
 
-        .date-range-box input {
-            padding: 10px 16px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            background-color: white;
-            font-size: 14px;
-            flex: 1;
-        }
+    .date-range-box input {
+        padding: 10px 16px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        background-color: white;
+        font-size: 14px;
+        flex: 1;
+    }
 
-        .date-range-box span {
-            color: #666;
-            font-size: 14px;
-        }
+    .date-range-box span {
+        color: #666;
+        font-size: 14px;
+    }
 
     .btn-filter {
         background-color: orangered;
@@ -432,13 +470,56 @@
         background-color: #e0e0e0;
     }
 
-    .search-icon {
-        position: absolute;
-        top: 50%;
-        right: 12px;
-        transform: translateY(-50%);
+    /* Pagination Styles */
+    .block-27 ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .block-27 ul li {
+        margin: 0 5px;
+    }
+
+    .block-27 ul li.pagination-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .block-27 ul li.pagination-btn a,
+    .block-27 ul li.pagination-btn span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
         color: #333;
-        font-size: 16px;
-        pointer-events: none;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .block-27 ul li.pagination-btn.active {
+        background-color: #ffaa66; /* Light orange for active page */
+        color: white;
+    }
+
+    .block-27 ul li.pagination-btn:hover:not(.disabled) {
+        background-color: #e0e0e0;
+    }
+
+    .block-27 ul li.pagination-btn.disabled {
+        background-color: #f5f5f5;
+        color: #ccc;
+        cursor: not-allowed;
     }
 </style>
