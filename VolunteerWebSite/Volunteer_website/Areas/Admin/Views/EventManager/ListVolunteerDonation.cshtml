@@ -144,15 +144,15 @@
     <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
       @if (Model!.HasPreviousPage)
       {
-        <a href="@Url.Action("ListVolunteerDonation", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
+        <a href="@Url.Action("ListVolunteerDonation", new { id = ViewBag.EventId ,page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
       }
       @for (int i = 1; i <= Model.PageCount; i++)
       {
-        <a href="@Url.Action("ListVolunteerDonation", new { page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+        <a href="@Url.Action("ListVolunteerDonation", new { id = ViewBag.EventId, page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
       }
       @if (Model.HasNextPage)
       {
-        <a href="@Url.Action("ListVolunteerDonation", new { page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
+        <a href="@Url.Action("ListVolunteerDonation", new { id = ViewBag.EventId, page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
       }
     </div>
   </div>

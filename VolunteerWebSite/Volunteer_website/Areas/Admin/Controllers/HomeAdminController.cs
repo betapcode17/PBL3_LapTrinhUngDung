@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Volunteer_website.Models;
 using Volunteer_website.Areas.Admin.Data;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using System.Buffers;
+using Volunteer_website.Helpers;
+using Volunteer_website.ViewModels;
 namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -31,7 +31,10 @@ namespace Volunteer_website.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
+            var currentAdmin = _db.Admins.FirstOrDefault(a => a.AdminId == adminId);
+            if (currentAdmin == null)
+                return NotFound();
+            ViewBag.ImgPath = currentAdmin.ImgPath;
 
             var events = _db.Events.Count();
             var totalAmount = _db.Donations.AsNoTracking()
@@ -254,6 +257,8 @@ namespace Volunteer_website.Areas.Admin.Controllers
             return result;
         }
         #endregion
+
+        
 
         #region Logout
         [HttpGet]

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Volunteer_website.ViewModels;
+using AspNetCoreGeneratedDocument;
 
 namespace Volunteer_website.Controllers
 {
@@ -231,7 +232,7 @@ namespace Volunteer_website.Controllers
 
                 return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     ? Redirect(returnUrl)
-                    : Redirect(Url.Action("Index", "Statistics", new { area = "Organization" }));
+                    : Redirect(Url.Action("Index", "Statistics", new { area = "Organization" })!);
             }
             else if (user.Role == 2)
             {
@@ -246,7 +247,8 @@ namespace Volunteer_website.Controllers
                 {
                     new Claim(ClaimTypes.Name, Admin.Name ?? ""),
                     new Claim(ClaimTypes.Email, Admin.Email ?? ""),
-                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()!),
+                    new Claim("AvatarUrl", Admin.ImgPath!),
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
                 };
 
@@ -266,7 +268,7 @@ namespace Volunteer_website.Controllers
 
                 return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     ? Redirect(returnUrl)
-                    : Redirect(Url.Action("Index", "HomeAdmin", new { area = "Admin" }));
+                    : Redirect(Url.Action("Index", "HomeAdmin", new { area = "Admin" })!);
             }
 
 

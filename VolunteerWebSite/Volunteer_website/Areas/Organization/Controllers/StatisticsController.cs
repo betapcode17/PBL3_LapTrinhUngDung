@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using Volunteer_website.Models;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
     [Route("Organization/[controller]/[action]")]
@@ -18,11 +20,11 @@ namespace Volunteer_website.Areas.Organization.Controllers
         {
             _db = db;
         }
+
         [HttpGet]
-       
         public IActionResult Index(string searchValue = "", string? startDate = null, string? endDate = null)
         {
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 return RedirectToAction("Login", "Account");
@@ -48,7 +50,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             ViewBag.UncompletedEvaluations = _db.Evaluations
                 .Count(e => !e.IsCompleted && eventIds.Contains(e.Reg.EventId));
 
-            // Xử lý ngày mặc định nếu startDate hoặc endDate là null
+            // Handle default dates  
             DateOnly startDateOnly, endDateOnly;
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
@@ -57,17 +59,16 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                var defaultEndDateTime = DateTime.Now;
+                var defaultStartDateTime = defaultEndDateTime.AddDays(-30);
+                startDateOnly = DateOnly.FromDateTime(defaultStartDateTime);
+                endDateOnly = DateOnly.FromDateTime(defaultEndDateTime);
             }
 
-            // Định dạng ngày thành chuỗi "yyyy-MM-dd" để hiển thị trong input
             ViewBag.StartDate = startDateOnly.ToString("yyyy-MM-dd");
             ViewBag.EndDate = endDateOnly.ToString("yyyy-MM-dd");
 
-            // Lấy dữ liệu thống kê đăng ký theo thời gian
+            // Registration statistics by time  
             var statisticsData = StatisticsRegistrationByTime(searchValue, startDate, endDate);
             var registrationChartData = statisticsData.Select(x => new
             {
@@ -81,7 +82,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Data = registrationChartData.Select(x => x.Count).ToArray()
             };
 
-            // Lấy dữ liệu thống kê donation theo thời gian
+            // Donation statistics by time  
             var donationStatistics = StatisticsDonationByTime(searchValue, startDate, endDate);
             var donationChartData = donationStatistics.Select(x => new
             {
@@ -95,7 +96,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Data = donationChartData.Select(x => x.TotalAmount).ToArray()
             };
 
-            // Lấy dữ liệu thống kê đăng ký theo sự kiện
+            // Registration statistics by event  
             var registrationByEventData = StatisticsRegistrationByEvent(searchValue, startDate, endDate);
             var registrationByEventChartData = registrationByEventData.Select(x => new
             {
@@ -109,7 +110,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Data = registrationByEventChartData.Select(x => x.Count).ToArray()
             };
 
-            // Lấy dữ liệu thống kê donation theo sự kiện
+            // Donation statistics by event  
             var donationByEventData = StatisticsDonationByEvent(searchValue, startDate, endDate);
             var donationByEventChartData = donationByEventData.Select(x => new
             {
@@ -123,45 +124,33 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 Data = donationByEventChartData.Select(x => x.TotalAmount).ToArray()
             };
 
-            // Lấy dữ liệu thống kê tổng hợp (tên sự kiện, số lượt tham gia, số tiền ủng hộ)
+            // Event summary  
             var eventSummaryData = StatisticsEventSummary(searchValue, startDate, endDate);
             ViewBag.EventSummary = eventSummaryData;
 
-
-
-            // Lấy tổng số lượt đăng ký dựa trên startDate và endDate
-
-
+            // Fix totalRegistrationsByDate to avoid ToDateTime in query  
+            var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
+            var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
             var totalRegistrationsByDate = _db.Registrations
-      .Where(r => eventIds.Contains(r.EventId))
-      .ToList() // Fetch data to memory
-      .Count(r => r.RegisterAt.HasValue &&
-                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= DateTime.Parse(startDateOnly.ToString("yyyy-MM-dd")) &&
-                  r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= DateTime.Parse(endDateOnly.ToString("yyyy-MM-dd")));
+                .Where(r => eventIds.Contains(r.EventId) && r.RegisterAt.HasValue)
+                .AsEnumerable() // Force client-side evaluation  
+                .Count(r => r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime &&
+                            r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime);
 
             ViewBag.TotalRegistrationsByDate = totalRegistrationsByDate;
 
+            // Total donation by date  
+            var totalDonationByDate = _db.Donations
+                .Where(d => eventIds.Contains(d.EventId) && d.DonationDate.HasValue)
+                .AsEnumerable()
+                .Sum(d => d.DonationDate!.Value >= startDateTime && d.DonationDate!.Value <= endDateTime ? d.Amount ?? 0 : 0);
 
-
-            // Lấy tổng số tiền ủng hộ dựa trên startDate và endDate (giả định bảng Donations)
-       //     var totalDonationByDate = _db.Donations
-       //.Where(d => eventIds.Contains(d.EventId))
-       //.ToList() // Fetch data to memory
-       //.Sum(d => d.DonationDate.HasValue &&
-       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) >= startDateOnly.ToDateTime(TimeOnly.MinValue) &&
-       //          d.DonationDate.Value.ToDateTime(TimeOnly.MinValue) <= endDateOnly.ToDateTime(TimeOnly.MinValue)
-       //          ? d.Amount ?? 0
-       //          : 0);
-
-            //ViewBag.TotalDonationByDate = totalDonationByDate;// Giả định có cột Amount, xử lý null
-
-            
+            ViewBag.TotalDonationByDate = totalDonationByDate;
 
             return View();
         }
 
-
-        #region Thống kê số lượt đăng kí theo thời gian
+        #region Thống kê số lượt đăng ký theo thời gian
         public List<dynamic> StatisticsRegistrationByTime(string searchValue = "", string? startDate = null, string? endDate = null)
         {
             DateOnly startDateOnly, endDateOnly;
@@ -172,13 +161,13 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                var defaultEndDateTime = DateTime.Now;
+                var defaultStartDateTime = defaultEndDateTime.AddDays(-30);
+                startDateOnly = DateOnly.FromDateTime(defaultStartDateTime);
+                endDateOnly = DateOnly.FromDateTime(defaultEndDateTime);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 Console.WriteLine("No orgId found, returning empty list.");
@@ -192,33 +181,25 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
 
             var eventIds = eventQuery.Select(e => e.EventId).ToList();
-            Console.WriteLine($"Event IDs for Registrations: {string.Join(", ", eventIds)}");
+            var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
+            var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
 
             var data = _db.Registrations
                 .Where(r => eventIds.Contains(r.EventId) && r.RegisterAt.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                .Where(r =>
-                {
-                    // Fixing the CS1503 error by converting DateOnly to DateTime before using it  
-                    var registerDate = r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue);
-                    // Convert DateOnly to DateTime for comparison
-                    var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
-                    var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
-                   
-
-                    return registerDate >= startDateTime && registerDate <= endDateTime;
-                })
+                .AsEnumerable() // Force client-side evaluation
+                .Where(r => r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime &&
+                            r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime)
                 .GroupBy(r => new
                 {
                     Year = r.RegisterAt!.Value.Year,
-                    Month = r.RegisterAt.Value.Month,
-                    Day = r.RegisterAt.Value.Day // Thêm Day vào GroupBy
+                    Month = r.RegisterAt!.Value.Month,
+                    Day = r.RegisterAt!.Value.Day
                 })
                 .Select(g => new
                 {
                     Year = g.Key.Year,
                     Month = g.Key.Month,
-                    Day = g.Key.Day, // Thêm Day vào kết quả
+                    Day = g.Key.Day,
                     Count = g.Count()
                 })
                 .OrderBy(x => x.Year)
@@ -226,12 +207,9 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 .ThenBy(x => x.Day)
                 .ToList();
 
-            Console.WriteLine($"Registration Statistics Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
-
-            return data.Select(x => (dynamic)x).ToList();
+            return data.Cast<dynamic>().ToList();
         }
         #endregion
-
 
         #region Thống kê số tiền Donation theo thời gian
         public List<dynamic> StatisticsDonationByTime(string searchValue = "", string? startDate = null, string? endDate = null)
@@ -248,7 +226,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 startDateTime = endDateTime.AddDays(-30);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 Console.WriteLine("No orgId found, returning empty list.");
@@ -262,29 +240,16 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
 
             var eventIds = eventQuery.Select(e => e.EventId).ToList();
-            Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
                 .Where(r => eventIds.Contains(r.EventId) && r.DonationDate.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                //a đạt xử lý
-                //.Where(r =>
-                //{
-                //    // Fixing the CS1503 error by converting DateOnly to DateTime before using it
-                //    //a đạt xử lý
-                //    //var donationDate = r.DonationDate!.Value.ToDateTime(TimeOnly.MinValue);
-                  
-                //    // Fixing the CS0019 errors by converting DateOnly to DateTime before comparison
-                //    var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
-                //    var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
-
-                //    return donationDate >= startDateTime && donationDate <= endDateTime;
-                //})
+                .AsEnumerable() // Force client-side evaluation
+                .Where(r => r.DonationDate!.Value >= startDateTime && r.DonationDate!.Value <= endDateTime)
                 .GroupBy(r => new
                 {
                     Year = r.DonationDate!.Value.Year,
-                    Month = r.DonationDate.Value.Month,
-                    Day = r.DonationDate.Value.Day
+                    Month = r.DonationDate!.Value.Month,
+                    Day = r.DonationDate!.Value.Day
                 })
                 .Select(g => new
                 {
@@ -298,16 +263,11 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 .ThenBy(x => x.Day)
                 .ToList();
 
-            Console.WriteLine($"Donation Statistics Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
-
-            return data.Select(x => (dynamic)x).ToList();
+            return data.Cast<dynamic>().ToList();
         }
-
         #endregion
 
-
-
-        #region Số lượt đăng kí theo sự kiện
+        #region Số lượt đăng ký theo sự kiện
         public List<dynamic> StatisticsRegistrationByEvent(string searchValue = "", string? startDate = null, string? endDate = null)
         {
             DateOnly startDateOnly, endDateOnly;
@@ -318,13 +278,13 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
             else
             {
-                var endDateTime = DateTime.Now;
-                var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                var defaultEndDateTime = DateTime.Now;
+                var defaultStartDateTime = defaultEndDateTime.AddDays(-30);
+                startDateOnly = DateOnly.FromDateTime(defaultStartDateTime);
+                endDateOnly = DateOnly.FromDateTime(defaultEndDateTime);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 Console.WriteLine("No orgId found, returning empty list.");
@@ -338,35 +298,27 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
 
             var eventIds = eventQuery.Select(e => e.EventId).ToList();
-            Console.WriteLine($"Event IDs for Registrations: {string.Join(", ", eventIds)}");
+            var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
+            var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
 
             var data = _db.Registrations
                 .Where(r => eventIds.Contains(r.EventId) && r.RegisterAt.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                 .Where(r =>
-                 {
-                     // Fixing the CS1503 error by converting DateOnly to DateTime before using it  
-                     var registerDate = r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue);
-                     // Convert DateOnly to DateTime for comparison
-                     var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
-                     var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
-                     return registerDate >= startDateTime && registerDate <= endDateTime;
-                 })
+                .AsEnumerable()
+                .Where(r => r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime &&
+                            r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime)
                 .GroupBy(r => r.EventId)
-                .Join(_db.Events, 
+                .Join(_db.Events,
                       regGroup => regGroup.Key,
-                      evt => evt.EventId,     
+                      evt => evt.EventId,
                       (regGroup, evt) => new
                       {
-                          EventName = evt.Name ?? "Sự kiện không tên", 
-                          Count = regGroup.Count() 
+                          EventName = evt.Name ?? "Sự kiện không tên",
+                          Count = regGroup.Count()
                       })
                 .OrderBy(x => x.EventName)
                 .ToList();
 
-            Console.WriteLine($"Registration Statistics By Event: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
-
-            return data.Select(x => (dynamic)x).ToList();
+            return data.Cast<dynamic>().ToList();
         }
         #endregion
 
@@ -385,7 +337,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 startDateTime = endDateTime.AddDays(-30);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 Console.WriteLine("No orgId found, returning empty list.");
@@ -399,12 +351,11 @@ namespace Volunteer_website.Areas.Organization.Controllers
             }
 
             var eventIds = eventQuery.Select(e => e.EventId).ToList();
-            Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
 
             var data = _db.Donations
                 .Where(d => eventIds.Contains(d.EventId) && d.DonationDate.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                //.Where(d => d.DonationDate!.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
+                .AsEnumerable()
+                .Where(d => d.DonationDate!.Value >= startDateTime && d.DonationDate!.Value <= endDateTime)
                 .GroupBy(d => d.EventId)
                 .Join(_db.Events,
                       donateGroup => donateGroup.Key,
@@ -417,19 +368,14 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 .OrderBy(x => x.EventName)
                 .ToList();
 
-            Console.WriteLine($"Donation Statistics By Event: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
-
-            return data.Select(x => (dynamic)x).ToList();
+            return data.Cast<dynamic>().ToList();
         }
-
         #endregion
-
 
         #region Bảng thống kê tổng quát
         public List<dynamic> StatisticsEventSummary(string searchValue = "", string? startDate = null, string? endDate = null)
         {
             DateTime startDateTime, endDateTime;
-
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
                 startDateTime = DateTime.Parse(startDate);
@@ -441,14 +387,13 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 startDateTime = endDateTime.AddDays(-30);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
                 Console.WriteLine("No orgId found, returning empty list.");
                 return new List<dynamic>();
             }
 
-            // Lấy danh sách sự kiện
             var eventQuery = _db.Events.Where(e => e.OrgId == orgId);
             if (!string.IsNullOrEmpty(searchValue))
             {
@@ -457,27 +402,23 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             var events = eventQuery.ToList();
 
-            // Đếm số lượt đăng ký
             var registrationCounts = _db.Registrations
-                .Where(r => events.Select(e => e.EventId).Contains(r.EventId))
+                .Where(r => events.Select(e => e.EventId).Contains(r.EventId) && r.RegisterAt.HasValue)
                 .AsEnumerable()
-                .Where(r => r.RegisterAt.HasValue
-                            && r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime
-                            && r.RegisterAt.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime)
+                .Where(r => r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) >= startDateTime &&
+                            r.RegisterAt!.Value.ToDateTime(TimeOnly.MinValue) <= endDateTime)
                 .GroupBy(r => r.EventId)
                 .Select(g => new { EventId = g.Key ?? string.Empty, Count = g.Count() })
                 .ToDictionary(g => g.EventId, g => g.Count);
 
-            // Tính tổng số tiền ủng hộ (dùng DateTime)
             var donationAmounts = _db.Donations
-               .Where(d => events.Select(e => e.EventId).Contains(d.EventId))
-               .AsEnumerable()
-               //.Where(d => d.DonationDate.HasValue && d.DonationDate.Value >= startDateOnly && d.DonationDate.Value <= endDateOnly)
-               .GroupBy(d => d.EventId)
-               .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
-               .ToDictionary(g => g.EventId, g => g.TotalAmount);
+                .Where(d => events.Select(e => e.EventId).Contains(d.EventId) && d.DonationDate.HasValue)
+                .AsEnumerable()
+                .Where(d => d.DonationDate!.Value >= startDateTime && d.DonationDate!.Value <= endDateTime)
+                .GroupBy(d => d.EventId)
+                .Select(g => new { EventId = g.Key ?? string.Empty, TotalAmount = g.Sum(d => d.Amount ?? 0) })
+                .ToDictionary(g => g.EventId, g => g.TotalAmount);
 
-            // Kết hợp dữ liệu
             var data = events.Select(e => new
             {
                 EventName = e.Name ?? "Sự kiện không tên",
@@ -489,34 +430,30 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             Console.WriteLine($"Event Summary Statistics: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
 
-            return data.Select(x => (dynamic)x).ToList();
+            return data.Cast<dynamic>().ToList();
         }
+        #endregion
+
         [HttpGet]
         public IActionResult ExportEventSummaryReport(string searchValue = "", string? startDate = null, string? endDate = null)
         {
             Console.WriteLine($"ExportEventSummaryReport called with searchValue: {searchValue}, startDate: {startDate}, endDate: {endDate}");
 
-            // Lấy dữ liệu từ StatisticsEventSummary  
             var data = StatisticsEventSummary(searchValue, startDate, endDate);
 
-            // Create an instance of EPPlusLicense to call the method  
-            var license = new EPPlusLicense();
-            license.SetNonCommercialOrganization("VolunteerWebsite"); // Đặt tên tổ chức phi thương mại (tùy chọn)  
+            // Set EPPlus license context
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            // Tạo file Excel bằng EPPlus  
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("Thống kê sự kiện");
 
-                // Định dạng tiêu đề  
                 worksheet.Cells[1, 1].Value = "Thống kê tổng hợp sự kiện";
                 worksheet.Cells[1, 1, 1, 3].Merge = true;
                 worksheet.Cells[1, 1].Style.Font.Size = 16;
                 worksheet.Cells[1, 1].Style.Font.Bold = true;
                 worksheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-
-                // Thêm dòng thời gian (từ ngày ... đến ngày ...)
                 string formattedStartDate = string.IsNullOrEmpty(startDate) ? DateTime.Now.AddDays(-30).ToString("dd/MM/yyyy") : DateOnly.Parse(startDate).ToString("dd/MM/yyyy");
                 string formattedEndDate = string.IsNullOrEmpty(endDate) ? DateTime.Now.ToString("dd/MM/yyyy") : DateOnly.Parse(endDate).ToString("dd/MM/yyyy");
                 worksheet.Cells[2, 1].Value = $"Thống kê từ ngày {formattedStartDate} đến ngày {formattedEndDate}";
@@ -524,8 +461,6 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 worksheet.Cells[2, 1].Style.Font.Size = 12;
                 worksheet.Cells[2, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-
-                // Định dạng tiêu đề cột  
                 worksheet.Cells[3, 1].Value = "Tên sự kiện";
                 worksheet.Cells[3, 2].Value = "Số lượt tham gia";
                 worksheet.Cells[3, 3].Value = "Số tiền ủng hộ (VND)";
@@ -534,27 +469,23 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 worksheet.Cells[3, 1, 3, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
                 worksheet.Cells[3, 1, 3, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-                // Đổ dữ liệu vào bảng  
                 int row = 4;
                 foreach (var item in data)
                 {
                     worksheet.Cells[row, 1].Value = item.EventName;
                     worksheet.Cells[row, 2].Value = item.RegistrationCount;
                     worksheet.Cells[row, 3].Value = item.DonationAmount;
-                    worksheet.Cells[row, 3].Style.Numberformat.Format = "#,##0"; // Định dạng số tiền  
+                    worksheet.Cells[row, 3].Style.Numberformat.Format = "#,##0";
                     row++;
                 }
 
-                // Tự động điều chỉnh độ rộng cột  
                 worksheet.Cells[3, 1, row - 1, 3].AutoFitColumns();
 
-                // Thêm viền cho bảng  
                 worksheet.Cells[3, 1, row - 1, 3].Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 worksheet.Cells[3, 1, row - 1, 3].Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 worksheet.Cells[3, 1, row - 1, 3].Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 worksheet.Cells[3, 1, row - 1, 3].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
 
-                // Xuất file  
                 var stream = new MemoryStream();
                 package.SaveAs(stream);
                 stream.Position = 0;
@@ -563,9 +494,5 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
         }
-        #endregion
-
-
-
     }
 }

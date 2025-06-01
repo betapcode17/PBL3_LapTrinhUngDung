@@ -5,7 +5,7 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
@@ -70,7 +70,22 @@ namespace Volunteer_website.Areas.Organization.Controllers
             return View(lstDonated);
         }
 
+        [HttpGet]
+        public IActionResult GetVolunteerDetails(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound("Volunteer ID is required.");
+            }
 
+            var volunteer = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == id);
+            if (volunteer == null)
+            {
+                return NotFound($"Volunteer with ID {id} not found.");
+            }
+
+            return Json(volunteer); // Trả về dữ liệu dưới dạng JSON
+        }
 
     }
 }
