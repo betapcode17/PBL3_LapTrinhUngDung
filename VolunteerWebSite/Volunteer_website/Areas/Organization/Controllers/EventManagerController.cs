@@ -123,6 +123,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         public IActionResult Create()
         {
             var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrEmpty(orgId))
             {
                 return RedirectToAction("Login", "Account", new { area = "" });

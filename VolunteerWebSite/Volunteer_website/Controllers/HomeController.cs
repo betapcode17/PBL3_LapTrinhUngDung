@@ -92,19 +92,22 @@ namespace Volunteer_website.Controllers
 
             return View();
         }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+     
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpGet]
         public IActionResult Events(int page = 1, int pageSize = 6, string statusFilter = "ongoing", string eventName = "", string organization = "", string startDateFrom = "", string startDateTo = "", string eventType = "")
         {
-            var query = _context.Events.AsQueryable();
+            var query = _context.Events
+                .Include(e => e.Org)
+                .Include(e => e.TypeEvent)
+                .Include(e => e.Registrations)
+                .Include(e => e.Donations)
+                .AsQueryable();
 
             // Áp dụng các bộ lọc
             var today = DateOnly.FromDateTime(DateTime.Today);
@@ -151,13 +154,10 @@ namespace Volunteer_website.Controllers
                 query = query.Where(e => e.TypeEvent != null && e.TypeEvent.Name == eventType);
             }
 
-            // Tính tổng số sự kiện sau khi lọc
             var totalEvents = query.Count();
 
-            // Tính tổng số trang
             var totalPages = (int)Math.Ceiling((double)totalEvents / pageSize);
 
-            // Đảm bảo số trang hợp lệ
             page = Math.Max(1, page);
             page = Math.Min(page, totalPages > 0 ? totalPages : 1);
 
@@ -166,22 +166,6 @@ namespace Volunteer_website.Controllers
                 .OrderByDescending(e => e.DayBegin)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(e => new EventModel
-                {
-                    Event_Id = e.EventId,
-                    Name = e.Name ?? "Không có tên",
-                    EventDescription = e.Description ?? "Không có mô tả",
-                    ImagePath = e.ImagePath ?? "/images/default-event.jpg",
-                    DateBegin = e.DayBegin ?? DateOnly.FromDateTime(DateTime.Today),
-                    DateEnd = e.DayEnd ?? DateOnly.FromDateTime(DateTime.Today),
-                    Location = e.Location ?? "N/A",
-                    Organization = e.Org != null ? e.Org.Name ?? "N/A" : "N/A",
-                    targetmember = e.TargetMember ?? 0,
-                    targetfund = e.TargetFunds.HasValue ? (int)e.TargetFunds.Value : 0,
-                    currentmember = e.Registrations.Count(ev => ev.Status == "Được duyệt"),
-                    currentfund = e.Donations != null ? (int)e.Donations.Sum(d => d.Amount ?? 0) : 0,
-                    type = e.TypeEvent != null ? e.TypeEvent.Name ?? "N/A" : "N/A"
-                })
                 .ToList();
 
             // Truyền thông tin phân trang và bộ lọc cho view
@@ -201,60 +185,53 @@ namespace Volunteer_website.Controllers
         [HttpGet]
         public IActionResult Detail_Event(string id)
         {
-            var eventDetail = _context.Events.FirstOrDefault(e => e.EventId == id);
+            var eventDetail = _context.Events
+                .Include(e => e.Org)
+                .Include(e => e.Donations)
+                .FirstOrDefault(e => e.EventId == id);
+
             if (eventDetail == null)
             {
                 return NotFound();
             }
 
-            var event_detail = (from v in _context.Events
-                                where v.EventId == id
-                                join ev in _context.Organizations
-                                on v.OrgId equals ev.OrgId
-                                //join e in _context.EventImages
-                                //on v.EventId equals e.EventId
-                                join d in _context.Donations
-                                on v.EventId equals d.EventId into donations
-                                select new EventModel
-                                {
-                                    Event_Id = v.EventId,
-                                    Name = v.Name,
-                                    EventDescription = v.Description,
-                                    ImagePath = v.ImagePath,
-                                    DateBegin = v.DayBegin ?? DateOnly.FromDateTime(DateTime.Today),
-                                    DateEnd = v.DayEnd ?? DateOnly.FromDateTime(DateTime.Today),
-                                    Location = v.Location,
-                                    Organization = ev.Name,
-                                    OrganizationImagePath = ev.ImagePath,
-                                    OrganizationDescription = ev.Description,
-                                    OrganizationPhone = ev.PhoneNumber,
-                                    OrganizationEmail = ev.Email,
-                                    targetmember = v.TargetMember ?? 0,
-                                    targetfund = v.TargetFunds.HasValue ? (int)v.TargetFunds.Value : 0,
-                                    currentmember = v.Donations.Count(d=>d.EventId==id),
-                                    currentfund = v.Donations != null ? (int)v.Donations.Sum(d => d.Amount ?? 0) : 0
-                                    
-                                }).FirstOrDefault();
-            var donationDetails = (from v in _context.Volunteers
-                                    join d in _context.Donations on v.VolunteerId equals d.VolunteerId
-                                    where d.EventId == id
-                                    orderby d.DonationDate descending 
-                                    select new Donate_List
-                                    {
-                                        VolunteerName = v.Name ?? "Unknown",
-                                        Volunteer_Id = v.VolunteerId,
-                                        EventId = d.EventId,
-                                        Amount = d.Amount,
-                                        DonationDate = d.DonationDate
-                                    }).ToList();
+           
+            var eventDetailWithOrg = (from e in _context.Events
+                                      join org in _context.Organizations
+                                      on e.OrgId equals org.OrgId
+                                      where e.EventId == id
+                                      select new
+                                      {
+                                          Event = e,
+                                          Organization = org
+                                      }).FirstOrDefault();
 
-            if (event_detail != null)
+            if (eventDetailWithOrg == null)
             {
-                event_detail.Donations = donationDetails;
+                return NotFound();
             }
 
-            return View(event_detail);
+            var donationDetails = (from v in _context.Volunteers
+                                   join d in _context.Donations on v.VolunteerId equals d.VolunteerId
+                                   where d.EventId == id
+                                   orderby d.DonationDate descending
+                                   select new
+                                   {
+                                       VolunteerName = v.Name ?? "Unknown",
+                                       Volunteer_Id = v.VolunteerId,
+                                       EventId = d.EventId,
+                                       Amount = d.Amount,
+                                       DonationDate = d.DonationDate
+                                   }).ToList();
+
+         
+            ViewBag.Event = eventDetailWithOrg.Event;
+            ViewBag.Organization = eventDetailWithOrg.Organization;
+            ViewBag.Donations = donationDetails;
+
+            return View(eventDetailWithOrg.Event);
         }
+    
         
 
 

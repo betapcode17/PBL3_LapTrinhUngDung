@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.Entity;
 
 namespace Volunteer_website.Areas.Organizations.Controllers
 {
@@ -24,13 +25,11 @@ namespace Volunteer_website.Areas.Organizations.Controllers
             int pageSize = 8;
             int pageNumber = page ?? 1;
 
-
-            var query = _db.Donations.AsNoTracking();
-
+            // Explicitly specify the namespace to resolve ambiguity  
+            var query = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking(_db.Donations);
 
             if (!string.IsNullOrEmpty(searchValue))
             {
-
                 var matchingEventIds = _db.Events
                                           .Where(e => e.Name.Contains(searchValue))
                                           .Select(e => e.EventId)
@@ -41,16 +40,13 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                                               .Select(v => v.VolunteerId)
                                               .ToList();
 
-
                 query = query.Where(d =>
                     matchingEventIds.Contains(d.EventId) ||
                     matchingVolunteerIds.Contains(d.VolunteerId));
             }
 
-
             var lstDonated = query.OrderBy(x => x.DonationId)
                                   .ToPagedList(pageNumber, pageSize);
-
 
             var volunteerIds = lstDonated.Select(d => d.VolunteerId).Distinct().ToList();
             var volunteers = _db.Volunteers
@@ -62,7 +58,6 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                             .Where(e => eventIds.Contains(e.EventId))
                             .ToDictionary(e => e.EventId, e => e);
 
-
             ViewBag.Volunteers = volunteers;
             ViewBag.Events = events;
             ViewBag.SearchValue = searchValue;
@@ -73,20 +68,22 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return NotFound("Volunteer ID is required.");
-            }
-
             var volunteer = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == id);
-            if (volunteer == null)
+            if (volunteer == null) return NotFound();
+
+            var result = new
             {
-                return NotFound($"Volunteer with ID {id} not found.");
-            }
-
-            return Json(volunteer); // Trả về dữ liệu dưới dạng JSON
+                volunteerId = volunteer.VolunteerId,
+                name = volunteer.Name,
+                email = volunteer.Email,
+                phoneNumber = volunteer.PhoneNumber,
+                dateOfBirth = volunteer.DateOfBirth?.ToString("yyyy-MM-dd"),
+                gender = volunteer.Gender,
+                address = volunteer.Address,
+                imagePath = volunteer.ImagePath
+            };
+            return Json(result);
         }
-
     }
 }
 //
