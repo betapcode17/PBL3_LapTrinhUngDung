@@ -1,7 +1,9 @@
-﻿@model Volunteer_website.Models.Event
+﻿@using System.Security.Claims
+@model Volunteer_website.Models.Event
 @{
     ViewData["Title"] = "Detail_Event";
-    var role = Context.Session.GetString("UserRole");
+    // var role = Context.Session.GetString("UserRole");
+	var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "guest";
     Layout = "_Layout";
     var today = DateOnly.FromDateTime(DateTime.Now);
     bool isEventOver = Model.DayEnd.HasValue && Model.DayEnd < today;
@@ -39,7 +41,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <img src="@Url.Content(Model.ImagePath ?? "/images/default-event.jpg")" alt="@Model.Name" class="img-fluid banner-img" style="max-height: 500px; width: 100%; object-fit: cover;" />
+                <img src="~/@Url.Content(Model.ImagePath ?? "/images/default-event.jpg")" alt="@Model.Name" class="img-fluid banner-img" style="max-height: 500px; width: 100%; object-fit: cover;" />
                 <div class="mt-4 d-flex align-items-center flex-wrap">
                     <div class="me-4 d-flex align-items-center">
                         <i class="bi bi-calendar-event text-primary me-2" style="font-size: 1.2rem;"></i>
@@ -82,14 +84,14 @@
                     </p>
                     <p class="mb-2">
                         <i class="fa-solid fa-user"></i>
-                        <span class="fw-bold text-dark float-end">@(Model.Registrations?.Count(r => r.Status == "Được duyệt") ?? 0) lượt ủng hộ</span>
+                        <span class="fw-bold text-dark float-end">@(Model.Donations?.Count() ?? 0) lượt ủng hộ</span>
                     </p>
                     <div class="input-group my-3">
                         <span class="input-group-text">VND</span>
                         <input type="text" class="form-control" value="@(Model.TargetFunds?.ToString("N0") ?? "0")" readonly />
                     </div>
 
-                    @if (role != "admin")
+                    @if (role != "3")
                     {
                         <div>
                             <button class="btn w-100 @(isDonateDisabled ? "btn-disabled" : "btn-primary")"
@@ -204,7 +206,8 @@
                             {
                                 <tr>
                                     <td>@(donation.VolunteerName ?? "Unknown")</td>
-                                    <td>@(donation.Amount.HasValue ? $"{donation.Amount.Value:N0} VND" : "0 VND")</td>
+                                    <td>@($"{(donation.Amount ?? 0):N0} VND")</td>
+
                                     <td>@(donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy") ?? "N/A")</td>
                                 </tr>
                             }
