@@ -199,39 +199,40 @@
 
 <script>
     // Hàm viewVolunteerDetails để hiển thị thông tin tình nguyện viên qua AJAX
-    function viewVolunteerDetails(volunteerId) {
-        $.ajax({
-            url: '/Organization/DonationManager/GetVolunteerDetails?id=' + volunteerId,
-            type: 'GET',
-            success: function (volunteer) {
-                if (volunteer) {
-                    // Cập nhật thông tin vào modal
-                    $('#volunteerId').text('ID: ' + volunteerId);
-                    $('#volunteerName').text(volunteer.Name || 'N/A');
-                    $('#volunteerEmail').text(volunteer.Email || 'N/A');
-                    $('#volunteerPhone').text(volunteer.Phone || 'N/A');
-                    $('#volunteerDob').text(volunteer.DateOfBirth ? new Date(volunteer.DateOfBirth).toLocaleDateString() : 'N/A');
-                    $('#volunteerGender').text(volunteer.Gender || 'N/A');
-                    $('#volunteerAddress').text(volunteer.Address || 'N/A');
-                    $('#volunteerImage').attr('src', volunteer.ImageUrl || 'https://via.placeholder.com/200');
+   function viewVolunteerDetails(volunteerId) {
+    $.ajax({
+        url: '/Organization/DonationManager/GetVolunteerDetails?id=' + volunteerId,
+        type: 'GET',
+        success: function (volunteer) {
+            console.log('Volunteer data:', volunteer); // Thêm log để kiểm tra dữ liệu
+            if (volunteer) {
+                // Cập nhật thông tin vào modal
+                $('#volunteerId').text('ID: ' + (volunteer.volunteerId || 'N/A'));
+                $('#volunteerName').text(volunteer.name || 'N/A');
+                $('#volunteerEmail').text(volunteer.email || 'N/A');
+                $('#volunteerPhone').text(volunteer.phoneNumber || 'N/A');
+                $('#volunteerDob').text(volunteer.dateOfBirth ? new Date(volunteer.dateOfBirth).toLocaleDateString() : 'N/A');
+                $('#volunteerGender').text(volunteer.gender || 'N/A');
+                $('#volunteerAddress').text(volunteer.address || 'N/A');
+                $('#volunteerImage').attr('src', volunteer.imagePath ? `~/images/${volunteer.imagePath}` : 'https://via.placeholder.com/200');
 
-                    // Hiển thị modal
-                    $('#volunteerDetailsModal').modal('show');
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Volunteer not found!'
-                    });
-                }
-            },
-            error: function (xhr, status, error) {
+                // Hiển thị modal
+                $('#volunteerDetailsModal').modal('show');
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Failed to load volunteer details: ' + error
+                    text: 'Volunteer not found!'
                 });
             }
-        });
-    }
+        },
+        error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load volunteer details: ' + error
+            });
+        }
+    });
+}
 </script>
