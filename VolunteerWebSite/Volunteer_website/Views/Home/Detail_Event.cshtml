@@ -73,7 +73,8 @@
                     @{
                         var currentFund = Model.Donations?.Sum(d => d.Amount ?? 0) ?? 0;
                         var targetFund = Model.TargetFunds ?? 1; // Tránh chia cho 0
-                        var progressPercent = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                        // var progressPercent = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                        var progressPercent = targetFund > 0 ? (int)((double)currentFund / targetFund * 100) : 0;
                     }
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: @progressPercent%" aria-valuenow="@currentFund" aria-valuemin="0" aria-valuemax="@targetFund"></div>
