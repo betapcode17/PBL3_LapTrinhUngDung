@@ -1,11 +1,10 @@
-﻿@{
-    ViewData["Title"] = "navbar";
-}
-@using System.Security.Claims
+﻿@using System.Security.Claims
 @{
     var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
     var userName = User.Identity.Name; // Lấy từ ClaimTypes.Name
+    ViewData["Title"] = "navbar";
 }
+
 <!-- Thêm jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- navbar -->
@@ -81,7 +80,6 @@
                              src="@Url.Content(User.FindFirst("ImagePath")?.Value ?? "~/images/default.jpg")"
                              alt="avatar"
                              id="profileDropdown" />
-
                     </div>
 
                     <ul class="dropdown-menu dropdown-animation shadow pt-3" aria-labelledby="profileDropdown">
@@ -91,9 +89,8 @@
                                 <!-- Avatar -->
                                 <div class="avatar me-3">
                                     <img class="avatar-img rounded-circle"
-                                 src="@Url.Content(User.FindFirst("ImagePath")?.Value ?? "~/images/default.jpg")"
-                                 alt="avatar"
-                                 id="profileDropdown" />
+                                         src="@Url.Content(User.FindFirst("ImagePath")?.Value ?? "~/images/default.jpg")"
+                                         alt="avatar" />
                                 </div>
                                 <div>
                                     <a class="h6" href="#">@userName</a>
@@ -107,7 +104,6 @@
                                 <i class="fa-solid fa-user" style="margin-right: 10px"></i>Xem hồ sơ
                             </a>
                         </li>
-
                         <li>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Contact_Infor">
                                 <i class="fa-solid fa-gear" style="margin-right: 10px"></i>Chỉnh sửa thông tin  
@@ -118,7 +114,6 @@
                                 <i class="fa-solid fa-calendar-days" style="margin-right: 10px"></i>Sự kiện của tôi
                             </a>
                         </li>
-
                         <li>
                             <a class="dropdown-item bg-danger-soft-hover" asp-controller="Account" asp-action="Logout">
                                 <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px"></i>Đăng xuất
@@ -131,8 +126,7 @@
             {
                 <div class="dropdown" style="margin-left: 20px">
                     <div class="avatar-container">
-                        <a class="icon d-flex align-items-center justify-content-center" id="profileDropdown" href="#"
-                           data-bs-toggle="dropdown">
+                        <a class="icon d-flex align-items-center justify-content-center" id="profileDropdown" href="#">
                             <i class="fa-solid fa-user"></i>
                         </a>
                     </div>
@@ -155,6 +149,51 @@
     </div>
 </nav>
 <!-- END nav -->
+
+<style>
+    /* Ensure dropdown menu is hidden by default */
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%; /* Position below the avatar */
+        right: 0; /* Align with the right edge of the avatar */
+        min-width: 250px; /* Wider width to match original Bootstrap dropdown */
+        width: auto; /* Allow content to determine width */
+        z-index: 1000; /* Ensure it appears above other elements */
+    }
+
+    /* Show dropdown menu on hover */
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    /* Adjust avatar container for better hover target */
+    .avatar-container {
+        cursor: pointer;
+    }
+
+    /* Optional: Smooth transition for dropdown appearance */
+    .dropdown-menu.dropdown-animation {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    .dropdown:hover .dropdown-menu.dropdown-animation {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Ensure dropdown items are styled consistently */
+    .dropdown-item {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa; /* Light hover background */
+    }
+</style>
 
 <!-- Script AJAX để cập nhật số lượng -->
 <script>

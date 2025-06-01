@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Detail_Event";
     var role = Context.Session.GetString("UserRole");
-    Layout = (role != null && role == "volunteer") ? "~/Views/Shared/User_Layout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    Layout = "_Layout";
     var today = DateOnly.FromDateTime(DateTime.Now);
     bool isEventOver = Model.DateEnd < today;
     bool isEventNotStarted = Model.DateBegin > today;

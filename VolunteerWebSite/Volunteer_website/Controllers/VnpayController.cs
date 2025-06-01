@@ -42,14 +42,14 @@ namespace Volunteer_website.Controllers
             {
                 _logger.LogWarning("UserId is null or empty");
                 TempData["Error"] = "Không tìm thấy thông tin người dùng.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Account");
             }
             var volunteer = _context.Volunteers.FirstOrDefault(v => v.VolunteerId == userId);
             if (volunteer == null)
             {
                 _logger.LogWarning($"Volunteer not found for userId={userId}");
                 TempData["Error"] = "Không tìm thấy thông tin người dùng.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Account");
             }
 
             // Build VNPAY payment request
