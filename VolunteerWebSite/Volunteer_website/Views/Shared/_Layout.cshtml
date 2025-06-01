@@ -39,39 +39,37 @@
     <link rel="stylesheet" href="~/css/Footer.css" />
     <link href="~/OrgLayout/assets/css/site.css" rel="stylesheet" />
     <link href="~/OrgLayout/assets/js/alert.js" rel="stylesheet" />
+     <link rel="stylesheet" href="~/OrgLayout/Modern-Aler.css" />
+
 </head>
 <body>
-    @*<header>
-
-
-        @if (TempData.ContainsKey("SuccessMessage"))
-        {
-            <div id="customAlertSuccess" class="modern-alert success">
-                <div class="alert-icon">
-                    <span>✔</span>
-                </div>
-                <div class="alert-content">
-                    <strong>Success</strong>
-                    <p>@TempData["SuccessMessage"]</p>
-                </div>
-                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+       @if (TempData.ContainsKey("SuccessMessage"))
+    {
+        <div id="customAlertSuccess" class="modern-alert success">
+            <div class="alert-icon">
+                <span>✔</span>
             </div>
-        }
-
-        @if (TempData.ContainsKey("Error"))
-        {
-            <div id="customAlertError" class="modern-alert error">
-                <div class="alert-icon">
-                    <span>⚠</span>
-                </div>
-                <div class="alert-content">
-                    <strong>Error</strong>
-                    <p>@TempData["Error"]</p>
-                </div>
-                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+            <div class="alert-content">
+                <strong>Success</strong>
+                <p>@TempData["SuccessMessage"]</p>
             </div>
-        }
-    </header>*@
+            <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+        </div>
+    }
+
+    @if (TempData.ContainsKey("Error"))
+    {
+        <div id="customAlertError" class="modern-alert error">
+            <div class="alert-icon">
+                <span>⚠</span>
+            </div>
+            <div class="alert-content">
+                <strong>Error</strong>
+                <p>@TempData["Error"]</p>
+            </div>
+            <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+        </div>
+    }
 
 
     @await Html.PartialAsync("Navbar")
