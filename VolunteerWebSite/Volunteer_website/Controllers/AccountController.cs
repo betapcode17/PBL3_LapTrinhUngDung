@@ -176,7 +176,7 @@ namespace Volunteer_website.Controllers
                     new Claim(ClaimTypes.StreetAddress, volunteer.Address ?? ""),
                     new Claim(ClaimTypes.Gender, volunteer.Gender == true? "Male" : "Female"),
                     new Claim(ClaimTypes.Role, user.Role.ToString()!),
-                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
 
              
                     new Claim("ImagePath", volunteer.ImagePath ?? "default.jpg")
