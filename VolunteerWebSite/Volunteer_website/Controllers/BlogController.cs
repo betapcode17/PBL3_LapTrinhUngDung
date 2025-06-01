@@ -6,158 +6,183 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Volunteer_website.ViewModels;
 
 namespace Volunteer_website.Controllers
 {
     public class BlogController : Controller
     {
         private readonly HttpClient _httpClient;
+        private const int PageSize = 6; // Number of articles per page
+        private const int MaxArticles = 100; // Maximum number of articles to fetch
 
         public BlogController(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, string searchString = null)
         {
             var articles = await FetchVolunteerArticles();
-            return View(articles);
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                articles = articles
+                    .Where(a => a.Title?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true)
+                    .ToList();
+            }
+
+            // Manual pagination
+            var totalArticles = articles.Count;
+            var totalPages = (int)Math.Ceiling(totalArticles / (double)PageSize);
+            page = Math.Max(1, Math.Min(page, totalPages)); // Ensure page is within bounds
+            var paginatedArticles = articles
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            ViewBag.SearchString = searchString;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedArticles);
         }
 
         private async Task<List<Article>> FetchVolunteerArticles()
         {
-            try
+            var rssFeeds = new List<(string Url, bool IsVietnamese)>
             {
-                var rssUrls = new List<(string Url, bool IsVietnamese)>
+                ("https://vnexpress.net/rss/tin-moi-nhat.rss", true), // Vietnamese sources first
+                ("https://tuoitre.vn/rss/tin-moi-nhat.rss", true),
+                ("https://thanhnien.vn/rss/viet-nam.rss", true),
+                ("https://zingnews.vn/rss/tin-moi-nhat.rss", true),
+                ("https://www.globalgiving.org/rss-feed.xml", false), // Non-Vietnamese sources after
+                ("https://reliefweb.int/headlines.xml", false),
+                ("https://www.volunteerforever.com/feed/", false),
+                ("https://www.unv.org/rss.xml", false),
+                ("https://www.unicef.org/rss.xml", false),
+                ("https://www.redcross.org/content/dam/redcross/rss/press.rss", false),
+                ("https://www.who.int/feeds/entity/hac/en/rss.xml", false)
+            };
+
+            var excludeKeywords = new List<string>
+            {
+                "bóng đá", "ca sĩ", "showbiz", "giải trí", "thể thao", "phim", "sao việt", "chính trị", "giáo dục", "công nghệ",
+                "sports", "entertainment", "politics", "economy", "technology", "finance", "weather", "fashion", "celebrity"
+            };
+
+            var disasterKeywords = new[] { "nạn nhân", "bão", "lũ", "thiên tai", "sạt lở", "động đất", "cháy rừng", "mưa lớn", "hạn hán", "lốc xoáy" };
+
+            var vnPrimary = new[] { "tình nguyện" }; // Single keyword for Vietnamese
+            var enPrimary = new[] { "volunteer" };   // Single keyword for non-Vietnamese
+
+            var resultArticles = new List<(Article Article, bool IsVietnamese)>();
+
+            foreach (var (url, isVietnamese) in rssFeeds)
+            {
+                try
                 {
-                    // Vietnam
-                    ("https://vnexpress.net/rss/tin-moi-nhat.rss", true),
-                    ("https://tuoitre.vn/rss/tin-moi-nhat.rss", true),
-                    ("https://thanhnien.vn/rss/viet-nam.rss", true),
-                    ("https://zingnews.vn/rss/tin-moi-nhat.rss", true),
-
-                    // Global volunteer and charity
-                    ("https://www.globalgiving.org/rss-feed.xml", false),
-                    ("https://reliefweb.int/headlines.xml", false),
-                    ("https://www.volunteerforever.com/feed/", false),
-                    ("https://www.unv.org/rss.xml", false),
-                    ("https://www.unicef.org/rss.xml", false),
-                    ("https://www.redcross.org/content/dam/redcross/rss/press.rss", false),
-                    ("https://www.charitynavigator.org/index.cfm?bay=content.view&cpid=43", false), // summary
-                    ("https://www.who.int/feeds/entity/hac/en/rss.xml", false)
-                };
-
-                var vietnamesePrimaryKeywords = new List<string> { "tình nguyện", "từ thiện", "hiến máu", "thiện nguyện", "cứu trợ" };
-                var vietnameseSecondaryKeywords = new List<string> { "giúp đỡ", "ủng hộ", "hỗ trợ", "khó khăn", "mồ côi", "gương sáng", "cộng đồng" };
-
-                var englishPrimaryKeywords = new List<string> { "volunteer", "charity", "nonprofit", "philanthropy", "humanitarian", "relief aid" };
-                var englishSecondaryKeywords = new List<string> { "donation", "blood drive", "fundraising", "support community", "emergency aid", "orphan", "food bank", "helping" };
-
-                var excludeKeywords = new List<string>
-                {
-                    "bóng đá", "ca sĩ", "showbiz", "giải trí", "thể thao", "phim", "sao việt", "chính trị", "giáo dục", "công nghệ",
-                    "sports", "entertainment", "politics", "economy", "technology", "finance", "weather", "fashion", "celebrity"
-                };
-
-                var allArticles = new List<Article>();
-
-                foreach (var (Url, IsVietnamese) in rssUrls)
-                {
-                    HttpResponseMessage response;
-
-                    try
-                    {
-                        response = await _httpClient.GetAsync(Url);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"❌ Không thể truy cập RSS: {Url} | {e.Message}");
-                        continue;
-                    }
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine($"❌ Lỗi lấy RSS từ {Url}: {response.StatusCode}");
-                        continue;
-                    }
+                    var response = await _httpClient.GetAsync(url);
+                    if (!response.IsSuccessStatusCode) continue;
 
                     var content = await response.Content.ReadAsStringAsync();
-                    var xmlDoc = XDocument.Parse(content);
-                    var items = xmlDoc.Descendants("item");
+                    var xml = XDocument.Parse(content);
+                    var items = xml.Descendants("item");
 
-                    string sourceName = Url.Contains("vnexpress") ? "VN Express" :
-                                        Url.Contains("tuoitre") ? "Tuổi Trẻ" :
-                                        Url.Contains("thanhnien") ? "Thanh Niên" :
-                                        Url.Contains("zingnews") ? "Zing News" :
-                                        Url.Contains("globalgiving") ? "GlobalGiving" :
-                                        Url.Contains("reliefweb") ? "ReliefWeb" :
-                                        Url.Contains("volunteerforever") ? "Volunteer Forever" :
-                                        Url.Contains("unv") ? "UN Volunteers" :
-                                        Url.Contains("unicef") ? "UNICEF" :
-                                        Url.Contains("redcross") ? "Red Cross" :
-                                        Url.Contains("who") ? "WHO" : "Other";
+                    string source = GetSourceName(url);
+                    var primaryKeywords = isVietnamese ? vnPrimary : enPrimary;
 
-                    var primary = IsVietnamese ? vietnamesePrimaryKeywords : englishPrimaryKeywords;
-                    var secondary = IsVietnamese ? vietnameseSecondaryKeywords : englishSecondaryKeywords;
+                    // Increase limit for Vietnamese feeds to maximize Vietnamese articles
+                    int maxItems = isVietnamese ? 50 : 10; // Higher limit for Vietnamese sources
+                    int itemCount = 0;
 
                     foreach (var item in items)
                     {
-                        var title = item.Element("title")?.Value ?? "";
-                        var description = Regex.Replace(item.Element("description")?.Value ?? "", "<[^>]+>", "").Trim();
+                        if (itemCount >= maxItems) break; // Limit per feed
+
+                        var title = item.Element("title")?.Value?.Trim() ?? "";
+                        var descriptionRaw = item.Element("description")?.Value ?? "";
+                        var contentEncoded = item.Element("{http://purl.org/rss/1.0/modules/content/}encoded")?.Value ?? "";
+
+                        var description = Regex.Replace(descriptionRaw, "<[^>]+>", "").Trim();
+                        var contentText = Regex.Replace(contentEncoded, "<[^>]+>", "").Trim();
+
+                        if (contentText.Length > description.Length)
+                            description = contentText;
+
+                        string combinedContent = $"{title} {description}";
+                        if (string.IsNullOrWhiteSpace(combinedContent)) continue;
+
+                        bool hasPrimaryKeyword = primaryKeywords.Any(k =>
+                            Regex.IsMatch(combinedContent, $@"\b{k}\b", RegexOptions.IgnoreCase));
+
+                        bool hasExcludedKeyword = excludeKeywords.Any(k =>
+                            combinedContent.Contains(k, StringComparison.OrdinalIgnoreCase));
+
+                        bool hasDisasterKeyword = disasterKeywords.Any(k =>
+                            combinedContent.Contains(k, StringComparison.OrdinalIgnoreCase));
+
+                        if (!hasPrimaryKeyword || hasExcludedKeyword || hasDisasterKeyword)
+                            continue;
+
                         var link = item.Element("link")?.Value ?? "";
                         var pubDate = item.Element("pubDate")?.Value ?? DateTime.Now.ToString("R");
 
-                        var fullContent = title + " " + description;
+                        string imageUrl = item.Descendants()
+                            .Where(e => e.Name.LocalName == "thumbnail" && e.Name.Namespace == "http://search.yahoo.com/mrss/")
+                            .Select(e => e.Attribute("url")?.Value)
+                            .FirstOrDefault();
 
-                        // Kiểm tra lọc
-                        bool hasPrimary = primary.Any(k => fullContent.Contains(k, StringComparison.OrdinalIgnoreCase));
-                        bool hasSecondary = secondary.Any(k => fullContent.Contains(k, StringComparison.OrdinalIgnoreCase));
-                        bool hasExcluded = excludeKeywords.Any(k => fullContent.Contains(k, StringComparison.OrdinalIgnoreCase));
+                        if (string.IsNullOrEmpty(imageUrl))
+                        {
+                            var enclosure = item.Element("enclosure");
+                            imageUrl = enclosure?.Attribute("url")?.Value;
+                        }
 
-                        if (string.IsNullOrWhiteSpace(link) || !hasPrimary || !hasSecondary || hasExcluded)
-                            continue;
+                        string placeholderImage = "https://static.vecteezy.com/system/resources/previews/015/779/127/original/colored-volunteer-crowd-hands-hand-drawing-lettering-volunteering-raised-hand-silhouettes-volunteer-education-poster-mockup-donation-and-charity-concept-vector.jpg";
+                        if (string.IsNullOrWhiteSpace(link)) continue;
 
-                        allArticles.Add(new Article
+                        resultArticles.Add((new Article
                         {
                             Title = title,
                             Description = description.Length > 250 ? description.Substring(0, 250) + "..." : description,
                             Url = link,
                             PublishedAt = pubDate,
-                            Source = sourceName
-                        });
+                            Source = source,
+                            UrlToImage = string.IsNullOrEmpty(imageUrl) ? placeholderImage : imageUrl
+                        }, isVietnamese));
+
+                        itemCount++;
                     }
                 }
-
-                var sortedArticles = allArticles.OrderByDescending(a =>
+                catch
                 {
-                    try { return DateTime.Parse(a.PublishedAt); }
-                    catch { return DateTime.Now; }
-                }).Take(30).ToList();
-
-                Console.WriteLine($"✅ Tổng bài viết phù hợp: {sortedArticles.Count}");
-
-                if (!sortedArticles.Any())
-                {
-                    ViewBag.ErrorMessage = "Không tìm thấy bài viết phù hợp về tình nguyện, từ thiện.";
+                    continue; // Skip if there's an error
                 }
+            }
 
-                return sortedArticles;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Lỗi hệ thống: {ex.Message}");
-                ViewBag.ErrorMessage = $"Đã xảy ra lỗi: {ex.Message}";
-                return new List<Article>();
-            }
+            return resultArticles
+                .OrderByDescending(x => x.IsVietnamese) // Prioritize Vietnamese articles
+                .ThenByDescending(x => DateTime.TryParse(x.Article.PublishedAt, out var date) ? date : DateTime.MinValue)
+                .Take(MaxArticles)
+                .Select(x => x.Article)
+                .ToList();
         }
-    }
 
-    public class Article
-    {
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Url { get; set; }
-        public string? PublishedAt { get; set; }
-        public string? Source { get; set; }
+        private string GetSourceName(string url)
+        {
+            if (url.Contains("vnexpress")) return "VN Express";
+            if (url.Contains("tuoitre")) return "Tuổi Trẻ";
+            if (url.Contains("thanhnien")) return "Thanh Niên";
+            if (url.Contains("zingnews")) return "Zing News";
+            if (url.Contains("globalgiving")) return "GlobalGiving";
+            if (url.Contains("reliefweb")) return "ReliefWeb";
+            if (url.Contains("volunteerforever")) return "Volunteer Forever";
+            if (url.Contains("unv")) return "UN Volunteers";
+            if (url.Contains("unicef")) return "UNICEF";
+            if (url.Contains("redcross")) return "Red Cross";
+            if (url.Contains("who")) return "WHO";
+            return "Other";
+        }
     }
 }

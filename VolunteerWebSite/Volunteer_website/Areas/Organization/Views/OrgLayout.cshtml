@@ -1,6 +1,6 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @inject Volunteer_website.Models.VolunteerManagementContext _db
-@using Microsoft.EntityFrameworkCore // Thêm namespace này để sử dụng AsNoTracking
+@using Microsoft.EntityFrameworkCore 
 @{
     ViewData["Title"] = "OrgLayout";
 }
@@ -24,38 +24,45 @@
         orgImagePath = "~/OrgLayout/assets/images/faces/face1.jpg"; // Ảnh mặc định nếu không có OrgId
     }
 }
-<!DOCTYPE html>
-<html lang="en">
+
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Purple Admin</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" href="~/OrgLayout/assets/vendors/mdi/css/materialdesignicons.min.css" />
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
+        <link rel="stylesheet"
+          href="~/OrgLayout/assets/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="~/OrgLayout/assets/vendors/css/vendor.bundle.base.css" />
     <link rel="stylesheet" href="~/OrgLayout/assets/css/style.css" />
-    <link href="~/OrgLayout/CreateEvent.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/OrgLayout/Modal.css">
+    <link rel="stylesheet" href="~/OrgLayout/CreateEvent.css" />
+    <link rel="stylesheet" href="~/OrgLayout/Modal.css" />
+    <link rel="stylesheet" href="~/OrgLayout/VolunteerDetails.css" />
+    <link rel="stylesheet" href="~/OrgLayout/EventDetails.css" />
+    <link rel="stylesheet" href="~/OrgLayout/assets/css/site.css" />
+   
+    <link href="~/OrgLayout/CreateEvent.css" rel="stylesheet" />   
+    <link rel="stylesheet" href="~/OrgLayout/Modern-Aler.css" />
     <!-- End layout styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet" />
     <!-- Nhúng Material Design Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSV7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
     <link href="~/OrgLayout/VolunteerDetails.css" rel="stylesheet" />
     <!-- Include Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="~/OrgLayout/DeleteEvent.js" rel="stylesheet" />
     <link href="~/OrgLayout/EventDetails.css" rel="stylesheet" />
-    <link href="~/OrgLayout/assets/css/site.css" rel="stylesheet" />
-    <link href="~/OrgLayout/assets/js/alert.js" rel="stylesheet" />
+    <link href="~/OrgLayout/EventDetails.css" rel="stylesheet" />
+      <link href="~/" rel="stylesheet" />
 </head>
 <body>
     @if (TempData["SuccessMessage"] != null)
@@ -104,7 +111,7 @@
                                 <i class="mdi mdi-cached me-2 text-success"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" asp-action="Logout" asp-controller="Profile">
                                 <i class="mdi mdi-logout me-2 text-primary"></i> Signout
                             </a>
                         </div>
@@ -115,6 +122,34 @@
                 </button>
             </div>
         </nav>
+          @if (TempData.ContainsKey("SuccessMessage"))
+    {
+        <div id="customAlertSuccess" class="modern-alert success">
+            <div class="alert-icon">
+                <span>✔</span>
+            </div>
+            <div class="alert-content">
+                <strong>Success</strong>
+                <p>@TempData["SuccessMessage"]</p>
+            </div>
+            <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+        </div>
+    }
+
+    @if (TempData.ContainsKey("Error"))
+    {
+        <div id="customAlertError" class="modern-alert error">
+            <div class="alert-icon">
+                <span>⚠</span>
+            </div>
+            <div class="alert-content">
+                <strong>Error</strong>
+                <p>@TempData["Error"]</p>
+            </div>
+            <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+        </div>
+    }
+
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->

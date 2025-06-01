@@ -1,30 +1,251 @@
-﻿@model List<Volunteer_website.Controllers.Article>
-
-<h2>Tin tức từ nhiều nguồn về Từ Thiện, Tình Nguyện, và Tấm Gương Vượt Khó</h2>
-
-@if (ViewBag.ErrorMessage != null)
-{
-    <p class="text-danger">@ViewBag.ErrorMessage</p>
+﻿@model List<Volunteer_website.ViewModels.Article>
+@{
+    ViewData["Title"] = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-else if (Model.Any())
+
+<style>
+    .news-header {
+        background: linear-gradient(to right, #007bff, #00c6ff);
+        color: white;
+        padding: 40px 0;
+        text-align: center;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        margin-top: 80px; /* Tránh dính navbar */
+    }
+
+    .news-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .news-header p {
+        font-size: 1.1rem;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+        height: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #007bff;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        min-height: 48px;
+    }
+
+    .card-text.text-muted {
+        font-size: 0.95rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 60px;
+    }
+
+    .card-footer {
+        margin-top: auto;
+        background: none;
+        border-top: none;
+    }
+
+    .search-bar input {
+        border-radius: 30px;
+        padding: 10px 20px;
+    }
+
+    .search-bar button {
+        border-radius: 30px;
+        padding: 10px 25px;
+    }
+
+    .references-section img {
+        height: 80px;
+        width: auto;
+        object-fit: contain;
+        filter: grayscale(60%);
+        transition: transform 0.3s, filter 0.3s;
+    }
+
+    .references-section img:hover {
+        transform: scale(1.1);
+        filter: grayscale(0%);
+    }
+
+    .reference-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        padding: 8px 15px;
+        color: #007bff;
+        text-decoration: none;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+    }
+
+    .pagination a:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination .current {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="container news-header">
+    <h2>Tin tức về Từ Thiện & Tình Nguyện</h2>
+    <p>Cập nhật những câu chuyện ý nghĩa về hoạt động tình nguyện và từ thiện từ khắp nơi trên thế giới.</p>
+</div>
+
+<!-- Search Form -->
+<div class="container mb-4">
+    <form method="get" action="@Url.Action("Index", "Blog")" class="d-flex justify-content-center search-bar">
+        <input type="text" name="searchString" class="form-control w-50 me-2" placeholder="Tìm bài viết..." value="@ViewBag.SearchString" />
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </form>
+</div>
+
+<!-- Error Message -->
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
 {
-    <div class="row">
-        @foreach (var article in Model)
+    <div class="container">
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    </div>
+}
+
+<!-- News Section -->
+<section class="news-section py-4">
+    <div class="container">
+        @if (!Model.Any())
         {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@article.Title</h5>
-                        <p class="card-text">@article.Description</p>
-                        <p class="card-text"><small class="text-muted">Nguồn: @article.Source | Thời gian: @article.PublishedAt</small></p>
-                        <a href="@article.Url" target="_blank" class="btn btn-primary">Đọc thêm</a>
+            <p class="text-center text-muted">Không có bài viết nào để hiển thị.</p>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col">
+                        <div class="card shadow-sm border-0 h-100">
+                            @if (!string.IsNullOrEmpty(item.UrlToImage))
+                            {
+                                <img src="@item.UrlToImage" alt="@item.Title" class="card-img-top" />
+                            }
+                            else
+                            {
+                                <img src="https://static.vecteezy.com/system/resources/previews/015/779/127/original/colored-volunteer-crowd-hands-hand-drawing-lettering-volunteering-raised-hand-silhouettes-volunteer-education-poster-mockup-donation-and-charity-concept-vector.jpg" class="card-img-top" alt="Volunteer Image" />
+                            }
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@item.Title</h5>
+                                <p class="card-text text-muted">@item.Description</p>
+                                <div class="mt-auto">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Nguồn: @item.Source |
+                                            @if (DateTime.TryParse(item.PublishedAt, out var pubDate))
+                                            {
+                                                @pubDate.ToString("dd/MM/yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <span>Không rõ ngày</span>
+                                            }
+                                        </small>
+                                    </p>
+                                    <a href="@item.Url" class="btn btn-outline-primary btn-sm" target="_blank">Đọc thêm</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination">
+                @{
+                    var currentPage = ViewBag.CurrentPage;
+                    var totalPages = ViewBag.TotalPages;
+                    var searchString = ViewBag.SearchString;
+
+                    if (currentPage > 1)
+                    {
+                        <a href="@Url.Action("Index", new { page = currentPage - 1, searchString })">Trước</a>
+                    }
+
+                    for (int i = 1; i <= totalPages; i++)
+                    {
+                        <a href="@Url.Action("Index", new { page = i, searchString })" class="@(i == currentPage ? "current" : "")">@i</a>
+                    }
+
+                    if (currentPage < totalPages)
+                    {
+                        <a href="@Url.Action("Index", new { page = currentPage + 1, searchString })">Sau</a>
+                    }
+                }
             </div>
         }
     </div>
-}
-else
-{
-    <p>Không có bài viết nào để hiển thị.</p>
+</section>
+
+<!-- References Section -->
+<section class="references-section py-5 bg-light mt-5">
+    <div class="container text-center">
+        <h3 class="mb-4 text-primary">Các trang tôi đã tham khảo</h3>
+        <div class="reference-logos">
+            <a href="https://vnexpress.net" target="_blank"><img src="https://akira.edu.vn/hoc-tieng-nhat-online/wp-content/uploads/2017/12/vnexpress.png" alt="VNExpress" /></a>
+            <a href="https://tuoitre.vn" target="_blank"><img src="https://th.bing.com/th/id/R.c3500537fa04542434e2b623a19b544d?rik=MlFFmfdIFGwZhw&riu=http%3a%2f%2fwww.abhorizon.com%2fwp-content%2fuploads%2f2021%2f03%2fTuoitre.png&ehk=zC4vWIx83is4L7omWaYOFwiNDah%2bpzxcS2TsArAqVOQ%3d&risl=&pid=ImgRaw&r=0" alt="Tuoi Tre" /></a>
+            <a href="https://thanhnien.vn" target="_blank"><img src="https://www.bing.com/images/search?q=thanhnien%20vn%20lgo&FORM=IQFRBA&id=39FB00AC0BE07123D815038B3077665C40617A56" alt="Thanh Nien" /></a>
+            <a href="https://zingnews.vn" target="_blank"><img src="https://www.bing.com/images/search?view=detailV2&ccid=jBiUBbSp&id=23C7BA6B04DA1B9EF81FB2629A1CF2D6C8209344&thid=OIP.jBiUBbSpeLhZwAvEQU3eYQHaCU&mediaurl=https%3a%2f%2fstatic.wikia.nocookie.net%2flogos%2fimages%2f5%2f57%2fZing_News.svg%2frevision%2flatest%3fcb%3d20211230234629%26path-prefix%3dvi&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.8c189405b4a978b859c00bc4414dde61%3frik%3dRJMgyNbyHJpisg%26pid%3dImgRaw%26r%3d0&exph=162&expw=516&q=zing+new+logo&simid=608020856032029885&FORM=IRPRST&ck=FDFB35B5AD335C32BF3853DD9CF5E753&selectedIndex=0&itb=0" alt="ZingNews" /></a>
+            <a href="https://www.globalgiving.org" target="_blank"><img src="https://th.bing.com/th/id/OIP.M8MYx--DKOxeXMlA6z2-CgAAAA?rs=1&pid=ImgDetMain" alt="GlobalGiving" /></a>
+            <a href="https://reliefweb.int" target="_blank"><img src="https://reliefweb.int/sites/reliefweb.int/files/images/logo-rw.svg" alt="ReliefWeb" /></a>
+            <a href="https://www.redcross.org" target="_blank"><img src="https://www.redcross.org/etc.clientlibs/redcross/clientlibs/clientlib-site/resources/images/redcross-logo.svg" alt="Red Cross" /></a>
+            <a href="https://www.who.int" target="_blank"><img src="https://www.who.int/ResourcePackages/WHO/assets/dist/images/logos/en/h-logo-blue.svg" alt="WHO" /></a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 }

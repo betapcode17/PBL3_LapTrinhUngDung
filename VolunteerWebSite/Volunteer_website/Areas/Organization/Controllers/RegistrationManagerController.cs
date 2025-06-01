@@ -106,18 +106,21 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return NotFound("Volunteer ID is required.");
-            }
-
             var volunteer = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == id);
-            if (volunteer == null)
-            {
-                return NotFound($"Volunteer with ID {id} not found.");
-            }
+            if (volunteer == null) return NotFound();
 
-            return Json(volunteer); // Trả về dữ liệu dưới dạng JSON
+            var result = new
+            {
+                volunteerId = volunteer.VolunteerId,
+                name = volunteer.Name,
+                email = volunteer.Email,
+                phoneNumber = volunteer.PhoneNumber,
+                dateOfBirth = volunteer.DateOfBirth?.ToString("yyyy-MM-dd"),
+                gender = volunteer.Gender,
+                address = volunteer.Address,
+                imagePath = volunteer.ImagePath
+            };
+            return Json(result);
         }
         #endregion
     }
