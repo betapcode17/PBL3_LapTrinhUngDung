@@ -1,5 +1,4 @@
-﻿@using System.Security.Claims
-@model List<Volunteer_website.ViewModels.EventModel>
+﻿@model IEnumerable<Volunteer_website.Models.Event>
 @{
     ViewData["Title"] = "Events";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -32,126 +31,187 @@
                 var today = DateOnly.FromDateTime(DateTime.Today);
             }
             <div class="event-filter-container container">
-                <!-- Status Tabs Row -->
-                <div class="event-filter-tabs d-flex gap-2 mb-3">
-                    <button class="tab-btn active" data-filter="ongoing">Đang diễn ra</button>
-                    <button class="tab-btn" data-filter="upcoming">Sắp diễn ra</button>
-                    <button class="tab-btn" data-filter="ended">Đã kết thúc</button>
+                <div class="event-filter-nav d-flex gap-2 mb-3">
+                    <button class="event-tab-button active" data-filter="ongoing">Đang diễn ra</button>
+                    <button class="event-tab-button" data-filter="upcoming">Sắp diễn ra</button>
+                    <button class="event-tab-button" data-filter="ended">Đã kết thúc</button>
                 </div>
 
-                <!-- Tất cả các thanh lọc trên cùng một hàng -->
                 <div class="row mb-3 align-items-center">
-                    <!-- Loại sự kiện -->
                     <div class="col-md-3">
-                        <div class="filter-box">
+                        <div class="event-filter-input">
                             <select id="eventTypeFilter">
                                 <option value="">Tất cả loại sự kiện</option>
-                                @foreach (var type in Model.Select(e => e.type).Distinct())
+                                @foreach (var type in Model.Select(e => e.TypeEvent?.Name).Distinct().Where(t => !string.IsNullOrEmpty(t)))
                                 {
                                     <option value="@type">@type</option>
                                 }
                             </select>
-                            <i class="fa fa-chevron-down search-icon"></i>
+                            <i class="fa fa-chevron-down event-search-icon"></i>
                         </div>
                     </div>
 
-                    <!-- Khoảng thời gian -->
                     <div class="col-md-6">
-                        <div class="date-range-box">
+                        <div class="event-date-range">
                             <input type="date" id="startDateFrom" placeholder="Từ ngày">
                             <span>đến</span>
                             <input type="date" id="startDateTo" placeholder="Đến ngày">
                         </div>
                     </div>
 
-                    <!-- Nút lọc và đặt lại -->
                     <div class="col-md-3 text-right">
-                        <button id="applyFilter" class="btn btn-filter">Lọc</button>
-                        <button id="resetFilter" class="btn btn-reset">Đặt lại</button>
+                        <button id="applyFilter" class="event-filter-apply">Lọc</button>
+                        <button id="resetFilter" class="event-filter-reset">Đặt lại</button>
                     </div>
                 </div>
 
-                <!-- Hàng tìm kiếm theo tên sự kiện và ban tổ chức -->
                 <div class="row mb-3">
-                    <!-- Tìm kiếm sự kiện -->
                     <div class="col-md-6">
-                        <div class="filter-box">
+                        <div class="event-filter-input">
                             <input type="text" id="eventNameSearch" placeholder="Tìm kiếm sự kiện...">
-                            <i class="fa fa-search search-icon"></i>
+                            <i class="fa fa-search event-search-icon"></i>
                         </div>
                     </div>
 
-                    <!-- Tìm kiếm ban tổ chức -->
                     <div class="col-md-6">
-                        <div class="filter-box">
+                        <div class="event-filter-input">
                             <input type="text" id="organizationSearch" placeholder="Tìm ban tổ chức...">
-                            <i class="fa fa-search search-icon"></i>
+                            <i class="fa fa-search event-search-icon"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            @foreach (var ev in Model)
+
+            @if (Model == null || !Model.Any())
             {
-                var daysLeft = (ev.DateEnd.DayNumber - today.DayNumber);
-                var percentFund = ev.targetfund > 0 ? (int)((double)ev.currentfund / ev.targetfund * 100) : 0;
-
-                // Xác định trạng thái sự kiện
-                var eventStatus = "";
-                if (today >= ev.DateBegin && today <= ev.DateEnd)
-                {
-                    eventStatus = "ongoing";
-                }
-                else if (today < ev.DateBegin)
-                {
-                    eventStatus = "upcoming";
-                }
-                else
-                {
-                    eventStatus = "ended";
-                }
-
-                <div class="col-md-4 ftco-animate mb-4 event-card"
-                     data-status="@eventStatus"
-                     data-date-begin="@ev.DateBegin.ToString("yyyy-MM-dd")"
-                     data-date-end="@ev.DateEnd.ToString("yyyy-MM-dd")"
-                     data-event-type="@ev.type">
-                    <div class="card">
-                        <img src="@Url.Content(ev.ImagePath)" alt="@ev.Name" />
-                        <div class="card-content">
-                            <span class="card-title">@ev.Name</span>
-                            <div class="org-info">
-                                <span>@ev.Organization</span>
-                                <span style="background: #ffcc99; padding: 5px 10px; border-radius: 5px;">
-                                    @(daysLeft > 0 ? $"{daysLeft} Days Left" : "Closed")
-                                </span>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: @(percentFund)%"></div>
-                            </div>
-                            <span class="fund-raised">
-                                @ev.currentfund.ToString("N0") / @ev.targetfund.ToString("N0")
-                            </span>
-                            <span class="donation-group">
-                                <span class="donation-count">
-                                    <div>Members</div>
-                                    <span class="count">
-                                        @ev.currentmember.ToString("N0") / @ev.targetmember.ToString("N0")
-                                    </span>
-                                </span>
-                                <a href="@Url.Action("Detail_Event", "Home", new { id = ev.Event_Id })" class="donate-btn">View</a>
-                            </span>
-                        </div>
-                    </div>
+                <div class="col-12 text-center">
+                    <p>Không có sự kiện nào phù hợp với bộ lọc.</p>
                 </div>
             }
-  
+            else
+            {
+                @foreach (var ev in Model)
+                {
+                    var daysLeft = (ev.DayEnd.HasValue ? ev.DayEnd.Value.DayNumber : today.DayNumber) - today.DayNumber;
+                    var currentFund = ev.Donations?.Sum(d => d.Amount ?? 0) ?? 0;
+                    var targetFund = ev.TargetFunds ?? 1; // Tránh chia cho 0
+                    var percentFund = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                    var currentMember = ev.Registrations?.Count(r => r.Status == "Được duyệt") ?? 0;
 
-        <!-- Phân trang -->
+                    var eventStatus = "";
+                    if (ev.DayBegin.HasValue && ev.DayEnd.HasValue)
+                    {
+                        if (today >= ev.DayBegin.Value && today <= ev.DayEnd.Value)
+                        {
+                            eventStatus = "ongoing";
+                        }
+                        else if (today < ev.DayBegin.Value)
+                        {
+                            eventStatus = "upcoming";
+                        }
+                        else
+                        {
+                            eventStatus = "ended";
+                        }
+                    }
+                    else
+                    {
+                        eventStatus = "ended"; // Nếu không có ngày, coi như đã kết thúc
+                    }
+
+                    <div class="col-md-4 ftco-animate mb-4 event-card"
+                         data-status="@eventStatus"
+                         data-date-begin="@(ev.DayBegin.HasValue ? ev.DayBegin.Value.ToString("yyyy-MM-dd") : "")"
+                         data-date-end="@(ev.DayEnd.HasValue ? ev.DayEnd.Value.ToString("yyyy-MM-dd") : "")"
+                         data-event-type="@(ev.TypeEvent?.Name ?? "")">
+                        <div class="card">
+                            <img src="~/@Url.Content(string.IsNullOrEmpty(ev.ImagePath) ? "./images/DefaultImg/VolunteerImgDefault.jpg" : ev.ImagePath)" alt="@ev.Name" />
+                            <div class="card-content">
+                                <span class="card-title">@(ev.Name ?? "Không có tên")</span>
+                                <div class="org-info">
+                                    <span>@(ev.Org?.Name ?? "N/A")</span>
+                                    <span style="background: #ffcc99; padding: 5px 10px; border-radius: 5px;">
+                                        @(daysLeft > 0 ? $"{daysLeft} Days Left" : "Closed")
+                                    </span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: @percentFund%"></div>
+                                </div>
+                                <span class="fund-raised">
+                                    @currentFund.ToString("N0") / @targetFund.ToString("N0")
+                                </span>
+                                <span class="donation-group">
+                                    <span class="donation-count">
+                                        <div>Members</div>
+                                        <span class="count">
+                                            @currentMember.ToString("N0") / @(ev.TargetMember?.ToString("N0") ?? "0")
+                                        </span>
+                                    </span>
+                                    <a href="@Url.Action("Detail_Event", "Home", new { id = ev.EventId })" class="donate-btn">
+                                        @(ev.IsActive == 1 ? "View" : "Closed")
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
         <div class="row mt-5">
             <div class="col text-center">
-                <div class="block-27">
-                    <ul id="pagination">
-                        <!-- Pagination items will be dynamically generated here -->
+                <div class="event-pagination">
+                    <ul>
+                        <li>
+                            @if (ViewBag.CurrentPage > 1)
+                            {
+                                <a href="@Url.Action("Events", "Home", new { page = ViewBag.CurrentPage - 1, pageSize = ViewBag.PageSize, statusFilter = ViewBag.StatusFilter, eventName = ViewBag.EventName, organization = ViewBag.Organization, startDateFrom = ViewBag.StartDateFrom, startDateTo = ViewBag.StartDateTo, eventType = ViewBag.EventType })">&lt;</a>
+                            }
+                            else
+                            {
+                                <span>&lt;</span>
+                            }
+                        </li>
+
+                        @{
+                            int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+                            int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+
+                            if (endPage - startPage < 4)
+                            {
+                                if (startPage == 1)
+                                {
+                                    endPage = Math.Min(ViewBag.TotalPages, startPage + 4);
+                                }
+                                else if (endPage == ViewBag.TotalPages)
+                                {
+                                    startPage = Math.Max(1, endPage - 4);
+                                }
+                            }
+
+                            for (int i = startPage; i <= endPage; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="active"><span>@i</span></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("Events", "Home", new { page = i, pageSize = ViewBag.PageSize, statusFilter = ViewBag.StatusFilter, eventName = ViewBag.EventName, organization = ViewBag.Organization, startDateFrom = ViewBag.StartDateFrom, startDateTo = ViewBag.StartDateTo, eventType = ViewBag.EventType })">@i</a></li>
+                                }
+                            }
+                        }
+
+                        <li>
+                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                            {
+                                <a href="@Url.Action("Events", "Home", new { page = ViewBag.CurrentPage + 1, pageSize = ViewBag.PageSize, statusFilter = ViewBag.StatusFilter, eventName = ViewBag.EventName, organization = ViewBag.Organization, startDateFrom = ViewBag.StartDateFrom, startDateTo = ViewBag.StartDateTo, eventType = ViewBag.EventType })">&gt;</a>
+                            }
+                            else
+                            {
+                                <span>&gt;</span>
+                            }
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -160,200 +220,86 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const eventCards = document.querySelectorAll('.event-card');
-    const searchInputs = {
-        eventName: document.getElementById('eventNameSearch'),
-        organization: document.getElementById('organizationSearch'),
-        startDateFrom: document.getElementById('startDateFrom'),
-        startDateTo: document.getElementById('startDateTo'),
-        eventType: document.getElementById('eventTypeFilter')
-    };
-    const applyFilterBtn = document.getElementById('applyFilter');
-    const resetFilterBtn = document.getElementById('resetFilter');
-    const paginationContainer = document.getElementById('pagination');
-    let currentFilter = "ongoing";
-    let currentPage = 1;
-    const itemsPerPage = 6; // Adjust this number based on how many events per page
-
-    function applyAllFilters(page = 1) {
-        const query = {
-            eventName: searchInputs.eventName.value.toLowerCase(),
-            organization: searchInputs.organization.value.toLowerCase(),
-            startDateFrom: searchInputs.startDateFrom.value ? new Date(searchInputs.startDateFrom.value) : null,
-            startDateTo: searchInputs.startDateTo.value ? new Date(searchInputs.startDateTo.value) : null,
-            eventType: searchInputs.eventType.value
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.event-tab-button');
+        const searchInputs = {
+            eventName: document.getElementById('eventNameSearch'),
+            organization: document.getElementById('organizationSearch'),
+            startDateFrom: document.getElementById('startDateFrom'),
+            startDateTo: document.getElementById('startDateTo'),
+            eventType: document.getElementById('eventTypeFilter')
         };
+        const applyFilterBtn = document.getElementById('applyFilter');
+        const resetFilterBtn = document.getElementById('resetFilter');
+        let currentFilter = '@ViewBag.StatusFilter' || "ongoing";
 
-        // Collect all matching cards
-        const matchingCards = Array.from(eventCards).filter(card => {
-            const status = card.getAttribute('data-status');
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            const org = card.querySelector('.org-info span:first-child').textContent.toLowerCase();
-            const dateBegin = new Date(card.getAttribute('data-date-begin'));
-            const dateEndAttr = card.getAttribute('data-date-end');
-            const dateEnd = dateEndAttr ? new Date(dateEndAttr) : null;
-            const eventType = card.getAttribute('data-event-type');
+        function redirectWithFilters() {
+            const query = {
+                page: 1,
+                pageSize: @ViewBag.PageSize,
+                statusFilter: currentFilter,
+                eventName: searchInputs.eventName ? searchInputs.eventName.value : '',
+                organization: searchInputs.organization ? searchInputs.organization.value : '',
+                startDateFrom: searchInputs.startDateFrom ? searchInputs.startDateFrom.value : '',
+                startDateTo: searchInputs.startDateTo ? searchInputs.startDateTo.value : '',
+                eventType: searchInputs.eventType ? searchInputs.eventType.value : ''
+            };
 
-            // Status filter
-            const matchesStatus = (status === currentFilter);
+            const url = '@Url.Action("Events", "Home")?' + new URLSearchParams(query).toString();
+            window.location.href = url;
+        }
 
-            // Text filters
-            const matchesName = title.includes(query.eventName);
-            const matchesOrg = org.includes(query.organization);
-
-            // Date range filter
-            let matchesDate = true;
-            if (query.startDateFrom && query.startDateTo) {
-                matchesDate = (
-                    (dateBegin >= query.startDateFrom && dateBegin <= query.startDateTo) ||
-                    (dateEnd && dateEnd >= query.startDateFrom && dateEnd <= query.startDateTo)
-                );
-            } else if (query.startDateFrom) {
-                matchesDate = dateBegin >= query.startDateFrom || (dateEnd && dateEnd >= query.startDateFrom);
-            } else if (query.startDateTo) {
-                matchesDate = dateBegin <= query.startDateTo || (dateEnd && dateEnd <= query.startDateTo);
-            }
-
-            // Event type filter
-            let matchesType = true;
-            if (query.eventType) {
-                matchesType = eventType === query.eventType;
-            }
-
-            return matchesStatus && matchesName && matchesOrg && matchesDate && matchesType;
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.getAttribute('data-filter');
+                redirectWithFilters();
+            });
         });
 
-        // Calculate pagination
-        const totalItems = matchingCards.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        currentPage = Math.min(page, Math.max(1, totalPages));
+        if (applyFilterBtn) {
+            applyFilterBtn.addEventListener('click', redirectWithFilters);
+        }
 
-        // Show/hide cards based on current page
-        eventCards.forEach(card => card.style.display = 'none');
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        matchingCards.slice(startIndex, endIndex).forEach(card => {
-            card.style.display = 'block';
-        });
-
-        // Update pagination UI
-        updatePagination(totalPages);
-    }
-
-    function updatePagination(totalPages) {
-        paginationContainer.innerHTML = '';
-
-        // Previous button
-        const prevLi = document.createElement('li');
-        prevLi.innerHTML = '<a href="#"><</a>';
-        prevLi.classList.add('pagination-btn');
-        if (currentPage === 1) {
-            prevLi.classList.add('disabled');
-        } else {
-            prevLi.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    applyAllFilters(currentPage);
-                }
+        if (resetFilterBtn) {
+            resetFilterBtn.addEventListener('click', function () {
+                if (searchInputs.eventName) searchInputs.eventName.value = '';
+                if (searchInputs.organization) searchInputs.organization.value = '';
+                if (searchInputs.startDateFrom) searchInputs.startDateFrom.value = '';
+                if (searchInputs.startDateTo) searchInputs.startDateTo.value = '';
+                if (searchInputs.eventType) searchInputs.eventType.value = '';
+                currentFilter = "ongoing";
+                document.querySelector('.event-tab-button[data-filter="ongoing"]').click();
             });
         }
-        paginationContainer.appendChild(prevLi);
 
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>${i}</span>`;
-            li.classList.add('pagination-btn');
-            if (i === currentPage) {
-                li.classList.add('active');
-            } else {
-                li.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = i;
-                    applyAllFilters(currentPage);
-                });
-            }
-            paginationContainer.appendChild(li);
-        }
-
-        // Next button
-        const nextLi = document.createElement('li');
-        nextLi.innerHTML = '<a href="#">></a>';
-        nextLi.classList.add('pagination-btn');
-        if (currentPage === totalPages || totalPages === 0) {
-            nextLi.classList.add('disabled');
-        } else {
-            nextLi.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    applyAllFilters(currentPage);
-                }
-            });
-        }
-        paginationContainer.appendChild(nextLi);
-    }
-
-    // Tab buttons functionality
-    tabButtons.forEach(button => {
-        button.addEventListener('click', function () {
+        const activeTab = document.querySelector(`.event-tab-button[data-filter="${currentFilter}"]`);
+        if (activeTab) {
             tabButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            currentFilter = this.getAttribute('data-filter');
-            currentPage = 1; // Reset to first page when changing filters
-            applyAllFilters();
-        });
+            activeTab.classList.add('active');
+        }
     });
-
-    // Apply filter button
-    if (applyFilterBtn) {
-        applyFilterBtn.addEventListener('click', () => {
-            currentPage = 1; // Reset to first page when applying filters
-            applyAllFilters();
-        });
-    }
-
-    // Reset filter button
-    if (resetFilterBtn) {
-        resetFilterBtn.addEventListener('click', function () {
-            // Clear all inputs
-            searchInputs.eventName.value = '';
-            searchInputs.organization.value = '';
-            searchInputs.startDateFrom.value = '';
-            searchInputs.startDateTo.value = '';
-            searchInputs.eventType.value = '';
-            currentPage = 1; // Reset to first page
-            // Reset to default tab
-            document.querySelector('.tab-btn[data-filter="ongoing"]').click();
-        });
-    }
-
-    // Initialize with ongoing events
-    document.querySelector('.tab-btn[data-filter="ongoing"]').click();
-});
 </script>
 
 <style>
-    .search-box {
+    .event-search-container {
         position: relative;
-        width: 20%; /* 1/5 chiều rộng container */
+        width: 20%;
         min-width: 200px;
     }
 
-    .search-box input {
-        width: 100%;
-        padding: 10px 38px 10px 16px;
-        border: none;
-        border-radius: 25px;
-        background-color: white;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        font-size: 14px;
-    }
+        .event-search-container input {
+            width: 100%;
+            padding: 10px 38px 10px 16px;
+            border: none;
+            border-radius: 25px;
+            background-color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+        }
 
-    .search-icon {
+    .event-search-icon {
         position: absolute;
         top: 50%;
         right: 12px;
@@ -363,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
         pointer-events: none;
     }
 
-    .tab-btn {
+    .event-tab-button {
         background: none;
         border: none;
         font-weight: 600;
@@ -371,87 +317,86 @@ document.addEventListener('DOMContentLoaded', function () {
         color: #666;
         padding: 8px 12px;
         border-bottom: 3px solid transparent;
-        border-radius: 999px; /* Bo tròn hoàn toàn */
+        border-radius: 999px;
         cursor: pointer;
         transition: all 0.3s ease;
     }
 
-    .tab-btn.active {
-        color: orangered;
-        border-color: #8000ff;
-        background-color: #eee;
-    }
+        .event-tab-button.active {
+            color: orangered;
+            border-color: #8000ff;
+            background-color: #eee;
+        }
 
-    .tab-btn:hover {
-        background-color: #f0f0f0;
-        color: #000;
-    }
+        .event-tab-button:hover {
+            background-color: #f0f0f0;
+            color: #000;
+        }
 
-    .event-filter-tabs {
+    .event-filter-nav {
         display: flex;
         gap: 20px;
         margin: 0 auto 20px auto;
         border: 1px solid #ccc;
-        border-radius: 999px; /* Bo tròn khung */
+        border-radius: 999px;
         padding: 10px 15px;
         max-width: 1140px;
         background-color: #f9f9f9;
         justify-content: center;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* thêm nhẹ shadow nếu thích */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
 
-    /* Loc */
-    .filter-box {
+    .event-filter-input {
         position: relative;
         width: 100%;
     }
 
-    .filter-box input,
-    .filter-box select {
-        width: 100%;
-        padding: 10px 38px 10px 16px;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        background-color: white;
-        font-size: 14px;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    }
+        .event-filter-input input,
+        .event-filter-input select {
+            width: 100%;
+            padding: 10px 38px 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            background-color: white;
+            font-size: 14px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
-    .date-range-box {
+    .event-date-range {
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    .date-range-box input {
-        padding: 10px 16px;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        background-color: white;
-        font-size: 14px;
-        flex: 1;
-    }
+        .event-date-range input {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            background-color: white;
+            font-size: 14px;
+            flex: 1;
+        }
 
-    .date-range-box span {
-        color: #666;
-        font-size: 14px;
-    }
+        .event-date-range span {
+            color: #666;
+            font-size: 14px;
+        }
 
-    .btn-filter {
+    .event-filter-apply {
         background-color: orangered;
         color: white;
         border: none;
+        margin-right: 10px;
         padding: 8px 20px;
         border-radius: 25px;
         font-weight: 600;
         cursor: pointer;
         transition: background-color 0.3s;
-        margin-right: 10px;
     }
 
-    .btn-reset {
+    .event-filter-reset {
         background-color: #f0f0f0;
         color: #666;
         border: none;
@@ -462,64 +407,52 @@ document.addEventListener('DOMContentLoaded', function () {
         transition: background-color 0.3s;
     }
 
-    .btn-filter:hover {
+    .event-filter-apply:hover {
         background-color: #6a00d6;
     }
 
-    .btn-reset:hover {
+    .event-filter-reset:hover {
         background-color: #e0e0e0;
     }
 
-    /* Pagination Styles */
-    .block-27 ul {
+    .event-pagination ul {
         display: flex;
         justify-content: center;
-        align-items: center;
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-    .block-27 ul li {
-        margin: 0 5px;
-    }
+        .event-pagination ul li {
+            margin: 0 5px;
+        }
 
-    .block-27 ul li.pagination-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: #f5f5f5;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+            .event-pagination ul li a,
+            .event-pagination ul li span {
+                display: inline-block;
+                padding: 8px 15px;
+                border-radius: 25px;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
 
-    .block-27 ul li.pagination-btn a,
-    .block-27 ul li.pagination-btn span {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        color: #333;
-        text-decoration: none;
-        font-weight: 600;
-    }
+            .event-pagination ul li a {
+                background-color: #f0f0f0;
+                color: #333;
+            }
 
-    .block-27 ul li.pagination-btn.active {
-        background-color: #ffaa66; /* Light orange for active page */
-        color: white;
-    }
+                .event-pagination ul li a:hover {
+                    background-color: orangered;
+                    color: white;
+                }
 
-    .block-27 ul li.pagination-btn:hover:not(.disabled) {
-        background-color: #e0e0e0;
-    }
+            .event-pagination ul li.active span {
+                background-color: orangered;
+                color: white;
+            }
 
-    .block-27 ul li.pagination-btn.disabled {
-        background-color: #f5f5f5;
-        color: #ccc;
-        cursor: not-allowed;
-    }
+            .event-pagination ul li span {
+                cursor: default;
+            }
 </style>

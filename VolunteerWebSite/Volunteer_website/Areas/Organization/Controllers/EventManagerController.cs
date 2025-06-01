@@ -7,7 +7,7 @@ using Volunteer_website.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
     [Route("[area]/[controller]/[action]")] // Sửa lại route template
@@ -123,6 +123,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         public IActionResult Create()
         {
             var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrEmpty(orgId))
             {
                 return RedirectToAction("Login", "Account", new { area = "" });

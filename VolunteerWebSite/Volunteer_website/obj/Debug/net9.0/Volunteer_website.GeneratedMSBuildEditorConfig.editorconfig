@@ -1,19 +1,11 @@
 is_global = true
 build_property.TargetFramework = net9.0
-build_property.TargetFramework = net9.0
-build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
-build_property.UsingMicrosoftNETSdkWeb = true
-build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
-build_property.InvariantGlobalization = 
-build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
-build_property.EnforceExtendedAnalyzerRules = 
-build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Volunteer_website
 build_property.RootNamespace = Volunteer_website
@@ -22,7 +14,7 @@ build_property.EnableComHosting =
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
-build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = C:\Users\ASUS\Documents\PBL3\main\PBL3_LapTrinhUngDung\VolunteerWebSite\Volunteer_website
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
@@ -34,6 +26,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/EventManager/Event.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRXZlbnRNYW5hZ2VyXEV2ZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/EventManager/EventDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRXZlbnRNYW5hZ2VyXEV2ZW50RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/EventManager/ListVolunteerDonation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRXZlbnRNYW5hZ2VyXExpc3RWb2x1bnRlZXJEb25hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/EventManager/ListVolunteerRegistration.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRXZlbnRNYW5hZ2VyXExpc3RWb2x1bnRlZXJSZWdpc3RyYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/HomeAdmin/Index.cshtml]
@@ -50,10 +54,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/OrgManager/ListEvent.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT3JnTWFuYWdlclxMaXN0RXZlbnQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Users/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlcnNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Users/Index.cshtml]
@@ -104,10 +104,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcRXZlbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/HomeOrg/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/OrgLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXE9yZ0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -136,6 +132,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Blog/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/EventRegistration/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRSZWdpc3RyYXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Home/AboutUs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dFVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -150,10 +154,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Home/Events.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFdmVudHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Home/Fundraising.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGdW5kcmFpc2luZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Views/Home/Index.cshtml]

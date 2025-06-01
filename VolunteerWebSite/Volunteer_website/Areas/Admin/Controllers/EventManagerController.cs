@@ -18,11 +18,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
             _db = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         #region Hiển thị sự kiện
         [Route("Event")]
         public IActionResult Event(int? page)
@@ -46,8 +41,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
         {
             try
             {
-                //var firstEvent = await _db.Events.FirstOrDefaultAsync(); ;
-                //Console.WriteLine(firstEvent.EventId);
                 var EventId = request.EventId;
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
                 if (existingEvent == null)
@@ -97,49 +90,155 @@ namespace Volunteer_website.Areas.Admin.Controllers
         }
         #endregion
 
-        #region lấy dữ liệu event
-        [Route("GetEventDetails")]
-        public async Task<IActionResult> GetEventDetails(string id)
+        #region Xem chi tiet su kien
+        [HttpGet]
+        public async Task<IActionResult> EventDetails(string id)
         {
-            var eventObj = await _db.Events
-                .Include(e => e.Org)  // Include related organization
-                .FirstOrDefaultAsync(ev => ev.EventId == id);
-
-            if (eventObj == null)
-                return Json(new { success = false, message = "Event not found" });
-
-            // Count registrations
-            var registrationCount = await _db.Registrations.CountAsync(r => r.EventId == id);
-
-            // Get donations information
-            var donations = await _db.Donations
-                .Where(d => d.EventId == id)
-                .ToListAsync();
-
-            return Json(new
+            if (string.IsNullOrEmpty(id))
             {
-                success = true,
-                data = new
+                return NotFound("Event ID is required.");
+            }
+
+            try
+            {
+
+                var eventDetail = await _db.Events
+                    .Where(x => x.EventId == id)
+                    .FirstOrDefaultAsync();
+
+                if (eventDetail == null)
                 {
-                    eventId = eventObj.EventId,
-                    name = eventObj.Name,
-                    description = eventObj.Description,
-                    location = eventObj.Location,
-                    dayBegin = eventObj.DayBegin,
-                    dayEnd = eventObj.DayEnd,
-                    targetMember = eventObj.TargetMember,
-                    targetFunds = eventObj.TargetFunds,
-                    type_event_name = eventObj.TypeEventId,
-                    organizationName = eventObj.Org?.Name,
-                    status = eventObj.Status,
-                    imagePath = eventObj.ImagePath,
-                    listImg = eventObj.ListImg,
-                    registrationCount = registrationCount,
-                    donationCount = donations.Count,
-                    totalAmount = donations.Sum(d => d.Amount ?? 0)
+                    return NotFound("Event not found.");
                 }
-            });
+
+
+                var orgName = await _db.Organizations
+                    .Where(o => o.OrgId == eventDetail.OrgId)
+                    .Select(o => o.Name)
+                    .FirstOrDefaultAsync() ?? "Unknown Organization";
+
+
+                var registrations = await _db.Registrations
+                    .Where(r => r.EventId == id)
+                    .OrderByDescending(r => r.RegisterAt)
+                    .Take(10)
+                    .Join(
+                        _db.Volunteers,
+                        r => r.VolunteerId,
+                        v => v.VolunteerId,
+                        (r, v) => new
+                        {
+                            Name = v.Name ?? "Unknown",
+                            Time = r.RegisterAt.HasValue ? r.RegisterAt.Value.ToString("dd/MM/yyyy") : "N/A"
+                        })
+                    .ToListAsync();
+
+
+                var donations = await _db.Donations
+                    .Where(d => d.EventId == id)
+                    .OrderByDescending(d => d.DonationDate)
+                    .Take(10)
+                    .Join(
+                        _db.Volunteers,
+                        d => d.VolunteerId,
+                        v => v.VolunteerId,
+                        (d, v) => new
+                        {
+                            Name = v.Name ?? "Unknown",
+                            Amount = d.Amount,
+                            Time = d.DonationDate.HasValue ? d.DonationDate.Value.ToString("dd/MM/yyyy") : "N/A"
+                        })
+                    .ToListAsync();
+
+
+                ViewBag.OrgName = orgName;
+                ViewBag.Participants = registrations;
+                ViewBag.Donations = donations;
+                ViewBag.RegisteredCount = await _db.Registrations.CountAsync(r => r.EventId == id);
+
+                return View(eventDetail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex);
+                return StatusCode(500, "An error occurred while fetching event details.");
+            }
         }
         #endregion
+
+        //#region lấy dữ liệu event
+        //[Route("GetEventDetails")]
+        //public async Task<IActionResult> GetEventDetails(string id)
+        //{
+        //    var eventObj = await _db.Events
+        //        .Include(e => e.Org)  // Include related organization
+        //        .FirstOrDefaultAsync(ev => ev.EventId == id);
+
+        //    if (eventObj == null)
+        //        return Json(new { success = false, message = "Event not found" });
+
+        //    // Count registrations
+        //    var registrationCount = await _db.Registrations.CountAsync(r => r.EventId == id);
+
+        //    // Get donations information
+        //    var donations = await _db.Donations
+        //        .Where(d => d.EventId == id)
+        //        .ToListAsync();
+
+        //    return Json(new
+        //    {
+        //        success = true,
+        //        data = new
+        //        {
+        //            eventId = eventObj.EventId,
+        //            name = eventObj.Name,
+        //            description = eventObj.Description,
+        //            location = eventObj.Location,
+        //            dayBegin = eventObj.DayBegin,
+        //            dayEnd = eventObj.DayEnd,
+        //            targetMember = eventObj.TargetMember,
+        //            targetFunds = eventObj.TargetFunds,
+        //            type_event_name = eventObj.TypeEventId,
+        //            organizationName = eventObj.Org?.Name,
+        //            status = eventObj.Status,
+        //            imagePath = eventObj.ImagePath,
+        //            listImg = eventObj.ListImg,
+        //            registrationCount = registrationCount,
+        //            donationCount = donations.Count,
+        //            totalAmount = donations.Sum(d => d.Amount ?? 0)
+        //        }
+        //    });
+        //}
+        //#endregion
+
+        //#region Danh Sach Doantion
+        //[Route("ListVolunteerDonation")]
+        //public IActionResult ListVolunteerDonation(string id, int? page)
+        //{
+        //    int pageSize = 8;
+        //    int pageNumber = page ?? 1;
+
+        //    var ListVolunteerDonate = _db.Donations
+        //        .Where(r => r.EventId == id)
+        //        .ToPagedList(pageNumber, pageSize);
+        //    ViewBag.EventId = id;
+        //    return View(ListVolunteerDonate);
+        //}
+        //#endregion
+
+        //#region Danh sách volunteer
+        //[Route("ListVolunteerRegistrationm")]
+        //public IActionResult ListVolunteerRegistration(string id, int? page)
+        //{
+        //    int pageSize = 8;
+        //    int pageNumber = page ?? 1;
+
+        //    var ListVolunteerRegis = _db.Registrations
+        //        .Where(r => r.EventId == id)
+        //        .ToPagedList(pageNumber, pageSize);
+        //    return View(ListVolunteerRegis);
+        //}
+        //#endregion
+
     }
 }

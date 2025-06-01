@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +33,8 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<Volunteer> Volunteers { get; set; }
 
-   
+  
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Admin>(entity =>

@@ -4,11 +4,11 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Volunteer_website.Areas.Organization.Controllers
+namespace Volunteer_website.Areas.Organizations.Controllers
 {
-    [Authorize("Org")]
     [Area("Organization")]
-    [Route("Organization/RegistrationManager")] // Sửa lại route template
+    [Route("Organization/[controller]/[action]")]
+    [Authorize("Org")]
     public class RegistrationManagerController : Controller
     {
         private readonly VolunteerManagementContext _db;
@@ -19,7 +19,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
         }
 
         #region Danh sách người đăng kí tham gia
-        public IActionResult Index(int? page, string searchValue)
+        public IActionResult Index(int? page, string? searchValue)
         {
             int pageSize = 8;
             int pageNumber = page ?? 1;
@@ -61,12 +61,14 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
         #region Cập nhật trạng thái người tham gia
         [HttpGet]
-        public IActionResult Update(string regId, string status)
+        public IActionResult Update(string regId, string? status)
         {
             try
             {
+
                 // Validate status
-                if (!new[] { "PENDING", "ACCEPTED", "REJECTED" }.Contains(status.ToUpper()))
+
+                if (!new[] { "PENDING", "ACCEPTED", "REJECTED" }.Contains(status?.ToUpper() ?? string.Empty))
                 {
                     return Json(new { success = false, message = "Invalid status value" });
                 }
@@ -101,45 +103,24 @@ namespace Volunteer_website.Areas.Organization.Controllers
         #endregion
 
         #region Xem chi tiết người tham gia
-        [Route("GetVolunteerDetails")]
+        [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
         {
-            try
-            {
-                var volunteer = _db.Volunteers
-                    .FirstOrDefault(v => v.VolunteerId == id);
+            var volunteer = _db.Volunteers.FirstOrDefault(v => v.VolunteerId == id);
+            if (volunteer == null) return NotFound();
 
-                if (volunteer == null)
-                {
-                    return Json(new { success = false, message = "Volunteer not found" });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    data = new
-                    {
-                        volunteerId = volunteer.VolunteerId,
-                        name = volunteer.Name,
-                        email = volunteer.Email,
-                        phoneNumber = volunteer.PhoneNumber,
-                        dateOfBirth = volunteer.DateOfBirth?.ToString("dd/MM/yyyy"),
-                        gender = volunteer.Gender.HasValue ?
-                            (volunteer.Gender.Value ? "Male" : "Female") : "Not specified",
-                        imagePath = volunteer.ImagePath,
-                        address = volunteer.Address
-                    }
-                });
-            }
-            catch (Exception ex)
+            var result = new
             {
-                return Json(new
-                {
-                    success = false,
-                    message = "An error occurred while fetching volunteer details",
-                    error = ex.Message
-                });
-            }
+                volunteerId = volunteer.VolunteerId,
+                name = volunteer.Name,
+                email = volunteer.Email,
+                phoneNumber = volunteer.PhoneNumber,
+                dateOfBirth = volunteer.DateOfBirth?.ToString("yyyy-MM-dd"),
+                gender = volunteer.Gender,
+                address = volunteer.Address,
+                imagePath = volunteer.ImagePath
+            };
+            return Json(result);
         }
         #endregion
     }

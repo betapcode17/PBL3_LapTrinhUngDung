@@ -44,6 +44,7 @@
                         <th>Email</th>
                         <th>Address</th>
                         <th>Phone</th>
+                        <th>Age</th>
                         <th>Gender</th>
                         <th>Actions</th>
                     </tr>
@@ -66,13 +67,35 @@
                                 <td>@item.Email</td>
                                 <td>@item.Address</td>
                                 <td>@item.PhoneNumber</td>
+                                <td>
+                                    @{
+                                        var birthDate = item.DateOfBirth;
+                                        if (birthDate != null)
+                                        {
+                                            var today = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")); // Current time +07
+                                            var birthDateTime = ((DateOnly)birthDate).ToDateTime(new TimeOnly(0, 0)); // Convert to DateTime at midnight
+                                            int age = today.Year - birthDateTime.Year;
+                                            if (birthDateTime > today.AddYears(-age)) age--; // Adjust if birthday hasn't occurred
+                                            <span>@age years old</span>
+                                        }
+                                        else
+                                        {
+                                            <span>N/A</span>
+                                        }
+                                    }
+                                </td>
                                 <td>@Gender</td>
+                           
                                 <td class="action_btn">
+@*<<<<<<< HEAD
                                     <button type="button" class="btn btn-info btn-sm view-volunteer-btn"
                                             data-reg-id="@item.VolunteerId"
-                                            onclick="showVolunteerDetails('@item.VolunteerId', '/Admin/Volunteers/GetVolunteerDetails')">
+                                            onclick="showVolunteerDetails('@item.VolunteerId', '/Admin/Volunteers/GetVolunteerDetails')" title="Detail Volunteer">
                                         <i class="fas fa-eye"></i>
                                     </button>
+=======*@
+                                
+@* >>>>>>> 2e7358d210c32ce060dcdf1a7555be45e044d2c7 *@
                                     <a class="btn btn-success btn-sm" asp-area="Admin" asp-controller="Volunteers" asp-action="ListEventReg" asp-route-volId="@item.VolunteerId" title="List Event">
                                         <i class="fa fa-list-alt"></i>
                                     </a>
@@ -82,7 +105,8 @@
                     </tbody>
                 }
             </table>
-            <!-- Volunteer Details Modal - Redesigned -->
+@*<<<<<<< HEAD*@
+            <!-- Volunteer Details  -->
             <div class="modal fade" id="volunteerDetailsModal" tabindex="-1" aria-labelledby="volunteerDetailsModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -141,6 +165,9 @@
                 </div>
             </div>
         </div>
+@*=======
+        
+>>>>>>> 2e7358d210c32ce060dcdf1a7555be45e044d2c7*@
         <!-- Pagination -->
         <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
             @if (Model!.HasPreviousPage)

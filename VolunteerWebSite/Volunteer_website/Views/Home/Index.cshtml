@@ -1,20 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    Layout = "_Layout";
+    var role = Context.Session.GetInt32("UserRole");
+    Layout = role == 1 ? "~/Views/Shared/_AdminLayout.cshtml" :
+             role == 0 ? "~/Views/Shared/User_Layout.cshtml" :
+             "~/Views/Shared/_Layout.cshtml";
 }
-@* @{ *@
-@*     var role = Context.Session.GetInt32("UserRole"); *@
-@*     Layout = role == 1 ? "~/Views/Shared/_AdminLayout.cshtml" : *@
-@*              role == 0 ? "~/Views/Shared/User_Layout.cshtml" : *@
-@*              "~/Views/Shared/_Layout.cshtml";  *@
-@* } *@
 
 <div class="hero-wrap"
      style="background-image: url('images/index1.jpg')"
      data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
             @if (TempData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -29,9 +26,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
-           
             <div class="col-md-7 ftco-animate text-center"
-                 data-scrollax=" properties: { translateY: '70%' }">
+                 data-scrollax="properties: { translateY: '70%' }">
                 <h1 class="mb-4"
                     data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
                     Giving to Receive
@@ -151,152 +147,45 @@
         </div>
         <div class="row">
             <div class="col-md-12 ftco-animate">
-                <div class="carousel-cause owl-carousel">
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-1.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
+                @if (ViewBag.Causes != null && (ViewBag.Causes as List<Volunteer_website.Models.Event>).Any())
+                {
+                    <div class="carousel-cause owl-carousel">
+                        @foreach (var cause in ViewBag.Causes as List<Volunteer_website.Models.Event>)
+                        {
+                            var currentFunds = cause.Donations != null ? cause.Donations.Sum(d => d.Amount ?? 0) : 0;
+                            var percentFund = cause.TargetFunds.HasValue && cause.TargetFunds > 0 ? (int)((double)currentFunds / cause.TargetFunds.Value * 100) : 0;
+                            var lastDonationText = cause.Donations != null && cause.Donations.Any()
+                            ? $"Last donation {(DateTime.Now - cause.Donations.Max(d => d.DonationDate ?? DateTime.Now)).Days / 7}w ago"
+                            : "No donations yet";
+
+                            <div class="item">
+                                <div class="cause-entry">
+                                    <a href="@Url.Action("Detail_Event", "Home", new { id = cause.EventId })"
+                                       class="img"
+                                       style="background-image: url('@Url.Content(cause.ImagePath ?? "~/images/default-event.jpg")')"></a>
+                                    <div class="text p-3 p-md-4">
+                                        <h3><a href="@Url.Action("Detail_Event", "Home", new { id = cause.EventId })">@(cause.Name ?? "Không có tên")</a></h3>
+                                        <p>@(cause.Description ?? "Không có mô tả")</p>
+                                        <span class="donation-time mb-3 d-block">@lastDonationText</span>
+                                        <div class="progress custom-progress-success">
+                                            <div class="progress-bar bg-primary"
+                                                 role="progressbar"
+                                                 style="width: @percentFund%"
+                                                 aria-valuenow="@percentFund"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="fund-raised d-block">@currentFunds.ToString("N0") raised of @(cause.TargetFunds.HasValue ? cause.TargetFunds.Value.ToString("N0") : "0")</span>
+                                    </div>
                                 </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
                             </div>
-                        </div>
+                        }
                     </div>
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-2.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
-                                </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-3.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
-                                </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-4.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
-                                </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-5.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
-                                </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="cause-entry">
-                            <a href="#"
-                               class="img"
-                               style="background-image: url(images/cause-6.jpg)"></a>
-                            <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
-                                <p>
-                                    Even the all-powerful Pointing has no control about the
-                                    blind texts it is an almost unorthographic life
-                                </p>
-                                <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                                <div class="progress custom-progress-success">
-                                    <div class="progress-bar bg-primary"
-                                         role="progressbar"
-                                         style="width: 28%"
-                                         aria-valuenow="28"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"></div>
-                                </div>
-                                <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
+                else
+                {
+                    <p class="text-center">No causes available at the moment.</p>
+                }
             </div>
         </div>
     </div>
@@ -314,60 +203,50 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                <div class="staff">
-                    <div class="d-flex mb-4">
-                        <div class="img"
-                             style="background-image: url(images/person_1.jpg)"></div>
-                        <div class="info ml-4">
-                            <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                            <span class="position">Donated Just now</span>
-                            <div class="text">
-                                <p>
-                                    Donated <span>$300</span> for
-                                    <a href="#">Children Needs Food</a>
-                                </p>
+            @if (ViewBag.LatestDonations != null && (ViewBag.LatestDonations as IList<object>) != null && (ViewBag.LatestDonations as IList<object>).Count > 0)
+            {
+                @foreach (dynamic action in ViewBag.LatestDonations as IList<object>)
+                {
+                    var timeAgo = (DateTime.Now - action.ActionTime).TotalMinutes < 60
+                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalMinutes} minutes ago"
+                    : (DateTime.Now - action.ActionTime).TotalHours < 24
+                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalHours} hours ago"
+                    : $"{(int)(DateTime.Now - action.ActionTime).TotalDays} days ago";
+
+                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
+                        <div class="staff">
+                            <div class="d-flex mb-4">
+                                <div class="img"
+                                     style="background-image: url('@Url.Content(action.ImagePath)')"></div>
+                                <div class="info ml-4">
+                                    <h3><a href="#">@action.Name</a></h3>
+                                    <span class="position">@timeAgo</span>
+                                    <div class="text">
+                                        @if (action.Type == "Donation")
+                                        {
+                                            <p>
+                                                Donated <span>@action.Amount?.ToString("N0")</span> for
+                                                <a href="#">@action.EventName</a>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                Joined as a volunteer for
+                                                <a href="#">@action.EventName</a>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                <div class="staff">
-                    <div class="d-flex mb-4">
-                        <div class="img"
-                             style="background-image: url(images/person_2.jpg)"></div>
-                        <div class="info ml-4">
-                            <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                            <span class="position">Donated Just now</span>
-                            <div class="text">
-                                <p>
-                                    Donated <span>$150</span> for
-                                    <a href="#">Children Needs Food</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                <div class="staff">
-                    <div class="d-flex mb-4">
-                        <div class="img"
-                             style="background-image: url(images/person_3.jpg)"></div>
-                        <div class="info ml-4">
-                            <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                            <span class="position">Donated Just now</span>
-                            <div class="text">
-                                <p>
-                                    Donated <span>$250</span> for
-                                    <a href="#">Children Needs Food</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No recent donations or volunteer actions at the moment.</p>
+            }
         </div>
     </div>
 </section>
@@ -531,105 +410,46 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-1.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
+            @if (ViewBag.LatestEvents != null && (ViewBag.LatestEvents as List<Volunteer_website.Models.Event>).Any())
+            {
+                @foreach (var ev in ViewBag.LatestEvents as List<Volunteer_website.Models.Event>)
+                {
+                    <div class="col-md-4 d-flex ftco-animate">
+                        <div class="blog-entry align-self-stretch">
+                            <a href="@Url.Action("Detail_Event", "Home", new { id = ev.EventId })"
+                               class="block-20"
+                               style="background-image: url('@Url.Content(ev.ImagePath ?? "~/images/default-event.jpg")')">
+                            </a>
+                            <div class="text p-4 d-block">
+                                <div class="meta mb-3">
+                                    <div><a href="#">@ev.DayBegin?.ToString("MMM dd, yyyy")</a></div>
+                                    <div><a href="#">Admin</a></div>
+                                    <div>
+                                        <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
+                                    </div>
+                                </div>
+                                <h3 class="heading mb-4">
+                                    <a href="@Url.Action("Detail_Event", "Home", new { id = ev.EventId })">@(ev.Name ?? "Không có tên")</a>
+                                </h3>
+                                <p class="time-loc">
+                                    <span class="mr-2"><i class="icon-clock-o"></i> N/A - N/A</span>
+                                    <span><i class="icon-map-o"></i> @(ev.Location ?? "Không có địa điểm")</span>
+                                </p>
+                                <p>@(ev.Description ?? "Không có mô tả")</p>
+                                <p>
+                                    <a href="@Url.Action("Detail_Event", "Home", new { id = ev.EventId })">
+                                        Join Event <i class="ion-ios-arrow-forward"></i>
+                                    </a>
+                                </p>
                             </div>
                         </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-2.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/event-3.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mb-4">
-                            <a href="#">World Wide Donation</a>
-                        </h3>
-                        <p class="time-loc">
-                            <span class="mr-2"><i class="icon-clock-o"></i> 10:30AM-03:30PM</span>
-                            <span><i class="icon-map-o"></i> Venue Main Campus</span>
-                        </p>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                        <p>
-                            <a href="event.html">
-                                Join Event <i class="ion-ios-arrow-forward"></i>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No upcoming events at the moment.</p>
+            }
         </div>
     </div>
 </section>
