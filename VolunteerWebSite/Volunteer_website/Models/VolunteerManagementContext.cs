@@ -31,7 +31,7 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Volunteer> Volunteers { get; set; }
+    public virtual DbSet<Volunteer>  Volunteers { get; set; }
 
   
 
@@ -229,7 +229,7 @@ public partial class VolunteerManagementContext : DbContext
         {
             entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772D4A1B9A0");
 
-            entity.ToTable("Registration");
+            entity.ToTable("Registration"); 
 
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
