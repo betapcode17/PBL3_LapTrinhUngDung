@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Volunteer_website.Controllers
 {
@@ -24,11 +23,11 @@ namespace Volunteer_website.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("SignIn", "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             // Kiểm tra xem userId có tương ứng với một volunteer trong bảng Volunteers không

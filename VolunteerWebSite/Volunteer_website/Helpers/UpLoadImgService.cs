@@ -33,7 +33,11 @@ namespace Volunteer_website.Helpers
                     await imageFile.CopyToAsync(stream);
                 }
 
-                return Path.Combine("images", folderName, fileName).Replace("\\", "/");
+                string link = Path.Combine("images", folderName, fileName).Replace("\\", "/");
+                if (link.Substring(0, 1) == "/")
+                    return link;
+                else
+                    return "/" + link;
             }
             catch (Exception ex)
             {
@@ -78,6 +82,9 @@ namespace Volunteer_website.Helpers
                         }
 
                         string relativePath = Path.Combine("images", folderName, fileName).Replace("\\", "/");
+                        if (relativePath.Substring(0, 1) != "/")
+                            relativePath = "/" + relativePath;
+
                         uploadedPaths.Add(relativePath);
                     }
                 }

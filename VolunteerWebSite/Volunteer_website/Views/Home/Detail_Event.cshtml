@@ -1,8 +1,10 @@
-﻿@model Volunteer_website.Models.Event
+﻿@using System.Security.Claims
+@model Volunteer_website.Models.Event
 @{
     ViewData["Title"] = "Detail_Event";
-    var role = Context.Session.GetString("UserRole");
-    Layout = (role != null && role == "volunteer") ? "~/Views/Shared/User_Layout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    // var role = Context.Session.GetString("UserRole");
+	var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "guest";
+    Layout = "_Layout";
     var today = DateOnly.FromDateTime(DateTime.Now);
     bool isEventOver = Model.DayEnd.HasValue && Model.DayEnd < today;
     bool isEventNotStarted = Model.DayBegin.HasValue && Model.DayBegin > today;
@@ -71,7 +73,8 @@
                     @{
                         var currentFund = Model.Donations?.Sum(d => d.Amount ?? 0) ?? 0;
                         var targetFund = Model.TargetFunds ?? 1; // Tránh chia cho 0
-                        var progressPercent = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                        // var progressPercent = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                        var progressPercent = targetFund > 0 ? (int)((double)currentFund / targetFund * 100) : 0;
                     }
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: @progressPercent%" aria-valuenow="@currentFund" aria-valuemin="0" aria-valuemax="@targetFund"></div>
@@ -82,14 +85,14 @@
                     </p>
                     <p class="mb-2">
                         <i class="fa-solid fa-user"></i>
-                        <span class="fw-bold text-dark float-end">@(Model.Registrations?.Count(r => r.Status == "Được duyệt") ?? 0) lượt ủng hộ</span>
+                        <span class="fw-bold text-dark float-end">@(Model.Donations?.Count() ?? 0) lượt ủng hộ</span>
                     </p>
                     <div class="input-group my-3">
                         <span class="input-group-text">VND</span>
                         <input type="text" class="form-control" value="@(Model.TargetFunds?.ToString("N0") ?? "0")" readonly />
                     </div>
 
-                    @if (role != "admin")
+                    @if (role != "3")
                     {
                         <div>
                             <button class="btn w-100 @(isDonateDisabled ? "btn-disabled" : "btn-primary")"
@@ -204,7 +207,8 @@
                             {
                                 <tr>
                                     <td>@(donation.VolunteerName ?? "Unknown")</td>
-                                    <td>@(donation.Amount.HasValue ? $"{donation.Amount.Value:N0} VND" : "0 VND")</td>
+                                    <td>@($"{(donation.Amount ?? 0):N0} VND")</td>
+
                                     <td>@(donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy") ?? "N/A")</td>
                                 </tr>
                             }

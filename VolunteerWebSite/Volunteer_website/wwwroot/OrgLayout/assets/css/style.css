@@ -11038,7 +11038,7 @@ fieldset:disabled .btn {
 }
 
 .text-black {
-  --bs-text-opacity: 1;
+  --bs-text-opacity: 1!important;
   color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
 }
 
