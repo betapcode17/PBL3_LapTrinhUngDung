@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddSingleton<Volunteer_website.Services.EmailService>();
 
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {

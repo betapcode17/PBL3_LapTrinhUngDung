@@ -211,99 +211,92 @@
 </div>
 @section Scripts {
     <script>
-        function showVolunteerDetails(regId) {
+
+           // Hàm viewVolunteerDetails để hiển thị thông tin tình nguyện viên qua AJAX
+           function showVolunteerDetails(volunteerId) {
             $.ajax({
-                url: "/Organization/RegistrationManager/GetVolunteerDetails",
-                type: "GET",
-                data: { id: regId },
-                success: function (response) {
-                    if (response && response.success && response.data) {
-                        const data = response.data;
+                url: '/Organization/RegistrationManager/GetVolunteerDetails?id=' + volunteerId,
+                type: 'GET',
+                success: function (volunteer) {
+                    console.log('Volunteer data:', volunteer); // Thêm log để kiểm tra dữ liệu
+                    if (volunteer) {
+                        // Cập nhật thông tin vào modal
+                        $('#volunteerId').text('ID: ' + (volunteer.volunteerId || 'N/A'));
+                        $('#volunteerName').text(volunteer.name || 'N/A');
+                        $('#volunteerEmail').text(volunteer.email || 'N/A');
+                        $('#volunteerPhone').text(volunteer.phoneNumber || 'N/A');
+                        $('#volunteerDob').text(volunteer.dateOfBirth ? new Date(volunteer.dateOfBirth).toLocaleDateString() : 'N/A');
+                        $('#volunteerGender').text(volunteer.gender || 'N/A');
+                        $('#volunteerAddress').text(volunteer.address || 'N/A');
+                        $('#volunteerImage').attr('src', volunteer.imagePath ? `~/images/${volunteer.imagePath}` : 'https://via.placeholder.com/200');
 
-                        $("#volunteerId").text(`ID: ${data.volunteerId || "N/A"}`);
-                        $("#volunteerName").text(data.name || "N/A");
-                        $("#volunteerEmail").text(data.email || "N/A");
-                        $("#volunteerPhone").text(data.phoneNumber || "N/A");
-                        $("#volunteerDob").text(data.dateOfBirth || "N/A");
-                        $("#volunteerGender").text(data.gender || "N/A");
-                        $("#volunteerAddress").text(data.address || "N/A");
-
-                        if (data.imagePath) {
-                            $("#volunteerImage").attr("src", data.imagePath);
-                        } else {
-                            $("#volunteerImage").attr(
-                                "src",
-                                "https://via.placeholder.com/200?text=No+Image"
-                            );
-                        }
-
-                        $("#volunteerDetailsModal").modal("show");
+                        // Hiển thị modal
+                        $('#volunteerDetailsModal').modal('show');
                     } else {
                         Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: response.message || "Invalid response from server.",
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Volunteer not found!'
                         });
                     }
                 },
-                error: function (xhr) {
+                error: function (xhr, status, error) {
                     Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: xhr.responseJSON?.message || "Unable to fetch volunteer details.",
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to load volunteer details: ' + error
                     });
                 }
             });
         }
+                function confirmAction(regId, status) {
+                    const actionText = status === "ACCEPTED" ? "approve" : "reject";
+                    const actionColor = status === "ACCEPTED" ? "#28a745" : "#dc3545";
 
-        function confirmAction(regId, status) {
-            const actionText = status === "ACCEPTED" ? "approve" : "reject";
-            const actionColor = status === "ACCEPTED" ? "#28a745" : "#dc3545";
-
-            Swal.fire({
-                title: `Are you sure to ${actionText} this registration?`,
-                text: "This action cannot be undone!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: actionColor,
-                cancelButtonColor: "#6c757d",
-                confirmButtonText: `Yes, ${actionText} it!`,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    updateRegistrationStatus(regId, status);
+                    Swal.fire({
+                        title: `Are you sure to ${actionText} this registration?`,
+                        text: "This action cannot be undone!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: actionColor,
+                        cancelButtonColor: "#6c757d",
+                        confirmButtonText: `Yes, ${actionText} it!`,
+                        cancelButtonText: "Cancel"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            updateRegistrationStatus(regId, status);
+                        }
+                    });
                 }
-            });
-        }
 
-        function updateRegistrationStatus(regId, status) {
-            if (!regId || !["ACCEPTED", "REJECTED"].includes(status)) {
-                Swal.fire("Lỗi", "Dữ liệu không hợp lệ", "error");
-                return;
-            }
-
-            const url = `/Organization/RegistrationManager/Update?regId=${encodeURIComponent(regId)}&status=${status}`;
-
-            fetch(url)
-                .then((response) => {
-                    if (!response.ok) throw new Error(`Lỗi HTTP! Status: ${response.status}`);
-                    return response.json();
-                })
-                .then((data) => {
-                    if (data.success) {
-                        Swal.fire(
-                            "Thành công",
-                            "Cập nhật trạng thái thành công",
-                            "success"
-                        ).then(() => window.location.reload());
-                    } else {
-                        throw new Error(data.message || "Cập nhật thất bại");
+                function updateRegistrationStatus(regId, status) {
+                    if (!regId || !["ACCEPTED", "REJECTED"].includes(status)) {
+                        Swal.fire("Lỗi", "Dữ liệu không hợp lệ", "error");
+                        return;
                     }
-                })
-                .catch((error) => {
-                    console.error("Chi tiết lỗi:", error);
-                    Swal.fire("Lỗi", error.message || "Có lỗi xảy ra khi cập nhật", "error");
-                });
-        }
+
+                    const url = `/Organization/RegistrationManager/Update?regId=${encodeURIComponent(regId)}&status=${status}`;
+
+                    fetch(url)
+                        .then((response) => {
+                            if (!response.ok) throw new Error(`Lỗi HTTP! Status: ${response.status}`);
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire(
+                                    "Thành công",
+                                    "Cập nhật trạng thái thành công",
+                                    "success"
+                                ).then(() => window.location.reload());
+                            } else {
+                                throw new Error(data.message || "Cập nhật thất bại");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Chi tiết lỗi:", error);
+                            Swal.fire("Lỗi", error.message || "Có lỗi xảy ra khi cập nhật", "error");
+                        });
+                }
     </script>
 }
