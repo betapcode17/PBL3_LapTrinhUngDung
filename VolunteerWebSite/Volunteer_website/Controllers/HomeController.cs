@@ -107,9 +107,9 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.TypeEvent)
                 .Include(e => e.Registrations)
                 .Include(e => e.Donations)
-                .AsQueryable();
+                .AsQueryable(); // Removed FirstOrDefault to avoid null dereference  
 
-            // Áp dụng các bộ lọc
+            // Apply filters  
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
             {
@@ -161,14 +161,14 @@ namespace Volunteer_website.Controllers
             page = Math.Max(1, page);
             page = Math.Min(page, totalPages > 0 ? totalPages : 1);
 
-            // Lấy danh sách sự kiện đã phân trang
+            // Get paginated event list  
             var eventList = query
                 .OrderByDescending(e => e.DayBegin)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Truyền thông tin phân trang và bộ lọc cho view
+            // Pass pagination and filter info to the view  
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.PageSize = pageSize;
@@ -270,6 +270,16 @@ namespace Volunteer_website.Controllers
                 .ToList();
 
             return View(volunteers);
+        }
+
+        [HttpGet]
+        public IActionResult GetAcceptedEvents()
+        {
+            var acceptedEvents = _context.Events
+                .Where(e => e.Status != null && e.Status.Equals("ACCEPT", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return View(acceptedEvents);
         }
 
     }

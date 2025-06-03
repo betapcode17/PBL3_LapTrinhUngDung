@@ -135,6 +135,19 @@
             <div class="alert-close" onclick="this.parentElement.remove()">×</div>
         </div>
     }
+        @if (TempData.ContainsKey("ImageWarning"))
+        {
+            <div id="customAlertError" class="modern-alert error">
+                <div class="alert-icon">
+                    <span>⚠</span>
+                </div>
+                <div class="alert-content">
+                    <strong>Error</strong>
+                    <p> @TempData["ImageWarning"]</p>
+                </div>
+                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
+            </div>
+        }
 
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">

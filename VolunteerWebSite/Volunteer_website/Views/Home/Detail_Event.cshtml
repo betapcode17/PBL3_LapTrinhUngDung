@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <img src="@Url.Content(Model.ImagePath ?? "/images/default-event.jpg")" alt="@Model.Name" class="img-fluid banner-img" style="max-height: 500px; width: 100%; object-fit: cover;" />
+                <img src="~/@Url.Content(Model.ImagePath ?? "/images/default-event.jpg")" alt="@Model.Name" class="img-fluid banner-img" style="max-height: 500px; width: 100%; object-fit: cover;" />
                 <div class="mt-4 d-flex align-items-center flex-wrap">
                     <div class="me-4 d-flex align-items-center">
                         <i class="bi bi-calendar-event text-primary me-2" style="font-size: 1.2rem;"></i>
@@ -60,7 +60,7 @@
                     <div class="d-flex align-items-center mb-3">
                         @if (!string.IsNullOrEmpty(ViewBag.Organization?.ImagePath))
                         {
-                            <img src="@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="40" class="me-2" />
+                            <img src="~/@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="40" class="me-2" />
                         }
                         <span class="text-danger fw-bold">@(ViewBag.Organization?.Name ?? "N/A")</span>
                     </div>
@@ -164,7 +164,7 @@
                                 <div class="col-md-3 text-center">
                                     @if (!string.IsNullOrEmpty(ViewBag.Organization?.ImagePath))
                                     {
-                                        <img src="@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="80" class="me-2" />
+                                        <img src="~/@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="80" class="me-2" />
                                     }
                                 </div>
                                 <div class="col-md-9">
