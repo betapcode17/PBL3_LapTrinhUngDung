@@ -9,7 +9,7 @@ public partial class Event
 
     public string? OrgId { get; set; }
 
-    public string TypeEventId { get; set; } = null!;
+    public string? TypeEventId { get; set; } = null!;
 
     public string? Name { get; set; }
 

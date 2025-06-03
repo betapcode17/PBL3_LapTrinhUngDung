@@ -7,27 +7,31 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Add services to the container
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-
+// Register DbContext with SQL Server
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB"));
 });
+
 // Configure AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// Register IHttpClientFactory (fixes the InvalidOperationException for BlogController)
+builder.Services.AddHttpClient(); // This enables dependency injection for IHttpClientFactory
 
 // Configure Authentication & Authorization
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
     options.LoginPath = "/Account/Login";
@@ -49,10 +53,8 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Volunteer", policy => policy.RequireRole("0"));
     options.AddPolicy("Org", policy => policy.RequireRole("1"));
-    options.AddPolicy("Admin", policy=> policy.RequireRole("2"));
+    options.AddPolicy("Admin", policy => policy.RequireRole("2"));
 });
-
-builder.Services.AddAuthorization();
 
 // Configure API Behavior
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -69,16 +71,19 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
+// Configure Session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-//Connect Vnpay
+
+// Register VnPay Service
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
-
+// Add logging for debugging (optional but recommended)
+builder.Services.AddLogging(logging => logging.AddConsole());
 
 var app = builder.Build();
 
@@ -90,18 +95,22 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Đảm bảo phục vụ các tệp tĩnh từ wwwroot
+app.UseStaticFiles(); // Serve static files from wwwroot
 app.UseRouting();
 app.UseSession();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Configure Request Localization
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
+// Define Routes
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
 );
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

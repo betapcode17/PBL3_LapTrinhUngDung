@@ -10079,23 +10079,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ASUS\\.nuget\\packages\\": {},
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
+      "projectUniqueName": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
       "projectName": "Volunteer_website",
-      "projectPath": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
-      "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ASUS\\Documents\\PBL3\\main\\PBL3_LapTrinhUngDung\\VolunteerWebSite\\Volunteer_website\\obj\\",
+      "projectPath": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\Volunteer_website.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "E:\\HOCKI4\\PBL3-LTUD\\VolunteerWebSite\\Volunteer_website\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -10122,7 +10122,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -10228,7 +10228,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

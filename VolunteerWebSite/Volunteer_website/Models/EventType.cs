@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 
@@ -13,3 +14,4 @@ public partial class EventType
 
     public virtual ICollection<Event>? Events { get; set; } = new List<Event>();
 }
+
