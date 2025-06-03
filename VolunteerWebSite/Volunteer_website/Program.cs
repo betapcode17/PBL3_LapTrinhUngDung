@@ -13,11 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddSingleton<Volunteer_website.Services.EmailService>();
 
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase"));
 });
 // Configure AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

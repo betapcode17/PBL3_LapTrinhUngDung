@@ -37,7 +37,7 @@ public partial class Event
 
     public virtual Organization? Org { get; set; }
 
-    public virtual ICollection<Registration>? Registrations { get; set; } = new List<Registration>();
+    public virtual ICollection<Registration> Registrations { get; set; } = new List<Registration>();
 
-    public virtual EventType? TypeEvent { get; set; } = null!;
+    public virtual EventType TypeEvent { get; set; } = null!;
 }

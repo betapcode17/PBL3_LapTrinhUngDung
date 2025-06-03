@@ -3,21 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using Volunteer_website.Models;
-
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace Volunteer_website.Controllers
 {
-    public class ManageController:Controller
+    public class ManageController : Controller
     {
         private readonly VolunteerManagementContext _context;
+
         public ManageController(VolunteerManagementContext context)
         {
             _context = context;
         }
+
         [HttpGet]
         public IActionResult Registered_Event()
         {
-            var volunteerId = HttpContext.Session.GetString("UserId");
+            string volunteerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrEmpty(volunteerId))
             {
                 return RedirectToAction("Login", "Account");
@@ -34,7 +38,7 @@ namespace Volunteer_website.Controllers
         [HttpPost]
         public IActionResult CancelRegistration(string eventId)
         {
-            var volunteerId = HttpContext.Session.GetString("UserId");
+            string volunteerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(volunteerId))
             {
                 return Json(new { success = false, message = "Bạn cần đăng nhập để thực hiện thao tác này" });
@@ -59,6 +63,21 @@ namespace Volunteer_website.Controllers
             {
                 return Json(new { success = false, message = $"Lỗi khi hủy đăng ký: {ex.Message}" });
             }
+        }
+
+        [HttpGet]
+        public IActionResult GetRegisteredEventCount()
+        {
+            string volunteerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(volunteerId))
+            {
+                return Json(new { count = 0 });
+            }
+
+            int count = _context.Registrations
+                .Where(ev => ev.VolunteerId == volunteerId)
+                .Count();
+            return Json(new { count });
         }
     }
 }
