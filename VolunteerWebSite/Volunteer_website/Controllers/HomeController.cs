@@ -109,7 +109,6 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.Donations)
                 .Where(e => e.Status == "ACCEPT") 
                 .AsQueryable();
-
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
             {
@@ -160,13 +159,11 @@ namespace Volunteer_website.Controllers
 
             page = Math.Max(1, page);
             page = Math.Min(page, totalPages > 0 ? totalPages : 1);
-
             var eventList = query
                 .OrderByDescending(e => e.DayBegin)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.PageSize = pageSize;
@@ -268,6 +265,16 @@ namespace Volunteer_website.Controllers
                 .ToList();
 
             return View(volunteers);
+        }
+
+        [HttpGet]
+        public IActionResult GetAcceptedEvents()
+        {
+            var acceptedEvents = _context.Events
+                .Where(e => e.Status != null && e.Status.Equals("ACCEPT", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return View(acceptedEvents);
         }
 
     }
