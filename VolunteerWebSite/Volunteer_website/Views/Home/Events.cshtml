@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<Volunteer_website.Models.Event>
 @{
     ViewData["Title"] = "Events";
-    var role = Context.Session.GetInt32("UserRole");
-    Layout = (role == 0) ? "~/Views/Shared/User_Layout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
@@ -96,7 +95,7 @@
                     var daysLeft = (ev.DayEnd.HasValue ? ev.DayEnd.Value.DayNumber : today.DayNumber) - today.DayNumber;
                     var currentFund = ev.Donations?.Sum(d => d.Amount ?? 0) ?? 0;
                     var targetFund = ev.TargetFunds ?? 1; // Tránh chia cho 0
-                    var percentFund = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
+                    var percentFund = targetFund > 0 ? (int)((double)currentFund / targetFund * 100) : 0;
                     var currentMember = ev.Registrations?.Count(r => r.Status == "Được duyệt") ?? 0;
 
                     var eventStatus = "";
@@ -456,4 +455,5 @@
             .event-pagination ul li span {
                 cursor: default;
             }
+
 </style>

@@ -99,13 +99,19 @@ public partial class VolunteerManagementContext : DbContext
         {
             entity.HasKey(e => e.EvaluationId).HasName("PK__Evaluati__36AE68F3553373A3");
 
+            entity.ToTable("Evaluation");
+
             entity.Property(e => e.EvaluationId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
-                .HasDefaultValueSql("(newid())");
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("evaluation_id");
             entity.Property(e => e.EvaluatedAt)
                 .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime")
+                .HasColumnName("evaluated_at");
+            entity.Property(e => e.Feedback).HasColumnName("feedback");
+            entity.Property(e => e.IsCompleted).HasColumnName("is_completed");
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -113,6 +119,7 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Reg).WithMany(p => p.Evaluations)
                 .HasForeignKey(d => d.RegId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Evaluations_Registrations");
         });
 
@@ -222,6 +229,8 @@ public partial class VolunteerManagementContext : DbContext
         {
             entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772D4A1B9A0");
 
+            entity.ToTable("Registration");
+
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -230,6 +239,7 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("event_id");
+            entity.Property(e => e.RegisterAt).HasColumnName("register_at");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -255,6 +265,7 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("user_id");
+            entity.Property(e => e.CreateAt).HasColumnName("create_at");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
@@ -262,7 +273,9 @@ public partial class VolunteerManagementContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("password");
-            entity.Property(e => e.RandomKey).HasMaxLength(255);
+            entity.Property(e => e.RandomKey)
+                .HasMaxLength(255)
+                .HasColumnName("random_key");
             entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.UserName)
                 .HasMaxLength(255)
@@ -273,6 +286,8 @@ public partial class VolunteerManagementContext : DbContext
         modelBuilder.Entity<Volunteer>(entity =>
         {
             entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__0FE766B188AB9535");
+
+            entity.ToTable("Volunteer");
 
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)

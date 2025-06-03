@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Volunteer_website.Models;
 using Volunteer_website.Areas.Admin.Data;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using System.Buffers;
+using Volunteer_website.Helpers;
+using Volunteer_website.ViewModels;
 namespace Volunteer_website.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -31,7 +31,10 @@ namespace Volunteer_website.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
+            var currentAdmin = _db.Admins.FirstOrDefault(a => a.AdminId == adminId);
+            if (currentAdmin == null)
+                return NotFound();
+            ViewBag.ImgPath = currentAdmin.ImgPath;
 
             var events = _db.Events.Count();
             var totalAmount = _db.Donations.AsNoTracking()
@@ -190,7 +193,6 @@ namespace Volunteer_website.Areas.Admin.Controllers
                 })
                 .ToDictionary(x => x.Date, x => x.Count);
 
-            // Tạo danh sách tất cả các ngày trong khoảng
             var result = new List<dynamic>();
             for (var date = startDateOnly; date <= endDateOnly; date = date.AddDays(1))
             {
@@ -210,66 +212,53 @@ namespace Volunteer_website.Areas.Admin.Controllers
         #region donation theo thời gian
         public List<dynamic> StatisticsDonationByTime(string? startDate = null, string? endDate = null)
         {
+            // Xác định khoảng thời gian
             DateOnly startDateOnly, endDateOnly;
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
                 startDateOnly = DateOnly.Parse(startDate);
-                endDateOnly = DateOnly.Parse(endDate);
+                endDateOnly   = DateOnly.Parse(endDate);
             }
             else
             {
-                var endDateTime = DateTime.Now;
+                var endDateTime   = DateTime.Now;
                 var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly = DateOnly.FromDateTime(startDateTime);
-                endDateOnly = DateOnly.FromDateTime(endDateTime);
+                startDateOnly     = DateOnly.FromDateTime(startDateTime);
+                endDateOnly       = DateOnly.FromDateTime(endDateTime);
             }
 
-            var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(orgId))
-            {
-                Console.WriteLine("No orgId found, returning empty list.");
-                return new List<dynamic>();
-            }
-
-
-            var eventIds = _db.Events.Select(e => e.EventId).ToList();
-            Console.WriteLine($"Event IDs for Donations: {string.Join(", ", eventIds)}");
-
+            // Lấy dữ liệu, group theo ngày và tính tổng Amount
             var data = _db.Donations
-                .Where(r => eventIds.Contains(r.EventId) && r.DonationDate.HasValue)
-                .AsEnumerable() // Chuyển sang client-side để xử lý DateOnly
-                .Where(r =>
-                {
-                    var donationDate = r.DonationDate;
-
-                    var startDateTime = startDateOnly.ToDateTime(TimeOnly.MinValue);
-                    var endDateTime = endDateOnly.ToDateTime(TimeOnly.MinValue);
-
-                    return donationDate >= startDateTime && donationDate <= endDateTime;
-                })
-                .GroupBy(r => new
-                {
-                    Year = r.DonationDate!.Value.Year,
-                    Month = r.DonationDate.Value.Month,
-                    Day = r.DonationDate.Value.Day // Thêm Day vào GroupBy
-                })
+                .Where(d => d.DonationDate.HasValue)
+                .AsEnumerable() // xử lý DateOnly ở client-side
+                .Where(d => DateOnly.FromDateTime(d.DonationDate.Value) >= startDateOnly
+                        && DateOnly.FromDateTime(d.DonationDate.Value) <= endDateOnly)
+                .GroupBy(d => DateOnly.FromDateTime(d.DonationDate.Value))
                 .Select(g => new
                 {
-                    Year = g.Key.Year,
-                    Month = g.Key.Month,
-                    Day = g.Key.Day, // Thêm Day vào kết quả
-                    TotalAmount = g.Sum(d => d.Amount ?? 0)
+                    Date        = g.Key,
+                    TotalAmount = g.Sum(x => x.Amount)
                 })
-                .OrderBy(x => x.Year)
-                .ThenBy(x => x.Month)
-                .ThenBy(x => x.Day)
-                .ToList();
+                .ToDictionary(x => x.Date, x => x.TotalAmount);
 
-            Console.WriteLine($"Donation Statistics Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}");
+            // Tạo danh sách tất cả ngày trong khoảng, nếu không có thì mặc định 0
+            var result = new List<dynamic>();
+            for (var date = startDateOnly; date <= endDateOnly; date = date.AddDays(1))
+            {
+                result.Add(new
+                {
+                    Year        = date.Year,
+                    Month       = date.Month,
+                    Day         = date.Day,
+                    TotalAmount = data.ContainsKey(date) ? data[date] : 0
+                });
+            }
 
-            return data.Select(x => (dynamic)x).ToList();
+            return result;
         }
         #endregion
+
+        
 
         #region Logout
         [HttpGet]

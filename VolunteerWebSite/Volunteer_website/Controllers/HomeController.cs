@@ -107,9 +107,8 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.TypeEvent)
                 .Include(e => e.Registrations)
                 .Include(e => e.Donations)
-                .AsQueryable(); // Removed FirstOrDefault to avoid null dereference  
-
-            // Apply filters  
+                .Where(e => e.Status == "ACCEPT") 
+                .AsQueryable();
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
             {
@@ -160,15 +159,11 @@ namespace Volunteer_website.Controllers
 
             page = Math.Max(1, page);
             page = Math.Min(page, totalPages > 0 ? totalPages : 1);
-
-            // Get paginated event list  
             var eventList = query
                 .OrderByDescending(e => e.DayBegin)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-
-            // Pass pagination and filter info to the view  
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.PageSize = pageSize;
