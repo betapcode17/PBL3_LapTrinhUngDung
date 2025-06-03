@@ -229,7 +229,7 @@ public partial class VolunteerManagementContext : DbContext
         {
             entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772D4A1B9A0");
 
-            entity.ToTable("Registration");
+            entity.ToTable("Registrations");
 
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
@@ -287,7 +287,7 @@ public partial class VolunteerManagementContext : DbContext
         {
             entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__0FE766B188AB9535");
 
-            entity.ToTable("Volunteer");
+            entity.ToTable("Volunteers");
 
             entity.Property(e => e.VolunteerId)
                 .HasMaxLength(50)
