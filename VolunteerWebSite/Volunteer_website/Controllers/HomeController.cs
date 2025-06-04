@@ -107,7 +107,7 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.TypeEvent)
                 .Include(e => e.Registrations)
                 .Include(e => e.Donations)
-                .Where(e => e.Status == "ACCEPT") 
+                .Where(e => e.Status == "ACCEPTED") 
                 .AsQueryable();
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
