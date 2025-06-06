@@ -4,16 +4,16 @@
 @using Volunteer_website.Models
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý sự kiện";
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
 }
 @Html.AntiForgeryToken()
 <div class="container-fluid">
     <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
-        <h1 class="text-center my-4 heading-title">Event Management</h1>
+        <h1 class="text-center my-4 heading-title">Quản lý sự kiện</h1>
     </div>
     <div class="body-section border rounded p-4" style="background-color: #ffffff;">
-        <!-- Search Bar and Create Button -->
+        <!-- Thanh tìm kiếm và nút tạo sự kiện -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <div class="search-container">
                 <form asp-action="Index" method="get" class="d-flex align-items-center">
@@ -21,7 +21,7 @@
                            name="searchValue"
                            id="searchBoxVolunteers"
                            class="form-control me-2"
-                           placeholder="Search Event.."
+                           placeholder="Tìm kiếm sự kiện..."
                            value="@ViewBag.SearchValue" />
 
                     <button type="submit" class="btn btn-primary">
@@ -31,28 +31,28 @@
             </div>
 
             <a asp-area="Organization" asp-controller="EventManager" asp-action="Create" class="btn btn-primary create-btn">
-                <i class="fa-solid fa-plus"></i> Create Event
+                <i class="fa-solid fa-plus"></i> Tạo sự kiện mới
             </a>
         </div>
 
-        <!-- Event List Table -->
+        <!-- Bảng danh sách sự kiện -->
         <div class="table-responsive">
             <table class="table table-bordered table-hover event-table shadow-sm">
                 <thead class="table-dark">
                     <tr>
-                        <th>Event ID</th>
-                        <th>Event Name</th>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Mã sự kiện</th>
+                        <th>Tên sự kiện</th>
+                        <th>Thời gian</th>
+                        <th>Địa điểm</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody id="eventTable">
                     @foreach (var item in Model)
                     {
-                        var dayBegin = item.DayBegin?.ToString("dd/MM/yyyy") ?? "N/A";
-                        var dayEnd = item.DayEnd?.ToString("dd/MM/yyyy") ?? "N/A";
+                        var dayBegin = item.DayBegin?.ToString("dd/MM/yyyy") ?? "Không có";
+                        var dayEnd = item.DayEnd?.ToString("dd/MM/yyyy") ?? "Không có";
                         <tr>
                             <td>@item.EventId</td>
                             <td>@item.Name</td>
@@ -63,9 +63,9 @@
                                     @(item.Status == "PENDING" ? "bg-warning" :
                                       item.Status == "ACCEPTED" ? "bg-success" :
                                       "bg-danger") text-white fw-semibold text-uppercase">
-                                    @(item.Status == "PENDING" ? "PENDING" :
-                                        item.Status == "ACCEPTED" ? "ACCEPTED" :
-                                        "REJECTED")
+                                    @(item.Status == "PENDING" ? "ĐANG CHỜ" :
+                                        item.Status == "ACCEPTED" ? "ĐÃ DUYỆT" :
+                                        "BỊ TỪ CHỐI")
                                 </span>
                             </td>
                             <td class="action_btn">
@@ -153,7 +153,11 @@
                     $('#eventStatus').val(data.status ? 'Đang diễn ra' : 'Đã kết thúc');
                     $('#eventDetailsModal').modal('show');
                 } else {
-                    alert("Không thể tải dữ liệu sự kiện!");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Không thể tải dữ liệu sự kiện!'
+                    });
                 }
             });
         });
@@ -161,7 +165,7 @@
         function confirmDelete(eventId) {
             Swal.fire({
                 title: "Bạn chắc chắn muốn xóa?",
-                text: "Bạn không thể hoàn tác hành động này!",
+                text: "Hành động này không thể hoàn tác!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
@@ -176,4 +180,3 @@
         }
     </script>
 }
-
