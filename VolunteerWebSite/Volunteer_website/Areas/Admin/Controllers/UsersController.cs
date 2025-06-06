@@ -159,6 +159,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 //tạo admin mới
                 var newAdmin = new Admin();
                 newAdmin.AdminId = newnewIdAdmin;
+                newAdmin.Name = user.UserName;
                 if (isOrg != null)
                 {
                     newAdmin.Email = isOrg.Email;

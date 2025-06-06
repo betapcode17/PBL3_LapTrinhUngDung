@@ -46,26 +46,6 @@ namespace Volunteer_website.Areas.Admins.Controllers
         }
         #endregion
 
-        #region details
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var organization = await _context.Organizations
-                .FirstOrDefaultAsync(m => m.OrgId == id);
-
-            if (organization == null)
-            {
-                return NotFound();
-            }
-
-            return View(organization);
-        }
-        #endregion
-
         #region Duyệt tổ chức
         [HttpGet]
         public async Task<IActionResult> ApprovalOrg(int page = 1)
