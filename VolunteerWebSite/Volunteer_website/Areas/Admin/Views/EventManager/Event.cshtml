@@ -74,17 +74,20 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge 
-                                @(item.Status == "PENDING" ? "bg-warning" :
-                                item.Status == "ACCEPTED" ? "bg-success" :
-                                 "bg-danger") text-white fw-semibold text-uppercase">
-                                        @(item.Status == "PENDING" ? "PENDING" :
-                                            item.Status == "ACCEPTED" ? "ACCEPTED" :
-                                            "REJECTED")
-                                    </span>
+                                    @if (item.Status == "PENDING")
+                                    {
+                                        <span class="badge bg-warning text-dark">PENDING</span>
+                                    }
+                                    else if (item.Status == "ACCEPT")
+                                    {
+                                        <span class="badge bg-success">ACCEPT</span>
+                                    }
+                                    else if (item.Status == "REJECT")
+                                    {
+                                        <span class="badge bg-danger">REJECT</span>
+                                    }
                                 </td>
                                 <td class="action_btn">
-@*<<<<<<< HEAD*@
                                     <a asp-controller="EventManager" asp-action="EventDetails" asp-route-id="@item.EventId" class="btn btn-info btn-sm view-event-detail">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
@@ -100,26 +103,6 @@
                     </tbody>
                 }    
             </table>
-            @*
-=======
-                                  
-                                    <a asp-controller="EventManager" asp-action="EventDetails" asp-route-id="@item.EventId" class="btn btn-info btn-sm view-event-detail">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <button onclick="confirmAccept('@item.EventId')" class="btn btn-success btn-sm action-btn">
-                                        <i class="fa-solid fa-check"></i>
-                                    </button>
-                                    <button onclick="confirmReject('@item.EventId')" class="btn btn-danger btn-sm action-btn">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                      
-
-                    </tbody>
-                }    
-            </table> *@
         </div>
         <!-- Pagination -->
         <div class="pagination d-flex justify-content-center mt-5 custom-pagination">

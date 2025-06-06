@@ -1,27 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Volunteer_website.Models;
+using Volunteer_website.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using System.Net.Mail;
 using System.Net;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Diagnostics;
 using X.PagedList.Extensions;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Areas.Organizations.Controllers
 {
     [Area("Organization")]
-    [Route("[area]/[controller]/[action]")] // Sửa lại route template
+    [Route("[area]/[controller]/[action]")]
     [Authorize("Org")]
-
     public class EvaluationController : Controller
     {
         private readonly VolunteerManagementContext _db;
-    
+
         public EvaluationController(VolunteerManagementContext db)
         {
             _db = db;
         }
+
         #region Xem danh sách đánh giá
         public IActionResult Index(int? page, string searchValue)
         {
@@ -51,7 +56,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
             var evaluations = query
                               .OrderBy(e => e.EvaluationId)
                               .ToPagedList(pageNumber, pageSize);
-         
+
             var regIds = evaluations.Select(e => e.RegId).Distinct().ToList();
             var registrations = _db.Registrations
                                    .Where(r => regIds.Contains(r.RegId))
@@ -77,8 +82,8 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
             return View(evaluations);
         }
-
         #endregion
+
         #region Lấy thông tin tình nguyện viên
         [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
@@ -96,13 +101,14 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                 name = volunteer.Name,
                 email = volunteer.Email,
                 phoneNumber = volunteer.PhoneNumber,
-                dateOfBirth = volunteer.DateOfBirth?.ToString("yyyy-MM-dd"), // Format ngày tháng
-                gender = volunteer.Gender, // true/false hoặc null
-                imagePath = volunteer.ImagePath ?? "/default-profile.png", // Fallback image nếu null
+                dateOfBirth = volunteer.DateOfBirth?.ToString("yyyy-MM-dd"),
+                gender = volunteer.Gender,
+                imagePath = volunteer.ImagePath ?? "/default-profile.png",
                 address = volunteer.Address,
-                age = CalculateAge(volunteer.DateOfBirth?.ToDateTime(TimeOnly.MinValue)) // Thêm tuổi nếu cần
+                age = CalculateAge(volunteer.DateOfBirth?.ToDateTime(TimeOnly.MinValue))
             });
         }
+
         private int? CalculateAge(DateTime? dateOfBirth)
         {
             if (!dateOfBirth.HasValue)
@@ -118,156 +124,313 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         }
         #endregion
 
-
         #region Tạo đánh giá
         [HttpGet]
         public IActionResult Create()
         {
-
             string newId = "EVL0001";
-
             var maxId = _db.Evaluations
                 .Select(e => e.EvaluationId)
                 .OrderByDescending(id => id)
                 .FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(maxId))
+            if (!string.IsNullOrEmpty(maxId) && maxId.StartsWith("EVL"))
             {
                 if (int.TryParse(maxId.Substring(3), out int numericPart))
                 {
-                    newId = $"EVL{(numericPart + 1).ToString("D4")}"; // Định dạng thành 4 chữ số
+                    newId = $"EVL{(numericPart + 1):D4}";
                 }
             }
 
             var evaluationModel = new Evaluation
             {
-                EvaluationId = newId 
+                EvaluationId = newId,
+                IsCompleted = false
             };
 
-            var registrations = _db.Registrations
-                .Include(r => r.Volunteer)
-                .Include(r => r.Event)
+            string orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+            var volunteers = _db.Volunteers
+                .Where(v => _db.Registrations.Any(r =>
+                    r.VolunteerId == v.VolunteerId &&
+                    r.Event.OrgId == orgId))
+                .OrderBy(v => v.Name)
+                .Select(v => new SelectListItem
+                {
+                    Value = v.VolunteerId,
+                    Text = v.Name
+                })
                 .ToList();
 
-            ViewBag.Registrations = registrations;
-
-
-           
+            ViewBag.Volunteers = volunteers;
+            ViewBag.OrgId = orgId;
             return View(evaluationModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("EvaluationId,RegId,Feedback,IsCompleted")] Evaluation model)
+        public async Task<IActionResult> Create([Bind("EvaluationId,RegId,Feedback,IsCompleted")] Evaluation model)
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (!ModelState.IsValid || !ValidateEvaluation(model))
                 {
-                    // Ghi log lỗi nếu có
-                    var errors = ModelState
-                        .Where(x => x.Value.Errors.Count > 0)
-                        .SelectMany(x => x.Value.Errors)
-                        .ToList();
-
-                    foreach (var error in errors)
-                    {
-                        Debug.WriteLine($"Error: {error.ErrorMessage}");
-                    }
-
+                    ReloadVolunteers();
                     return View(model);
                 }
 
-                if (string.IsNullOrWhiteSpace(model.RegId))
+                if (_db.Evaluations.Any(e => e.EvaluationId == model.EvaluationId))
                 {
-                    ModelState.AddModelError("RegId", "Mã đăng ký không được để trống.");
+                    TempData["Error"] = "Mã đánh giá đã tồn tại.";
+                    ReloadVolunteers();
                     return View(model);
                 }
 
-                // Tìm đăng ký
-                var registration = _db.Registrations
-                    .Include(r => r.Volunteer)
-                    .Include(r => r.Event)
-                    .FirstOrDefault(r => r.RegId == model.RegId);
-
-                if (registration == null)
-                {
-                    ModelState.AddModelError("RegId", "Mã đăng ký không tồn tại trong hệ thống.");
-                    return View(model);
-                }
-
-                // Lấy danh sách EvaluationId và tạo ID mới
-                var evaluationIds = _db.Evaluations
-                    .Select(e => e.EvaluationId)
-                    .ToList();
-
-                string lastId = evaluationIds
-                    .Where(id => id.StartsWith("EVL"))
-                    .OrderByDescending(id => id)
-                    .FirstOrDefault();
-
-                string newId;
-                if (!string.IsNullOrEmpty(lastId) && lastId.Length > 3 && int.TryParse(lastId.Substring(3), out int lastNumber))
-                {
-                    newId = $"EVL{(lastNumber + 1):D3}";
-                }
-                else
-                {
-                    newId = "EVL001";
-                }
-
-                // Tạo bản ghi mới
                 var evaluation = new Evaluation
                 {
-                    EvaluationId = newId,
+                    EvaluationId = model.EvaluationId,
                     RegId = model.RegId,
                     Feedback = model.Feedback,
                     EvaluatedAt = DateTime.Now,
                     IsCompleted = model.IsCompleted
                 };
 
-                // Bắt đầu giao dịch và lưu dữ liệu
-                using (var transaction = _db.Database.BeginTransaction())
+                using (var transaction = await _db.Database.BeginTransactionAsync())
                 {
                     try
                     {
                         _db.Evaluations.Add(evaluation);
-                        _db.SaveChanges();
-                        transaction.Commit();
+                        await _db.SaveChangesAsync();
+                        await transaction.CommitAsync();
                     }
                     catch
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         throw;
                     }
                 }
 
                 TempData["SuccessMessage"] = "Tạo đánh giá thành công!";
-                return RedirectToAction("Index", "Evaluation");
+                return RedirectToAction("Index");
             }
             catch (DbUpdateException dbEx)
             {
-                ModelState.AddModelError("", $"Lỗi database: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                TempData["Error"] = $"Lỗi cơ sở dữ liệu: {dbEx.InnerException?.Message ?? dbEx.Message}";
+                ReloadVolunteers();
                 return View(model);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Lỗi hệ thống: {ex.Message}");
+                TempData["Error"] = $"Lỗi hệ thống: {ex.Message}";
+                ReloadVolunteers();
                 return View(model);
             }
         }
-
-
-
         #endregion
 
-        #region Gửi email
+        #region Sửa đánh giá
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            if (!InputValidator.IsValidEvaluationId(id))
+            {
+                TempData["Error"] = "Mã đánh giá không hợp lệ.";
+                return RedirectToAction("Index");
+            }
+
+            string orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+            var evaluation = _db.Evaluations
+                .Include(e => e.Reg)
+                .ThenInclude(r => r.Event)
+                .ThenInclude(e => e.Org)
+                .Include(e => e.Reg)
+                .ThenInclude(r => r.Volunteer)
+                .FirstOrDefault(e => e.EvaluationId == id);
+
+            if (evaluation == null)
+            {
+                TempData["Error"] = "Không tìm thấy đánh giá.";
+                return RedirectToAction("Index");
+            }
+
+            if (evaluation.Reg?.Event?.OrgId != orgId)
+            {
+                TempData["Error"] = "Bạn không có quyền chỉnh sửa đánh giá này.";
+                return Forbid();
+            }
+
+            var volunteers = _db.Volunteers
+                .Where(v => _db.Registrations.Any(r =>
+                    r.VolunteerId == v.VolunteerId &&
+                    r.Event.OrgId == orgId))
+                .OrderBy(v => v.Name)
+                .Select(v => new SelectListItem
+                {
+                    Value = v.VolunteerId,
+                    Text = v.Name
+                })
+                .ToList();
+
+            ViewBag.Volunteers = volunteers;
+            ViewBag.OrgId = orgId;
+            ViewBag.SelectedVolunteerId = evaluation.Reg?.VolunteerId;
+
+            // Đổ dữ liệu chi tiết của Volunteer đã chọn lên ViewBag
+            if (evaluation.Reg?.Volunteer != null)
+            {
+                ViewBag.SelectedVolunteer = new
+                {
+                    VolunteerId = evaluation.Reg.VolunteerId,
+                    Name = evaluation.Reg.Volunteer.Name,
+                    Email = evaluation.Reg.Volunteer.Email,
+                    PhoneNumber = evaluation.Reg.Volunteer.PhoneNumber,
+                    Gender = evaluation.Reg.Volunteer.Gender, // Đảm bảo là bool?
+                    DateOfBirth = evaluation.Reg.Volunteer.DateOfBirth,
+                    ImagePath = evaluation.Reg.Volunteer.ImagePath ?? "/OrgLayout/assets/images/pic-1.jpg"
+                };
+            }
+
+            // Đổ dữ liệu của Event đã chọn lên ViewBag
+            if (evaluation.Reg?.Event != null)
+            {
+                ViewBag.SelectedEvent = new
+                {
+                    RegId = evaluation.RegId,
+                    EventId = evaluation.Reg.EventId,
+                    Name = evaluation.Reg.Event.Name
+                };
+            }
+
+            return View(evaluation);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("EvaluationId,RegId,Feedback,IsCompleted")] Evaluation model)
+        {
+            try
+            {
+                if (!ModelState.IsValid || !ValidateEvaluation(model))
+                {
+                    ReloadVolunteers();
+                    ViewBag.SelectedVolunteerId = _db.Registrations
+                        .FirstOrDefault(r => r.RegId == model.RegId)?.VolunteerId;
+                    return View(model);
+                }
+
+                var evaluation = _db.Evaluations
+                    .Include(e => e.Reg)
+                    .ThenInclude(r => r.Event)
+                    .FirstOrDefault(e => e.EvaluationId == model.EvaluationId);
+
+                if (evaluation == null)
+                {
+                    TempData["Error"] = "Không tìm thấy đánh giá.";
+                    ReloadVolunteers();
+                    return View(model);
+                }
+
+                string orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+                if (evaluation.Reg?.Event?.OrgId != orgId)
+                {
+                    TempData["Error"] = "Bạn không có quyền chỉnh sửa đánh giá này.";
+                    ReloadVolunteers();
+                    return Forbid();
+                }
+
+                evaluation.RegId = model.RegId;
+                evaluation.Feedback = model.Feedback;
+                evaluation.IsCompleted = model.IsCompleted;
+                evaluation.EvaluatedAt = DateTime.Now;
+
+                using (var transaction = await _db.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        _db.Update(evaluation);
+                        await _db.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                TempData["SuccessMessage"] = "Cập nhật đánh giá thành công!";
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                TempData["Error"] = $"Lỗi cơ sở dữ liệu: {dbEx.InnerException?.Message ?? dbEx.Message}";
+                ReloadVolunteers();
+                ViewBag.SelectedVolunteerId = _db.Registrations
+                    .FirstOrDefault(r => r.RegId == model.RegId)?.VolunteerId;
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi hệ thống: {ex.Message}";
+                ReloadVolunteers();
+                ViewBag.SelectedVolunteerId = _db.Registrations
+                    .FirstOrDefault(r => r.RegId == model.RegId)?.VolunteerId;
+                return View(model);
+            }
+        }
+        #endregion
+
+        #region Xóa đánh giá
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                if (!InputValidator.IsValidEvaluationId(id))
+                {
+                    return Json(new { success = false, message = "Mã đánh giá không hợp lệ." });
+                }
+
+                var evaluation = await _db.Evaluations
+                    .FirstOrDefaultAsync(e => e.EvaluationId == id);
+
+                if (evaluation == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy đánh giá." });
+                }
+
+                using (var transaction = await _db.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        _db.Evaluations.Remove(evaluation);
+                        await _db.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        return Json(new { success = true, message = "Xóa đánh giá thành công!" });
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return Json(new { success = false, message = $"Lỗi cơ sở dữ liệu: {dbEx.InnerException?.Message ?? dbEx.Message}" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Lỗi hệ thống: {ex.Message}" });
+            }
+        }
+        #endregion
 
         #region Gửi email đánh giá
         public IActionResult SendEmail(string id)
         {
             try
             {
-                // Lấy đánh giá
                 var evaluation = _db.Evaluations
                     .Include(e => e.Reg)
                     .AsNoTracking()
@@ -279,7 +442,6 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Lấy đăng ký
                 var registration = _db.Registrations
                     .AsNoTracking()
                     .FirstOrDefault(r => r.RegId == evaluation.RegId);
@@ -290,7 +452,6 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Lấy tình nguyện viên
                 var volunteer = _db.Volunteers
                     .AsNoTracking()
                     .FirstOrDefault(v => v.VolunteerId == registration.VolunteerId);
@@ -301,20 +462,17 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Thông tin email
                 string toEmail = "quocdat19991712@gmail.com";
                 string volunteerName = volunteer.Name ?? "Tình nguyện viên";
                 string feedback = evaluation.Feedback ?? "Không có nhận xét.";
                 string statusText = evaluation.IsCompleted ? "Đã hoàn thành xuất sắc" : "Đã tham gia";
 
-                // Kiểm tra định dạng email
                 if (!toEmail.Contains("@") || !toEmail.Contains("."))
                 {
                     TempData["Error"] = "Địa chỉ email không hợp lệ.";
                     return RedirectToAction("Index");
                 }
 
-                // Nội dung email
                 string subject = "Kết quả đánh giá hoạt động tình nguyện";
                 string body = $@"
 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
@@ -329,7 +487,6 @@ namespace Volunteer_website.Areas.Organizations.Controllers
     </div>
 </div>";
 
-                // Gửi email
                 var fromEmail = "volunteer.web.pbl3@gmail.com";
                 var displayName = "VolunteerWebAdmin_HDB";
                 var appPassword = "dkep waiy kymb uhnl";
@@ -350,26 +507,17 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                     Credentials = new NetworkCredential(fromEmail, appPassword)
                 };
 
-                Console.WriteLine($"Đang gửi email đến: {toEmail}...");
                 smtpClient.Send(mail);
-                Console.WriteLine("✅ Gửi email thành công.");
-              
                 TempData["SuccessMessage"] = $"Đã gửi email thông báo thành công đến {volunteerName}!";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Lỗi gửi email: {ex.Message}");
-                Console.WriteLine($"Chi tiết lỗi: {ex.StackTrace}");
                 TempData["Error"] = $"Lỗi hệ thống: {ex.Message}. Vui lòng liên hệ quản trị viên.";
             }
 
             return RedirectToAction("Index");
         }
         #endregion
-
-
-        #endregion
-
 
         #region Lấy Thông tin event từ tình nguyện viên
         [HttpGet]
@@ -380,12 +528,9 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                 return Json(new { success = false, message = "Yêu cầu Volunteer ID." });
             }
 
-            var orgID = User?.Identity?.IsAuthenticated == true
-                ? User.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "ORG1"
-                : "ORG1";
-
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
             var events = _db.Registrations
-                .Where(r => r.VolunteerId == volunteerId && r.Event.OrgId == orgID)
+                .Where(r => r.VolunteerId == volunteerId && r.Event.OrgId == orgId)
                 .Select(r => new
                 {
                     regId = r.RegId,
@@ -398,5 +543,66 @@ namespace Volunteer_website.Areas.Organizations.Controllers
             return Json(events);
         }
         #endregion
+
+        private bool ValidateEvaluation(Evaluation model)
+        {
+            bool isValid = true;
+
+            if (!InputValidator.IsValidEvaluationId(model.EvaluationId))
+            {
+                TempData["Error"] = "Mã đánh giá không hợp lệ. Phải bắt đầu bằng 'EVL' và theo sau là 4 chữ số.";
+                isValid = false;
+            }
+
+            if (string.IsNullOrWhiteSpace(model.RegId) || !InputValidator.IsValidId(model.RegId))
+            {
+                TempData["Error"] = "Mã đăng ký không hợp lệ hoặc chưa được chọn.";
+                isValid = false;
+            }
+            else
+            {
+                string orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+                var registration = _db.Registrations
+                    .Include(r => r.Event)
+                    .FirstOrDefault(r => r.RegId == model.RegId && r.Event.OrgId == orgId);
+                if (registration == null)
+                {
+                    TempData["Error"] = "Mã đăng ký không tồn tại hoặc không thuộc tổ chức của bạn.";
+                    isValid = false;
+                }
+            }
+
+            if (string.IsNullOrEmpty(model.Feedback))
+            {
+                TempData["Error"] = "Phản hồi không được để trống.";
+                isValid = false;
+            }
+            else if (!InputValidator.IsValidFeedback(model.Feedback))
+            {
+                TempData["Error"] = "Phản hồi không hợp lệ. Vui lòng chỉ sử dụng chữ cái (bao gồm tiếng Việt), số, khoảng trắng, dấu chấm hoặc dấu phẩy.";
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        private void ReloadVolunteers()
+        {
+            string orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "1";
+            var volunteers = _db.Volunteers
+                .Where(v => _db.Registrations.Any(r =>
+                    r.VolunteerId == v.VolunteerId &&
+                    r.Event.OrgId == orgId))
+                .OrderBy(v => v.Name)
+                .Select(v => new SelectListItem
+                {
+                    Value = v.VolunteerId,
+                    Text = v.Name
+                })
+                .ToList();
+
+            ViewBag.Volunteers = volunteers;
+            ViewBag.OrgId = orgId;
+        }
     }
 }

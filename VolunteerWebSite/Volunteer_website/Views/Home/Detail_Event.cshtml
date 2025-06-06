@@ -62,7 +62,7 @@
                     <div class="d-flex align-items-center mb-3">
                         @if (!string.IsNullOrEmpty(ViewBag.Organization?.ImagePath))
                         {
-                            <img src="@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="40" class="me-2" />
+                            <img src="~/@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="40" class="me-2" />
                         }
                         <span class="text-danger fw-bold">@(ViewBag.Organization?.Name ?? "N/A")</span>
                     </div>
@@ -167,7 +167,7 @@
                                 <div class="col-md-3 text-center">
                                     @if (!string.IsNullOrEmpty(ViewBag.Organization?.ImagePath))
                                     {
-                                        <img src="@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="80" class="me-2" />
+                                        <img src="~/@Url.Content(ViewBag.Organization.ImagePath)" alt="@ViewBag.Organization?.Name" width="80" class="me-2" />
                                     }
                                 </div>
                                 <div class="col-md-9">
