@@ -8,26 +8,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using OfficeOpenXml; // Add EPPlus namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Set EPPlus license (required for EPPlus 8 to avoid LicenseContextPropertyObsoleteException)
+ExcelPackage.License.SetNonCommercialPersonal("Your_Name"); // Replace with your name for noncommercial use
+// For commercial use, use: ExcelPackage.License.SetCommercial("Your_License_Key_Here");
+// For noncommercial organization, use: ExcelPackage.License.SetNonCommercialOrganization("Your_Organization_Name");
+
+// Thêm dịch vụ vào container
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Register DbContext with SQL Server
+// Đăng ký DbContext với SQL Server
 builder.Services.AddDbContext<VolunteerManagementContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("VolunteerDB"));
 });
 
-// Configure AutoMapper
+// Cấu hình AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// Register IHttpClientFactory (fixes the InvalidOperationException for BlogController)
-builder.Services.AddHttpClient(); // This enables dependency injection for IHttpClientFactory
+// Đăng ký IHttpClientFactory
+builder.Services.AddHttpClient();
 
-// Configure Authentication & Authorization
+// Cấu hình Authentication & Authorization
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -40,6 +47,8 @@ builder.Services.AddAuthentication(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     options.SlidingExpiration = true;
 });
+
+// Admin Cookie (bỏ comment nếu cần)
 //.AddCookie("Admin", options =>
 //{
 //    options.LoginPath = "/Account/Login";
@@ -56,56 +65,74 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Admin", policy => policy.RequireRole("2"));
 });
 
-// Configure API Behavior
+// Cấu hình API Behavior
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
 
-// Configure Localization
+// Cấu hình Localization
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { new CultureInfo("en-US") };
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("vi-VN")
+    };
     options.DefaultRequestCulture = new RequestCulture("en-US");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
 
-// Configure Session
+// Cấu hình Session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
-// Register VnPay Service
+// Đăng ký VnPay Service
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
-// Add logging for debugging (optional but recommended)
-builder.Services.AddLogging(logging => logging.AddConsole());
+// Đăng ký EmailService
+builder.Services.AddScoped<Volunteer_website.Services.EmailService>();
+
+// Đăng ký EventNotificationService (dịch vụ nền gửi email)
+builder.Services.AddHostedService<EventNotificationService>();
+
+// Cấu hình logging
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.SetMinimumLevel(LogLevel.Debug);
+});
 
 var app = builder.Build();
 
-// Configure Middleware
-if (!app.Environment.IsDevelopment())
+// Cấu hình Middleware
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Serve static files from wwwroot
+app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure Request Localization
+// Cấu hình Request Localization
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
-// Define Routes
+// Định nghĩa Routes
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
@@ -113,7 +140,8 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 // Debugging Route Info
 app.Use(async (context, next) =>
