@@ -49,7 +49,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 }
 
                 // chuyển trạng thái status
-                existingEvent.Status = "ACCEPT";
+                existingEvent.Status = "ACCEPTED";
 
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();
@@ -76,7 +76,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 }
 
                 // chuyển trạng thái status
-                existingEvent.Status = "REJECT";
+                existingEvent.Status = "REJECTED";
 
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();

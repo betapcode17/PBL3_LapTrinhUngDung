@@ -410,7 +410,6 @@ obj/
 root/
 Areas/
 Models/
-Helpers/
 ViewModel/
 View/Account/
 View/Organization/
