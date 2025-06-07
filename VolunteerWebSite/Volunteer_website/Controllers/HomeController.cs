@@ -107,7 +107,7 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.TypeEvent)
                 .Include(e => e.Registrations)
                 .Include(e => e.Donations)
-                .Where(e => e.Status == "ACCEPT") 
+                .Where(e => e.Status == "ACCEPTED") 
                 .AsQueryable();
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
@@ -290,8 +290,20 @@ namespace Volunteer_website.Controllers
             ViewBag.TotalCount = totalCount;
             ViewBag.SearchTerm = searchTerm;
 
+            // Store additional data in ViewBag
+            ViewBag.VolunteerInfo = volunteerData.ToDictionary(
+                v => v.Volunteer.VolunteerId,
+                v => new
+                {
+                    JoinDate = v.JoinDate != null ? v.JoinDate.Value.ToString("dd/MM/yyyy") : "N/A",
+                    TotalDonations = v.TotalDonations.ToString("C"),
+                    EventCount = v.EventCount.ToString()
+                });
+
+            // Pass only the Volunteer objects to the view
             return View(volunteers);
         }
+        #endregion
 
 
         [HttpGet]

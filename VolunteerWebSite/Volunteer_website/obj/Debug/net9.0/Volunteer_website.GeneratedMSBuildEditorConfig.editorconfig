@@ -64,6 +64,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT3JnTWFuYWdlclxMaXN0RXZlbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Profile/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZmlsZVxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Profile/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZmlsZVxQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Profile/ProfileEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZmlsZVxQcm9maWxlRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Admin/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -106,10 +118,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/EventManager/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEV2ZW50TWFuYWdlclxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/HomeOrg/Event.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcT3JnYW5pemF0aW9uXFZpZXdzXEhvbWVPcmdcRXZlbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ASUS/Documents/PBL3/main/PBL3_LapTrinhUngDung/VolunteerWebSite/Volunteer_website/Areas/Organization/Views/OrgLayout.cshtml]
