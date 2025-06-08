@@ -54,7 +54,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Event accepted successfully" });
+                return Json(new { success = true, message = "Sự kiện đã được chấp nhận!" });
             }
             catch (Exception ex)
             {
@@ -75,13 +75,25 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     return Json(new { success = false, message = "Event not found" });
                 }
 
+                var registrated = _db.Registrations.Where(e=>e.EventId == request.EventId)
+                    .FirstOrDefault();
+                if (registrated != null) 
+                {
+                    return Json(new { success = false, message = "Đã có tình nguyện viên đăng ký không thể từ chối!" });
+                }
+
+                if(existingEvent.DayBegin <= DateOnly.FromDateTime(DateTime.Now))
+                {
+                    return Json(new { success = false, message = "Sự kiện đã bắt đầu không thể từ chối!" });
+                }
+
                 // chuyển trạng thái status
                 existingEvent.Status = "REJECTED";
 
                 _db.Update(existingEvent);
                 await _db.SaveChangesAsync();
 
-                return Json(new { success = true, message = "Event rejected successfully" });
+                return Json(new { success = true, message = "Từ chối thành công" });
             }
             catch (Exception ex)
             {
@@ -96,12 +108,11 @@ namespace Volunteer_website.Areas.Admins.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound("Event ID is required.");
+                return NotFound("Mã sự kiện đã được sử dụng");
             }
 
             try
             {
-
                 var eventDetail = await _db.Events
                     .Where(x => x.EventId == id)
                     .FirstOrDefaultAsync();
@@ -115,13 +126,13 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 var orgName = await _db.Organizations
                     .Where(o => o.OrgId == eventDetail.OrgId)
                     .Select(o => o.Name)
-                    .FirstOrDefaultAsync() ?? "Unknown Organization";
+                    .FirstOrDefaultAsync() ?? "Tổ chức không xác định";
                 var org = await _db.Organizations
                     .Where(o => o.OrgId == eventDetail.OrgId)
                     .FirstOrDefaultAsync();
-                var imgPath = "/images/default.jpg";
-                if(org!.ImagePath != null) imgPath = org.ImagePath;
 
+                var imgPath = "images/default.jpg";
+                if(org!.ImagePath != null) imgPath = org.ImagePath;
 
                 var registrations = await _db.Registrations
                     .Where(r => r.EventId == id)
@@ -133,7 +144,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                         v => v.VolunteerId,
                         (r, v) => new
                         {
-                            Name = v.Name ?? "Unknown",
+                            Name = v.Name ?? "N/A",
                             Time = r.RegisterAt.HasValue ? r.RegisterAt.Value.ToString("dd/MM/yyyy") : "N/A"
                         })
                     .ToListAsync();
@@ -149,7 +160,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                         v => v.VolunteerId,
                         (d, v) => new
                         {
-                            Name = v.Name ?? "Unknown",
+                            Name = v.Name ?? "N/A",
                             Amount = d.Amount,
                             Time = d.DonationDate.HasValue ? d.DonationDate.Value.ToString("dd/MM/yyyy") : "N/A"
                         })

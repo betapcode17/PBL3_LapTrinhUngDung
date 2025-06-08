@@ -170,7 +170,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
             }
 
             var isNotValidUserNameUsers = await _db.Users.Where(e => e.UserId != currentAdmin.AdminId)
-                        .AnyAsync(e => e.UserName == currentAdmin.Name);
+                        .AnyAsync(e => e.UserName == newUsername);
             if (isNotValidUserNameUsers)
             {
                 TempData["ErrorMessage"] = "UserName đã được sử dụng!";

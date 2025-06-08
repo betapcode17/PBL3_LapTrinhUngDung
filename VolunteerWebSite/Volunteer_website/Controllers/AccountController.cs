@@ -70,18 +70,18 @@ namespace Volunteer_website.Controllers
                     var user = new User();
 
                     var lastUser = await _db.Users
-                        .Where(user => user.UserId.StartsWith("U"))
+                        .Where(user => user.UserId.StartsWith("VOL"))
                         .OrderByDescending(user => user.UserId)
                         .FirstOrDefaultAsync();
                     if (lastUser == null)
                     {
-                        user.UserId = "U0001";
+                        user.UserId = "VOL0001";
                     }
                     else
                     {
                         int temp = int.Parse(lastUser.UserId.Substring(1));
                         temp++;
-                        user.UserId = "U" + temp.ToString("D4");
+                        user.UserId = "VOL" + temp.ToString("D4");
                     }
                     user.RandomKey = Util.GenerateRandomkey();
                     user.UserName = model.UserName;
@@ -104,17 +104,17 @@ namespace Volunteer_website.Controllers
                     _db.Volunteers.Add(volunteer);
                     _db.SaveChanges();
 
-                    TempData["SuccessMessage"] = "Your registration was successful!";
+                    TempData["SuccessMessage"] = "Đăng ký thành công!";
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = "Registration Error: " + ex.Message;
+                    TempData["ErrorMessage"] = "Lỗi đăng ký: " + ex.Message;
                 }
             }
             else
             {
-                TempData["ErrorMessage"] = "Invalid data! Please check and try again.";
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin";
             }
             return View(model);
         }
@@ -189,7 +189,7 @@ namespace Volunteer_website.Controllers
                 try
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-                    TempData["SuccessMessage"] = "You've successfully logged in!";
+                    TempData["SuccessMessage"] = "Đăng nhập thành công";
                 }
                 catch (Exception ex)
                 {

@@ -60,7 +60,7 @@
                     <tbody id="dataTable">
                         @foreach (var item in Model)
                         {
-                            var Gender = item.Gender == true? "Men" : "Women";
+                            var Gender = item.Gender == true? "Nam" : "Nữ";
                             <tr>
                                 <td>@item.VolunteerId</td>
                                 <td>@item.Name</td>
@@ -76,7 +76,7 @@
                                             var birthDateTime = ((DateOnly)birthDate).ToDateTime(new TimeOnly(0, 0)); // Convert to DateTime at midnight
                                             int age = today.Year - birthDateTime.Year;
                                             if (birthDateTime > today.AddYears(-age)) age--; // Adjust if birthday hasn't occurred
-                                            <span>@age years old</span>
+                                            <span>@age</span>
                                         }
                                         else
                                         {

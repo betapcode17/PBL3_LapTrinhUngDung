@@ -40,12 +40,12 @@
 function confirmAccept(EventId) {
     console.log(EventId),
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Bạn có chắc không?',
+        text: "Bạn không thể quay trở lại!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, accept!',
-        cancelButtonText: 'No, cancel!',
+        confirmButtonText: 'Đồng ý, Duyệt sự kiện!',
+        cancelButtonText: 'Không, Hủy',
     }).then((result) => {
         if (result.isConfirmed) {
             handleEventAction(EventId, "/Admin/EventManager/acceptEvent");
@@ -55,12 +55,12 @@ function confirmAccept(EventId) {
 
 function confirmReject(EventId) {
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Bạn có chắc không?',
+        text: "Bạn không thể quay trở lại!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, Reject!',
-        cancelButtonText: 'No, cancel!',
+        confirmButtonText: 'Đồng ý, Từ chối sự kiện!',
+        cancelButtonText: 'Không, Hủy',
     }).then((result) => {
         if (result.isConfirmed) {
             handleEventAction(EventId, "/Admin/EventManager/rejectEvent");

@@ -8,7 +8,7 @@
 <!-- Phần tiêu đề -->
 <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
     <h1 class="text-center my-4 heading-title">
-        <i class="mdi mdi-account-circle me-2"></i>Admin Profile
+        <i class="mdi mdi-account-circle me-2"></i>Thông tin cá nhân
     </h1>
 </div>
 
@@ -35,7 +35,7 @@
                 <div class="card-header bg-gradient-primary text-white text-center p-4 rounded-top-4">
                     <div class="position-relative d-inline-block">
                         <img id="adminAvatar"
-                             src="@(!string.IsNullOrEmpty(Model.ImgPath) ? Model.ImgPath : "https://via.placeholder.com/150/6f42c1/ffffff?text=Admin")"
+                             src="/@(Model.ImgPath)"
                              alt="Admin Avatar"
                              class="rounded-circle shadow-lg border border-3 border-white"
                              style="width: 120px; height: 120px; object-fit: cover;">
