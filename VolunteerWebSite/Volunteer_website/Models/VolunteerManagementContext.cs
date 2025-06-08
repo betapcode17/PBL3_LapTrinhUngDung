@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +31,7 @@ public partial class VolunteerManagementContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Volunteer>  Volunteers { get; set; }
+    public virtual DbSet<Volunteer> Volunteers { get; set; }
 
    
 
@@ -158,7 +158,7 @@ public partial class VolunteerManagementContext : DbContext
 
             entity.HasOne(d => d.Org).WithMany(p => p.Events)
                 .HasForeignKey(d => d.OrgId)
-                .HasConstraintName("FK__Events__org_id__52593CB8");
+                .HasConstraintName("FK__Events__org_id__4E88ABD4");
 
             entity.HasOne(d => d.TypeEvent).WithMany(p => p.Events)
                 .HasForeignKey(d => d.TypeEventId)
@@ -168,7 +168,7 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<EventType>(entity =>
         {
-            entity.HasKey(e => e.TypeEventId).HasName("PK__EventTyp__9AB5A4B0DAFD5528");
+            entity.HasKey(e => e.TypeEventId).HasName("PK__EventTyp__9AB5A4B027EAEFA3");
 
             entity.ToTable("EventType");
 
@@ -220,9 +220,7 @@ public partial class VolunteerManagementContext : DbContext
 
         modelBuilder.Entity<Registration>(entity =>
         {
-            entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772D4A1B9A0");
-
-            entity.ToTable("Registration"); 
+            entity.HasKey(e => e.RegId).HasName("PK__Registra__74038772661EDC80");
 
             entity.Property(e => e.RegId)
                 .HasMaxLength(50)
