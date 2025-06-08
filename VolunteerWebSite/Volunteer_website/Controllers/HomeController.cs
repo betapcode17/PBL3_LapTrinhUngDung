@@ -107,7 +107,7 @@ namespace Volunteer_website.Controllers
                 .Include(e => e.TypeEvent)
                 .Include(e => e.Registrations)
                 .Include(e => e.Donations)
-                .Where(e => e.Status == "ACCEPT") 
+                .Where(e => e.Status == "ACCEPTED") 
                 .AsQueryable();
             var today = DateOnly.FromDateTime(DateTime.Today);
             if (!string.IsNullOrEmpty(statusFilter))
@@ -251,21 +251,48 @@ namespace Volunteer_website.Controllers
         {
             return View();
         }
+        #region Danh sách tình nguyện viên
         public IActionResult Volunteer_List()
         {
+            // Eagerly load Volunteers with related Donations and Registrations
             var volunteers = _context.Volunteers
-                .Select(v => new Volunteer_List
+                .Include(v => v.Donations)
+                .Include(v => v.Registrations)
+                .ToList(); // Materialize the query early
+
+            // Join with Users to get CreateAt (JoinDate)
+            var volunteerData = volunteers
+                .GroupJoin(_context.Users.AsEnumerable(),
+                    v => v.VolunteerId,
+                    u => u.UserId,
+                    (v, users) => new
+                    {
+                        Volunteer = v,
+                        User = users.FirstOrDefault()
+                    })
+                .Select(vu => new
                 {
-                    VolunteerId = v.VolunteerId,
-                    Name = v.Name,
-                    Email = v.Email,
-                    PhoneNumber = v.PhoneNumber,
-                    JoinDate = null // Vì không có thông tin đăng ký, đặt null hoặc loại bỏ nếu không cần
+                    Volunteer = vu.Volunteer,
+                    JoinDate = vu.User != null ? vu.User.CreateAt : null,
+                    TotalDonations = vu.Volunteer.Donations.Sum(d => d.Amount ?? 0),
+                    EventCount = vu.Volunteer.Registrations.Count()
                 })
                 .ToList();
 
+            // Store additional data in ViewBag
+            ViewBag.VolunteerInfo = volunteerData.ToDictionary(
+                v => v.Volunteer.VolunteerId,
+                v => new
+                {
+                    JoinDate = v.JoinDate != null ? v.JoinDate.Value.ToString("dd/MM/yyyy") : "N/A",
+                    TotalDonations = v.TotalDonations.ToString("C"),
+                    EventCount = v.EventCount.ToString()
+                });
+
+            // Pass only the Volunteer objects to the view
             return View(volunteers);
         }
+        #endregion
 
         [HttpGet]
         public IActionResult GetAcceptedEvents()
