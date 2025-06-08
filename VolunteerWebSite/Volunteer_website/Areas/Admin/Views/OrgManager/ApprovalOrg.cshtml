@@ -1,0 +1,167 @@
+﻿@model X.PagedList.IPagedList<Volunteer_website.Models.Organization>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using X.PagedList.Mvc.Core
+@{
+    ViewData["Title"] = "Organization Manager";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Phần tiêu đề -->
+    <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
+        <h1 class="text-center my-4 heading-title">Duyệt tổ chức</h1>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Phần thân -->
+    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
+        <!-- Search Bar and Create Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div class="search-container">
+                <label for="searchBox">Tìm: </label>
+                <input type="text" id="searchBox" class="form-control search-input" placeholder="Tìm kiếm ở đây..." onkeyup="search()">
+            </div>
+        </div>
+
+        <!-- Event List Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover event-table shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        @* <th>Is Active</th> *@
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                @if (Model == null)
+                {
+                    <tr>
+                        <td>Không có tổ chức nào.</td>
+                    </tr>
+                }
+                else {
+                    <tbody id="dataTable">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.OrgId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.Address</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>
+                                    <a asp-action="AcceptApprovalOrg" asp-route-id="@item.OrgId" class="btn btn-success btn-sm action-btn" title="Chấp nhận">
+                                        <i class="fa fa-check"></i>
+                                    </a>
+                                    <a asp-action="RejectApprovalOrg" asp-route-id="@item.OrgId" class="btn btn-danger btn-sm action-btn" title="Từ chối">
+                                        <i class="fa fa-xmark"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }    
+            </table>
+        </div>
+
+        <!-- Pagination -->
+       <div class="pagination d-flex justify-content-center mt-5 custom-pagination">
+            @if (Model!.HasPreviousPage)
+            {
+                <a href="@Url.Action("ApprovalOrg", new { page = Model.PageNumber - 1 })" class="pagination-link rounded">«</a>
+            }
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <a href="@Url.Action("ApprovalOrg", new { page = i })" class="pagination-link rounded @(i == Model.PageNumber ? "active" : "")">@i</a>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <a href="@Url.Action("ApprovalOrg", new { page = Model.PageNumber + 1 })" class="pagination-link rounded">»</a>
+            }
+        </div>
+    </div>
+</div> 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/OrgLayout/Search.js"></script>
+
+
+
+
+@* 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.OrgId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.OrgId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.OrgId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@
