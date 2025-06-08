@@ -70,7 +70,7 @@
                                 <td>@item.Location</td>
                                 <td>
                                     <span class="badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
-                                        @(item.IsActive == 0 ? "Active" : "Inactive")
+                                        @(item.IsActive == 1 ? "Active" : "Inactive")
                                     </span>
                                 </td>
                                 <td>
@@ -78,13 +78,13 @@
                                     {
                                         <span class="badge bg-warning text-dark">PENDING</span>
                                     }
-                                    else if (item.Status == "ACCEPT")
+                                    else if (item.Status == "ACCEPTED")
                                     {
-                                        <span class="badge bg-success">ACCEPT</span>
+                                        <span class="badge bg-success">ACCEPTED</span>
                                     }
-                                    else if (item.Status == "REJECT")
+                                    else if (item.Status == "REJECTED")
                                     {
-                                        <span class="badge bg-danger">REJECT</span>
+                                        <span class="badge bg-danger">REJECTED</span>
                                     }
                                 </td>
                                 <td class="action_btn">
