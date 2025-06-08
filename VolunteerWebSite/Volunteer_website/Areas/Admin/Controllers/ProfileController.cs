@@ -84,23 +84,13 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     {
                         return NotFound();
                     }
-                    var isNotValidNameUsers = await _db.Users.Where(e => e.UserId != admin.AdminId)
-                        .AnyAsync(e => e.UserName == admin.Name);
-                    var isNotValidNameAdmins = await _db.Admins.Where(e => e.AdminId != admin.AdminId)
-                        .AnyAsync(e => e.Name == admin.Name);
+
                     var isNotValidEmailAdmins = await _db.Admins.Where(e => e.AdminId != admin.AdminId)
                         .AnyAsync(e => e.Email == admin.Email);
                     var isNotValidEmailVolunteers = await _db.Volunteers.AnyAsync(e => e.Email == admin.Email);
                     var isNotValidEmailOrg = await _db.Organizations.AnyAsync(e => e.Email == admin.Email);
 
-
-                    if (isNotValidNameAdmins || isNotValidNameUsers)
-                    {
-                        TempData["ErrorMessage"] = "UserName đã được sử dụng!";
-                        return View(admin);
-                    }
-
-                    if (isNotValidEmailOrg || isNotValidEmailVolunteers)
+                    if (isNotValidEmailOrg || isNotValidEmailVolunteers || isNotValidEmailAdmins)
                     {
                         TempData["ErrorMessage"] = "Email đã được sử dụng!";
                         return View(admin);
@@ -110,7 +100,6 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     {
                         currentAdmin.ImgPath = await UpLoadImgService.UploadImg(imgPath!, "EventsImg");
                     }
-                    currentUser.UserName = admin.Name!;
                     currentAdmin.Name = admin.Name;
                     currentAdmin.Email = admin.Email;
 
@@ -155,9 +144,9 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword( string newPassword, string currentPassword)
+        public async Task<IActionResult> ChangePassword(string newUsername, string newPassword, string currentPassword)
         {
-            if(newPassword == null)
+            if(newPassword == null && newUsername == null)
             {
                 TempData["ErrorMessage"] = "Vui lòng nhập các thông tin muốn cập nhật!";
             }
@@ -167,13 +156,25 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 return NotFound();
             }
 
-
             var currentUser = await _db.Users.FirstOrDefaultAsync(u => u.UserId == adminId);
             var currentAdmin = await _db.Admins.FirstOrDefaultAsync(u => u.AdminId == adminId);
+
+            if (currentAdmin == null)
+            {
+                return NotFound();
+            }
 
             if (currentUser == null)
             {
                 return NotFound();
+            }
+
+            var isNotValidUserNameUsers = await _db.Users.Where(e => e.UserId != currentAdmin.AdminId)
+                        .AnyAsync(e => e.UserName == currentAdmin.Name);
+            if (isNotValidUserNameUsers)
+            {
+                TempData["ErrorMessage"] = "UserName đã được sử dụng!";
+                return View();
             }
 
             if (currentUser.Password == currentPassword.ToMd5Hash(currentUser.RandomKey))
@@ -183,8 +184,13 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     currentUser.RandomKey = Util.GenerateRandomkey();
                     currentUser.Password = newPassword.ToMd5Hash(currentUser.RandomKey);
                 }
+                else if(newUsername != null)
+                {
+                    currentUser.UserName = newUsername;
+                }
+
                 _db.Users.Update(currentUser);
-                await _db.SaveChangesAsync(); // Thêm SaveChangesAsync()
+                await _db.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Đã cập nhật thành công!";
                 return RedirectToAction(nameof(Profile)); // Redirect về Profile sau khi thành công
             }
