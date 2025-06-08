@@ -116,6 +116,11 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     .Where(o => o.OrgId == eventDetail.OrgId)
                     .Select(o => o.Name)
                     .FirstOrDefaultAsync() ?? "Unknown Organization";
+                var org = await _db.Organizations
+                    .Where(o => o.OrgId == eventDetail.OrgId)
+                    .FirstOrDefaultAsync();
+                var imgPath = "/images/default.jpg";
+                if(org!.ImagePath != null) imgPath = org.ImagePath;
 
 
                 var registrations = await _db.Registrations
@@ -153,6 +158,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
                 ViewBag.OrgName = orgName;
                 ViewBag.Participants = registrations;
+                ViewBag.ImgPath = imgPath;
                 ViewBag.Donations = donations;
                 ViewBag.RegisteredCount = await _db.Registrations.CountAsync(r => r.EventId == id);
 
