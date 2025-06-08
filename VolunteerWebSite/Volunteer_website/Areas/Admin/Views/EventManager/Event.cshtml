@@ -71,6 +71,7 @@
                                 <td>
                                     <span class="badge @(item.IsActive == 0 ? "bg-success" : "bg-secondary")">
                                         @(item.IsActive == 0 ? "Có" : "Không")
+
                                     </span>
                                 </td>
                                 <td>
@@ -78,11 +79,11 @@
                                     {
                                         <span class="badge bg-warning text-dark">Đang xét</span>
                                     }
-                                    else if (item.Status == "ACCEPT")
+                                    else if (item.Status == "ACCEPTED")
                                     {
                                         <span class="badge bg-success">Chấp nhận</span>
                                     }
-                                    else if (item.Status == "REJECT")
+                                    else if (item.Status == "REJECTED")
                                     {
                                         <span class="badge bg-danger">Từ chối</span>
                                     }

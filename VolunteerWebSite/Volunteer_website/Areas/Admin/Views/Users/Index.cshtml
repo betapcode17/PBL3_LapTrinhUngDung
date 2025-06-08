@@ -76,9 +76,10 @@
                                     }
                                 </td>
                                 <td>@item.CreateAt?.ToString("dd/MM/yyyy")</td>
-                                <td class="action_btn">
+                               
                                     @if(item.Role != 2) {
-                                        if (item.IsActive == true)
+                                    <td class="action_btn">
+                                        @if (item.IsActive == true)
                                         {
                                             <button class="btn btn-danger btn-sm action-btn" onclick="BanUser('@item.UserId')">
                                                 <i class="fa-solid fa-ban"></i>
@@ -93,11 +94,12 @@
                                         <button class="btn btn-success btn-sm action-btn" onclick="confirmAcceptToAdmin('@item.UserId')">
                                             <i class="fa-solid bi-person-fill-up"></i>
                                         </button>
+                                         </td>
                                     }
                                     else {
 
                                     }
-                                </td>
+                               
                             </tr>
                         }
                     </tbody>
