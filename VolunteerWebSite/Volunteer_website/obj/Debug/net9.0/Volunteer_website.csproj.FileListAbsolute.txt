@@ -1745,3 +1745,4 @@ E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compress
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\if1em6cy8o-macwl9km92.gz
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\743ulveq1e-jgnckt1doi.gz
 E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\rag7q72qvh-gbzm45k83d.gz
+E:\HOCKI4\PBL3-LTUD\VolunteerWebSite\Volunteer_website\obj\Debug\net9.0\compressed\yde69gbngy-rkv194jfkb.gz
