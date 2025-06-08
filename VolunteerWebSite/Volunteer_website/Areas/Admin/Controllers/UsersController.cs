@@ -168,7 +168,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 {
                     newAdmin.Email = isVolunteer.Email;
                 }
-                newAdmin.ImgPath = "/images/default.jpg";
+                newAdmin.ImgPath = "images/default.jpg";
 
                 _context.Users.Add(user);
                 _context.Admins.Add(newAdmin);
