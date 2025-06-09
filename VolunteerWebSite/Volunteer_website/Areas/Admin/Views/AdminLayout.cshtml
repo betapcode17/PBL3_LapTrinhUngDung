@@ -6,7 +6,7 @@
 @using System.Security.Claims
 @{
     var userName = User.Identity!.Name; // Lấy từ ClaimTypes.Name
-    var imgPath = User.Claims.FirstOrDefault(c => c.Type == "AvatarUrl")?.Value ?? "/images/default.jpg";
+    var imgPath ="/" + User.Claims.FirstOrDefault(c => c.Type == "AvatarUrl")?.Value ?? "images/default.jpg";
 }
 <!DOCTYPE html>
 <html lang="en">

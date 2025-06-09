@@ -112,7 +112,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
             if (currentUser == null)
             {
-                TempData["ErrorMessage"] = "Người dùng không tồn tại!!";
+                TempData["ErrorMessage"] = "Người dùng không tồn tại!";
                 return RedirectToAction("Index");
             }
 
@@ -136,11 +136,11 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 {
                     int temp = int.Parse(LastAdmin.AdminId.Substring(1));
                     temp++;
-                    newnewIdAdmin = "A" + temp.ToString("D4");
+                    newnewIdAdmin = "ADM" + temp.ToString("D4");
                 }
                 else
                 {
-                    newnewIdAdmin = "A0001";
+                    newnewIdAdmin = "ADM0001";
                 }
 
                 // Tạo mật khẩu ngẫu nhiên
@@ -168,7 +168,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 {
                     newAdmin.Email = isVolunteer.Email;
                 }
-                newAdmin.ImgPath = "/images/default.jpg";
+                newAdmin.ImgPath = "images/default.jpg";
 
                 _context.Users.Add(user);
                 _context.Admins.Add(newAdmin);
@@ -184,7 +184,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 }
                 TempData["SuccessMessage"] = "Đã chấp thuận cấp quyền thành công! Vui lòng kiểm tra Email";
 
-                return Json(new { success = true, message = "Event accepted successfully" });
+                return Json(new { success = true, message = "Đã cấp quyền thành công!" });
             }
             catch (Exception ex)
             {

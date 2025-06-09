@@ -40,6 +40,7 @@
             <table class="table table-bordered table-hover event-table shadow-sm">
                 <thead class="table-dark">
                     <tr>
+                        <th>Mã</th>
                         <th>Tên</th>
                         <th>Quyền</th>
                         <th>Trạng thái</th>
@@ -59,6 +60,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>@item.UserId</td>
                                 <td>@item.UserName</td>
                                 <td>
                                     <span class="badge @(item.Role == 2 ? "bg-danger" : item.Role == 1 ? "bg-primary" : "bg-success")">
