@@ -139,6 +139,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
             var data = _db.Registrations
                 .Where(r => r.RegisterAt.HasValue)
+                .Where(r => r.Status == "ACCEPTED")
                 .Where(r => r.RegisterAt.Value >= startDateOnly && r.RegisterAt.Value <= endDateOnly)
                 .GroupBy(r => r.RegisterAt.Value)
                 .Select(g => new
@@ -184,6 +185,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
             var eventData = _db.Events
                 .Where(e => e.DayBegin.HasValue && e.DayEnd.HasValue)
+                .Where(e => e.Status == "ACCEPTED")
                 .Where(e => e.DayBegin.Value <= endDateOnly && e.DayEnd.Value >= startDateOnly)
                 .GroupBy(e => e.DayBegin.Value)
                 .Select(g => new
