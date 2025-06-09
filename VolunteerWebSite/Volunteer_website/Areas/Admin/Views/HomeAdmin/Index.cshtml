@@ -1,4 +1,5 @@
-﻿@using X.PagedList.Mvc.Core
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
@@ -78,6 +79,19 @@
                         <i class="fas fa-search"></i> Lọc
                     </button>
                 </form>
+                <!-- Form xuất Excel -->
+                <form asp-area="Admin"
+                      asp-controller="HomeAdmin"
+                      asp-action="ExportEventSummaryReport"
+                      method="get"
+                      class="d-inline">
+                    <input type="hidden" name="searchValue" value="@ViewBag.SearchValue" />
+                    <input type="hidden" name="startDate" value="@ViewBag.StartDate" />
+                    <input type="hidden" name="endDate" value="@ViewBag.EndDate" />
+                    <button type="submit" class="revenue-btn export-btn">
+                        <i class="fas fa-file-excel"></i> Xuất Excel
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -108,6 +122,46 @@
                 <div class="revenue-charts shadow-sm p-4 bg-white rounded mb-4">
                     <h3>Số tiền ủng hộ theo thời gian</h3>
                     <canvas id="DonationOverTimeChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Event Summary Table -->
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <div class="shadow-sm p-4 bg-white rounded">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">Thống kê tổng hợp sự kiện</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Tên sự kiện</th>
+                                    <th>Số lượt tham gia</th>
+                                    <th>Số tiền ủng hộ (VND)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.EventSummary != null && ViewBag.EventSummary.Count > 0)
+                                {
+                                    foreach (var item in ViewBag.EventSummary)
+                                    {
+                                        <tr>
+                                            <td>@item.EventName</td>
+                                            <td>@item.RegistrationCount</td>
+                                            <td>@item.DonationAmount.ToString("N0")</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Không có dữ liệu</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

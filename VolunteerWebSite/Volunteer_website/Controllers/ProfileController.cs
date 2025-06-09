@@ -9,9 +9,11 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Controllers
 {
+    [Authorize("Volunteer")]
     public class ProfileController : Controller
     {
         private readonly VolunteerManagementContext _context;

@@ -58,7 +58,7 @@
                        class="search-input"
                        name="searchTerm"
                        id="searchInput"
-                       placeholder="Tìm kiếm theo tên, email, số điện thoại..."
+                       placeholder="Tìm kiếm theo tên, số điện thoại..."
                        value="@Html.Raw(searchTerm)"
                        autocomplete="off">
                 <button type="submit" class="search-button">
@@ -89,49 +89,6 @@
                         </span>
                     }
                 </span>
-            </div>
-        }
-        else if (totalCount > 0)
-        {
-            <div class="summary-info mb-3">
-                <div class="summary-card">
-                    <h5 class="mb-3"><i class="fas fa-chart-bar mr-2"></i>Tóm tắt thống kê</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="stat-item">
-                                <div class="stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-number">@totalCount</div>
-                                    <div class="stat-label">Tổng số volunteer</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="stat-item">
-                                <div class="stat-icon money-icon">
-                                    <i class="fas fa-donate"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-number">@totalDonationsAll.ToString("N0")</div>
-                                    <div class="stat-label">Tổng quyên góp (VNĐ)</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="stat-item">
-                                <div class="stat-icon">
-                                    <i class="fas fa-calculator"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-number">@(totalCount > 0 ? (totalDonationsAll / totalCount).ToString("N0") : "0")</div>
-                                    <div class="stat-label">Trung bình/người (VNĐ)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         }
 
@@ -183,8 +140,8 @@
                     </div>
                 </div>
                 <div class="info-card">
-                    <div class="info-card-number">@currentPage</div>
-                    <div class="info-card-label">Trang hiện tại</div>
+                    <div class="info-card-number">@(totalCount > 0 ? (totalDonationsAll / totalCount).ToString("N0") : "0")</div>
+                    <div class="info-card-label">Trung bình/người (VNĐ)</div>
                 </div>
                 <div class="info-card">
                     <div class="info-card-number">@totalPages</div>
@@ -383,108 +340,45 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const input = document.getElementById('searchInput');
-            let timeout = null;
+            const form = document.querySelector('.search-form');
+            const searchInput = document.getElementById('searchInput');
 
-            // Client-side search
-            input.addEventListener('input', function () {
+            // Server-side search on form submit
+            form.addEventListener('submit', function (e) {
+                const searchValue = searchInput.value.trim();
+                if (searchValue.length === 0) {
+                    window.location.href = '@Url.Action("Volunteer_List", "Home")';
+                    e.preventDefault();
+                    return;
+                }
+
+                const searchBtn = document.querySelector('.search-button');
+                if (searchBtn) {
+                    searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    searchBtn.disabled = true;
+                }
+            });
+
+            // Client-side search for dynamic filtering
+            searchInput.addEventListener('input', function () {
                 const searchValue = this.value.toLowerCase();
                 const rows = document.querySelectorAll('.volunteer-table tbody tr');
-                let visibleRows = 0;
 
                 rows.forEach(row => {
                     const nameCell = row.querySelector('.name-column');
-                    const emailCell = row.querySelector('.email-column');
                     const phoneCell = row.querySelector('.phone-column');
 
-                    const name = nameCell ? nameCell.textContent.toLowerCase() : '';
-                    const email = emailCell ? emailCell.textContent.toLowerCase() : '';
-                    const phone = phoneCell ? phoneCell.textContent.toLowerCase() : '';
+                    const nameText = nameCell ? nameCell.textContent.toLowerCase() : '';
+                    const phoneText = phoneCell ? phoneCell.textContent.toLowerCase() : '';
 
-                    const isMatch = name.includes(searchValue) || email.includes(searchValue) || phone.includes(searchValue);
+                    const isMatch = nameText.includes(searchValue) || phoneText.includes(searchValue);
                     row.style.display = isMatch ? '' : 'none';
-                    if (isMatch) visibleRows++;
                 });
 
-                // Update result count and display range
-                const resultCountElement = document.getElementById('resultCount');
-                const displayedCountElement = document.getElementById('displayedCount');
-                const displayRangeStartElement = document.getElementById('displayRangeStart');
-                const displayRangeEndElement = document.getElementById('displayRangeEnd');
-                const searchInfo = document.querySelector('.search-info');
-
-                if (searchValue) {
-                    if (resultCountElement) resultCountElement.textContent = visibleRows;
-                    if (displayedCountElement) displayedCountElement.textContent = visibleRows;
-                    if (displayRangeStartElement) displayRangeStartElement.textContent = visibleRows > 0 ? '1' : '0';
-                    if (displayRangeEndElement) displayRangeEndElement.textContent = visibleRows;
-                    if (searchInfo) {
-                        searchInfo.innerHTML = `
-                            <span class="text-muted">
-                                <i class="fas fa-search mr-1"></i>
-                                Kết quả tìm kiếm cho: "<strong>${searchValue}</strong>" - <span id="resultCount">${visibleRows}</span> kết quả
-                                ${visibleRows > 0 ? '<span class="ml-3"><i class="fas fa-money-bill-wave mr-1"></i>Tổng quyên góp từ nhóm này: <strong>${calculateTotalDonations()}</strong></span>' : ''}
-                            </span>
-                        `;
-                    }
-                } else if (searchInfo) {
-                    searchInfo.innerHTML = '';
-                    if (resultCountElement) resultCountElement.textContent = '@totalCount';
-                    if (displayedCountElement) displayedCountElement.textContent = '@totalCount';
-                    if (displayRangeStartElement) displayRangeStartElement.textContent = '@(startIndex + 1)';
-                    if (displayRangeEndElement) displayRangeEndElement.textContent = '@(Math.Min(startIndex + pageSize, totalCount))';
-                }
-            });
-
-            // Calculate total donations for visible rows
-            function calculateTotalDonations() {
-                let total = 0;
-                const rows = document.querySelectorAll('.volunteer-table tbody tr');
-                rows.forEach(row => {
-                    if (row.style.display !== 'none') {
-                        const donationCell = row.querySelector('.donation-column');
-                        if (donationCell) {
-                            const donationText = donationCell.textContent.trim();
-                            const amount = parseFloat(donationText.replace(/[^\d]/g, '')) || 0;
-                            total += amount;
-                        }
-                    }
-                });
-                return total.toLocaleString('vi-VN') + ' VNĐ';
-            }
-
-            // Server-side search with debounce
-            input.addEventListener('input', function () {
-                clearTimeout(timeout);
-                const query = this.value.trim();
-
-                if (query.length >= 3) { // Only trigger server search for 3+ characters
-                    timeout = setTimeout(function () {
-                        const form = input.closest('form');
-                        form.submit();
-                    }, 800);
-                }
-            });
-
-            // Loading state
-            function showLoading() {
-                const searchBtn = document.querySelector('.search-button');
-                if (searchBtn) {
-                    const originalContent = searchBtn.innerHTML;
-                    searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    searchBtn.disabled = true;
-
-                    setTimeout(() => {
-                        searchBtn.innerHTML = originalContent;
-                        searchBtn.disabled = false;
-                    }, 2000);
-                }
-            }
-
-            document.querySelector('.search-form').addEventListener('submit', function () {
-                showLoading();
+                // Update displayed count
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none').length;
+                document.getElementById('displayedCount').textContent = visibleRows;
             });
         });
     </script>
 }
-

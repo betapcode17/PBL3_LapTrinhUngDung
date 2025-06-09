@@ -9,9 +9,11 @@ using System.Security.Claims;
 using Volunteer_website.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Controllers
 {
+    [Authorize("Volunteer")]
     public class VNPayController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -233,7 +235,7 @@ namespace Volunteer_website.Controllers
                             TempData["Error"] = "Thanh toán thành công nhưng không gửi được email xác nhận.";
                         }
 
-                        TempData["Message"] = "Ủng hộ thành công! Cảm ơn bạn!";
+                        TempData["SuccessMessage"] = "Ủng hộ thành công! Cảm ơn bạn!";
                         return RedirectToAction("Detail_Event", "Home", new { id = eventId });
                     }
                     else

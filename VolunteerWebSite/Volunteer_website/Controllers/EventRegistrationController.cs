@@ -2,9 +2,12 @@
 using Volunteer_website.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Volunteer_website.Controllers
 {
+    [Authorize("Volunteer")]
     public class EventRegistrationController : Controller
     {
         private readonly VolunteerManagementContext _context;
@@ -21,7 +24,7 @@ namespace Volunteer_website.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(string id)
+        public async Task<IActionResult> Register(string id)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -30,48 +33,60 @@ namespace Volunteer_website.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Kiểm tra xem userId có tương ứng với một volunteer trong bảng Volunteers không
-            var volunteer = _context.Volunteers
-                .FirstOrDefault(v => v.VolunteerId == userId); // Giả sử bảng Volunteers có cột UserId tham chiếu đến AspNetUsers
+            // Check if user is a registered volunteer
+            var volunteer = await _context.Volunteers
+                .FirstOrDefaultAsync(v => v.VolunteerId == userId);
 
             if (volunteer == null)
             {
-                TempData["Message"] = "Không tìm thấy thông tin tình nguyện viên. Vui lòng đăng ký làm tình nguyện viên trước.";
-                TempData.Keep("Message");
-                return RedirectToAction("Detail_Event", "Home", new { id = id });
+                TempData["Error"] = "Không tìm thấy thông tin tình nguyện viên. Vui lòng đăng ký làm tình nguyện viên trước.";
+                TempData.Keep("Error");
+                return RedirectToAction("Detail_Event", "Home", new { id });
             }
 
-            // Kiểm tra xem người dùng đã đăng ký sự kiện này chưa
-            var existed = _context.Registrations
-                .FirstOrDefault(r => r.EventId == id && r.VolunteerId == volunteer.VolunteerId);
+            // Check for existing registration
+            var existed = await _context.Registrations
+                .FirstOrDefaultAsync(r => r.EventId == id && r.VolunteerId == volunteer.VolunteerId);
 
             if (existed != null)
             {
-                TempData["Message"] = "Bạn đã đăng ký sự kiện này rồi.";
-                TempData.Keep("Message");
-                return RedirectToAction("Detail_Event", "Home", new { id = id });
+                TempData["Error"] = "Bạn đã đăng ký sự kiện này rồi.";
+                TempData.Keep("Error");
+                return RedirectToAction("Detail_Event", "Home", new { id });
             }
 
-            // Tạo bản ghi Registration với volunteer_id hợp lệ
+            // Generate new registration ID
+            string newId = "REG0001";
+            var maxId = await _context.Registrations
+                .Select(e => e.RegId)
+                .OrderByDescending(id => id)
+                .FirstOrDefaultAsync();
+
+            if (!string.IsNullOrEmpty(maxId) && maxId.StartsWith("REG"))
+            {
+                if (int.TryParse(maxId.Substring(3), out int numericPart))
+                {
+                    newId = $"REG{(numericPart + 1):D4}";
+                }
+            }
+
             var registration = new Registration
             {
-                RegId = Guid.NewGuid().ToString().Substring(0, 5),
+                RegId = newId, // Use sequential ID instead of GUID
                 EventId = id,
-                VolunteerId = volunteer.VolunteerId, // Sử dụng volunteer_id từ bảng Volunteers
-                RegisterAt = DateOnly.FromDateTime(DateTime.Today),
+                VolunteerId = volunteer.VolunteerId,
+                RegisterAt = DateOnly.FromDateTime(DateTime.UtcNow),
                 Status = "PENDING"
             };
-            TempData["Message"] = null;
 
             _context.Registrations.Add(registration);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            TempData["Message"] = "Đăng ký tham gia sự kiện thành công!";
-            TempData.Keep("Message");
+            TempData["SuccessMessage"] = "Đăng ký tham gia sự kiện thành công!";
+            TempData.Keep("SuccessMessage");
 
-            return RedirectToAction("Detail_Event", "Home", new { id = id });
+            return RedirectToAction("Detail_Event", "Home", new { id });
         }
-
         [HttpGet("EventRegistration/MyRegistrations")]
         [HttpGet("EventRegistration")]
         public async Task<IActionResult> Index()
@@ -108,16 +123,16 @@ namespace Volunteer_website.Controllers
 
             if (registration == null)
             {
-                TempData["Message"] = "Không tìm thấy đăng ký.";
-                TempData.Keep("Message");
+                TempData["Error"] = "Không tìm thấy đăng ký.";
+                TempData.Keep("Error");
                 return RedirectToAction("Index");
             }
 
             _context.Registrations.Remove(registration);
             await _context.SaveChangesAsync();
 
-            TempData["Message"] = "Đã hủy đăng ký thành công!";
-            TempData.Keep("Message");
+            TempData["SuccessMessage"] = "Đã hủy đăng ký thành công!";
+            TempData.Keep("SuccessMessage");
             return RedirectToAction("Index");
         }
     }
