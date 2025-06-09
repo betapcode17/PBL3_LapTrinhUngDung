@@ -85,6 +85,18 @@ namespace Volunteer_website.Areas.Admins.Controllers
                         return NotFound();
                     }
 
+                    if (admin.Name == null || admin.Name.Length == 0)
+                    {
+                        TempData["ErrorMessage"] = "Tên đầy đủ không được để trống!";
+                        return View(currentAdmin);
+                    }
+
+                    if (admin.Email == null || admin.Email.Length == 0)
+                    {
+                        TempData["ErrorMessage"] = "Email không được để trống!";
+                        return View(currentAdmin);
+                    }
+
                     var isNotValidEmailAdmins = await _db.Admins.Where(e => e.AdminId != admin.AdminId)
                         .AnyAsync(e => e.Email == admin.Email);
                     var isNotValidEmailVolunteers = await _db.Volunteers.AnyAsync(e => e.Email == admin.Email);
@@ -144,11 +156,22 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(string newUsername, string newPassword, string currentPassword)
+        public async Task<IActionResult> ChangePassword(string newUsername, string newPassword, string currentPassword, string confirmPassword)
         {
+            if(newPassword != confirmPassword)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu mới và xác nhận mật khẩu không trùng khớp!";
+                return View();
+            }
             if(newPassword == null && newUsername == null)
             {
                 TempData["ErrorMessage"] = "Vui lòng nhập các thông tin muốn cập nhật!";
+                return View();
+            }
+            if(newPassword != null && newPassword.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu có ít nhất 6 ký tự";
+                return View();
             }
             var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (adminId == null)
@@ -184,7 +207,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                     currentUser.RandomKey = Util.GenerateRandomkey();
                     currentUser.Password = newPassword.ToMd5Hash(currentUser.RandomKey);
                 }
-                else if(newUsername != null)
+                if(newUsername != null)
                 {
                     currentUser.UserName = newUsername;
                 }
