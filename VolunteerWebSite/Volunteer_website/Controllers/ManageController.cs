@@ -5,9 +5,11 @@ using System.Linq;
 using Volunteer_website.Models;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Volunteer_website.Controllers
 {
+    [Authorize("Volunteer")]
     public class ManageController : Controller
     {
         private readonly VolunteerManagementContext _context;
@@ -50,6 +52,11 @@ namespace Volunteer_website.Controllers
             if (registration == null)
             {
                 return Json(new { success = false, message = "Không tìm thấy đăng ký" });
+            }
+
+            if (registration.Status == "ACCEPTED")
+            {
+                return Json(new { success = false, message = "Không thể hủy đăng ký đã được duyệt" });
             }
 
             try
