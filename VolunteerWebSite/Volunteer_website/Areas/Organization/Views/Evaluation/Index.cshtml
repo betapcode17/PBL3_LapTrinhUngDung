@@ -1,0 +1,172 @@
+﻿@model X.PagedList.IPagedList<Volunteer_website.Models.Evaluation>
+@using Volunteer_website.Models
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Quản lý đánh giá";
+    Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
+}
+
+<!-- SweetAlert Confirmation Modal -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container-fluid">
+    <div class="header-section border rounded p-4 mb-4 bg-white">
+        <h1 class="text-center my-4 heading-title">Quản lý đánh giá</h1>
+    </div>
+
+    <div class="body-section border rounded p-4 bg-white">
+        <!-- Hiển thị thông báo từ TempData -->
+        <!-- Chưa có TempData trong mã gốc, giữ chỗ nếu cần -->
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div class="search-container">
+                <form asp-action="Index" method="get" class="d-flex align-items-center">
+                    <input type="text"
+                           name="searchValue"
+                           id="searchBoxVolunteers"
+                           class="form-control me-2"
+                           placeholder="Tìm kiếm sự kiện..."
+                           value="@ViewBag.SearchValue" />
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                    </button>
+                </form>
+            </div>
+            <a asp-area="Organization" asp-controller="Evaluation" asp-action="Create" class="btn btn-primary create-btn"><i class="fa-solid fa-plus"></i> Tạo đánh giá mới</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã đánh giá</th>
+                        <th>Tên tình nguyện viên</th>
+                        <th>Tên sự kiện</th>
+                        <th>Phản hồi</th>
+                        <th>Hoàn thành</th>
+                        <th>Ngày đánh giá</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var reg = item.Reg;
+                        Volunteer? volunteer = null;
+                        Event? evt = null;
+
+                        if (reg != null)
+                        {
+                            ViewBag.Volunteers.TryGetValue(reg.VolunteerId, out volunteer);
+                            ViewBag.Events.TryGetValue(reg.EventId, out evt);
+                        }
+
+                        <tr>
+                            <td>@item.EvaluationId</td>
+                            <td>@(volunteer?.Name ?? "Không có")</td>
+                            <td>@(evt?.Name ?? "Không có")</td>
+                            <td>@(item.Feedback ?? "Không có phản hồi")</td>
+                            <td>
+                                @if (item.IsCompleted)
+                                {
+                                    <span class="badge bg-success">Có</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Không</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.EvaluatedAt != null)
+                                {
+                                    @($"{item.EvaluatedAt:dd/MM/yyyy}")
+                                }
+                                else
+                                {
+                                    @:Không có
+                                }
+                            </td>
+                            <td class="action_btn text-center">
+                                <a asp-action="Edit" asp-area="Organization" asp-controller="Evaluation" asp-route-id="@item.EvaluationId" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+                                <button onclick="confirmDelete('@item.EvaluationId')" class="btn btn-danger btn-sm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                <a asp-action="SendEmail" asp-area="Organization" asp-controller="Evaluation" asp-route-id="@item.EvaluationId" class="btn btn-success btn-sm">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination d-flex justify-content-center mt-4">
+            @if (Model.HasPreviousPage)
+            {
+                <a href="@Url.Action("Index", new { page = Model.PageNumber - 1, searchValue = ViewBag.SearchValue })"
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            }
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <a href="@Url.Action("Index", new { page = i, searchValue = ViewBag.SearchValue })"
+                   class="pagination-link @(i == Model.PageNumber ? "active" : "")">@i</a>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <a href="@Url.Action("Index", new { page = Model.PageNumber + 1, searchValue = ViewBag.SearchValue })"
+                   class="pagination-link">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(evaluationId) {
+            Swal.fire({
+                title: "Bạn chắc chắn muốn xóa?",
+                text: "Hành động này không thể hoàn tác!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Xóa",
+                cancelButtonText: "Hủy",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Gửi yêu cầu DELETE trực tiếp bằng AJAX mà không cần CSRF
+                    $.ajax({
+                        url: `/Organization/Evaluation/Delete?id=${evaluationId}`,
+                        type: 'POST',
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire("Thành công!", "Đánh giá đã được xóa.", "success").then(() => {
+                                    location.reload(); // Tải lại trang
+                                });
+                            } else {
+                                Swal.fire("Lỗi", response.message || "Không thể xóa đánh giá.", "error");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire("Lỗi", "Đã xảy ra lỗi khi xóa: " + error, "error");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
