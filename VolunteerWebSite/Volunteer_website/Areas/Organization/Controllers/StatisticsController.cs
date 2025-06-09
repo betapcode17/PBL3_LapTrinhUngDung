@@ -435,6 +435,8 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         }
         #endregion
 
+
+        #region Xuất Excel
         [HttpGet]
         public IActionResult ExportEventSummaryReport(string searchValue = "", string? startDate = null, string? endDate = null)
         {
@@ -492,5 +494,6 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
         }
+        #endregion
     }
 }

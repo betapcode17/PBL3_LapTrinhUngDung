@@ -4,7 +4,7 @@
     ViewData["Title"] = "Detail_Event";
     var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "guest";
     Layout = "_Layout";
-    var today = DateOnly.FromDateTime(DateTime.Now);
+    var today = DateOnly.FromDateTime(DateTime.Now); // 10:05 PM +07, Monday, June 09, 2025
     bool isEventOver = Model.DayEnd.HasValue && Model.DayEnd < today;
     bool isEventNotStarted = Model.DayBegin.HasValue && Model.DayBegin > today;
     // Chỉ vô hiệu hóa nếu sự kiện đã kết thúc hoặc không hoạt động
@@ -141,13 +141,16 @@
             </div>
         </div>
 
-        <!-- Danh sách ủng hộ -->
+        <!-- Danh sách ủng hộ và đăng ký -->
         <ul class="nav nav-tabs mt-4">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#content">Nội dung</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#donors">Danh sách ủng hộ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#registrations">Danh sách đăng ký</a>
             </li>
         </ul>
         <div class="tab-content p-0 mt-3">
@@ -190,7 +193,6 @@
             <div id="donors" class="tab-pane fade">
                 <h5>Danh sách ủng hộ</h5>
                 <input type="text" id="search-donor" class="form-control search-bar" placeholder="Nhập tên người ủng hộ" />
-
                 <table class="table donor-table">
                     <thead>
                         <tr>
@@ -214,6 +216,35 @@
                         else
                         {
                             <tr><td colspan="3">Chưa có khoản ủng hộ nào.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="registrations" class="tab-pane fade">
+                <h5>Danh sách đăng ký</h5>
+                <input type="text" id="search-registration" class="form-control search-bar" placeholder="Nhập tên người đăng ký" />
+                <table class="table registration-table">
+                    <thead>
+                        <tr>
+                            <th>Tên tình nguyện viên</th>
+                            <th>Thời gian đăng ký</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Registrations != null && ViewBag.Registrations.Count > 0)
+                        {
+                            foreach (var registration in ViewBag.Registrations)
+                            {
+                                <tr>
+                                    <td>@(registration.Name ?? "Unknown")</td>
+                                    <td>@(registration.Time)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="2">Chưa có đăng ký nào.</td></tr>
                         }
                     </tbody>
                 </table>
@@ -248,6 +279,19 @@
         document.getElementById('search-donor').addEventListener('input', function () {
             const searchValue = this.value.toLowerCase();
             const rows = document.querySelectorAll('.donor-table tbody tr');
+
+            rows.forEach(row => {
+                const nameCell = row.querySelector('td:first-child');
+                if (nameCell) {
+                    const name = nameCell.textContent.toLowerCase();
+                    row.style.display = name.includes(searchValue) ? '' : 'none';
+                }
+            });
+        });
+
+        document.getElementById('search-registration').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.registration-table tbody tr');
 
             rows.forEach(row => {
                 const nameCell = row.querySelector('td:first-child');

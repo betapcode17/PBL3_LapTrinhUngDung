@@ -178,7 +178,7 @@ namespace Volunteer_website.Controllers
         }
 
         [HttpGet]
-        public IActionResult Detail_Event(string id)
+        public async Task<IActionResult> Detail_Event(string id)
         {
             var eventDetail = _context.Events
                 .Include(e => e.Org)
@@ -189,7 +189,6 @@ namespace Volunteer_website.Controllers
             {
                 return NotFound();
             }
-
 
             var eventDetailWithOrg = (from e in _context.Events
                                       join org in _context.Organizations
@@ -219,10 +218,25 @@ namespace Volunteer_website.Controllers
                                        DonationDate = d.DonationDate
                                    }).ToList();
 
+            // Lấy tất cả các đăng ký thay vì giới hạn 10
+            var registrations = await _context.Registrations
+                .Where(r => r.EventId == id)
+                .OrderByDescending(r => r.RegisterAt)
+                .Join(
+                    _context.Volunteers,
+                    r => r.VolunteerId,
+                    v => v.VolunteerId,
+                    (r, v) => new
+                    {
+                        Name = v.Name ?? "Unknown",
+                        Time = r.RegisterAt.HasValue ? r.RegisterAt.Value.ToString("dd/MM/yyyy") : "N/A"
+                    })
+                .ToListAsync();
 
             ViewBag.Event = eventDetailWithOrg.Event;
             ViewBag.Organization = eventDetailWithOrg.Organization;
             ViewBag.Donations = donationDetails;
+            ViewBag.Registrations = registrations;
 
             return View(eventDetailWithOrg.Event);
         }

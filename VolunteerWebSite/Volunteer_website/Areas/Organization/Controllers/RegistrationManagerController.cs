@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Volunteer_website.Areas.Organizations.Controllers
 {
@@ -23,7 +24,14 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         {
             int pageSize = 8;
             int pageNumber = page ?? 1;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return RedirectToAction("Login", "Account"); // Hoặc xử lý lỗi khác nếu không có orgId
+            }
             var query = _db.Registrations.AsNoTracking();
+            query = query.Where(d => _db.Events.Any(e => e.EventId == d.EventId && e.OrgId == orgId));
             if (!string.IsNullOrEmpty(searchValue))
             {
                 var matchedEventIds = _db.Events
