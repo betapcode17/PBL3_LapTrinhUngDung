@@ -1,123 +1,93 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Footer";
 }
 
-<!-- footer -->
-<footer class="ftco-footer ftco-section img">
+<!-- Footer -->
+<footer class="ftco-footer ftco-section">
     <div class="overlay"></div>
     <div class="container">
         <div class="row mb-5">
-            <div class="col-md-3">
-                <div class="ftco-footer-widget mb-4">
+            <!-- About Us -->
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="ftco-footer-widget">
                     <h2 class="ftco-heading-2">Về chúng tôi</h2>
-                    <p>
-                        Dự án Website tổ chức phi lợi nhuận nhằm mục đích học tập không
-                        chỉ là nơi cập nhật thông tin về các hoạt động từ thiện mà còn
-                        là nền tảng giúp mọi người dễ dàng tham gia, đóng góp và theo
-                        dõi tác động của từng hành động nhỏ bé nhưng đầy ý nghĩa.
+                    <p class="text-muted">
+                        Dự án Website tổ chức phi lợi nhuận nhằm mục đích học tập, cung cấp thông tin về các hoạt động từ thiện, giúp mọi người dễ dàng tham gia, đóng góp và theo dõi tác động của những hành động ý nghĩa.
                     </p>
-                    <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                        <li class="ftco-animate">
-                            <a href="#">
-                                <span class="icon-twitter">
-                                    <i class="fa-brands fa-github"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="ftco-animate">
-                            <a href="#">
-                                <span class="icon-facebook">
-                                    <i class="fa-brands fa-facebook"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="ftco-animate">
-                            <a href="#">
-                                <span class="icon-instagram">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
+                   
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="ftco-footer-widget mb-4">
+
+            <!-- Recent News -->
+            <div class="col-md-4 col-lg-4 mb-4">
+                <div class="ftco-footer-widget">
                     <h2 class="ftco-heading-2">Tin tức gần đây</h2>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4"
-                           style="background-image: url(images/image_1.jpg)"></a>
-                        <div class="text">
-                            <h3 class="heading">
-                                <a href="#">Even the all-powerful Pointing has no control about</a>
-                            </h3>
-                            <div class="meta">
-                                <div>
-                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-person"></span> Admin</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-chat"></span> 19</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4"
-                           style="background-image: url(images/image_2.jpg)"></a>
-                        <div class="text">
-                            <h3 class="heading">
-                                <a href="#">Even the all-powerful Pointing has no control about</a>
-                            </h3>
-                            <div class="meta">
-                                <div>
-                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-person"></span> Admin</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-chat"></span> 19</a>
+                    @if (ViewBag.RecentNews != null)
+                    {
+                        foreach (var news in ViewBag.RecentNews)
+                        {
+                            <div class="block-21 mb-3 d-flex">
+                                <a class="blog-img mr-3" style="background-image: url('@news.ImageUrl');"></a>
+                                <div class="text">
+                                    <h3 class="heading">
+                                        <a href="@news.Link">@news.Title</a>
+                                    </h3>
+                                    <div class="meta text-muted">
+                                        <div>
+                                            <a href="#"><i class="fa-solid fa-calendar"></i> @news.Date.ToString("MMM dd, yyyy")</a>
+                                        </div>
+                                        <div>
+                                            <a href="#"><i class="fa-solid fa-user"></i> @news.Author</a>
+                                        </div>
+                                        <div>
+                                            <a href="#"><i class="fa-solid fa-comment"></i> @news.Comments</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Hiện chưa có tin tức nào.</p>
+                    }
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="ftco-footer-widget mb-4 ml-md-4">
+
+            <!-- Links -->
+            <div class="col-md-4 col-lg-2 mb-4">
+                <div class="ftco-footer-widget">
                     <h2 class="ftco-heading-2">Liên kết</h2>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="py-2 d-block">Trang chủ</a></li>
-                        <li><a href="#" class="py-2 d-block">Sự kiện</a></li>
-                        <li><a href="#" class="py-2 d-block">Gây quỹ</a></li>
-                        <li><a href="#" class="py-2 d-block">Tình nguyện viên</a></li>
-                        <li><a href="#" class="py-2 d-block">Tin tức</a></li>
-                        <li><a href="#" class="py-2 d-block">Về chúng tôi</a></li>
+                        <li><a href="/" class="py-2 d-block">Trang chủ</a></li>
+                        <li><a href="/Events" class="py-2 d-block">Sự kiện</a></li>
+                        <li><a href="/Fundraising" class="py-2 d-block">Gây quỹ</a></li>
+                        <li><a href="/Volunteers" class="py-2 d-block">Tình nguyện viên</a></li>
+                        <li><a href="/News" class="py-2 d-block">Tin tức</a></li>
+                        <li><a href="/About" class="py-2 d-block">Về chúng tôi</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Đặt câu hỏi cho chúng tôi?</h2>
-                    <div class="block-23 mb-3">
-                        <ul class="contact-list">
-                            <li>
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span class="text">Đại học bách khoa đại học đà nẵng</span>
+
+            <!-- Contact Us -->
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="ftco-footer-widget">
+                    <h2 class="ftco-heading-2">Liên hệ</h2>
+                    <div class="block-23">
+                        <ul class="contact-list list-unstyled">
+                            <li class="d-flex align-items-start mb-3">
+                                <i class="fa-solid fa-location-dot me-3 mt-1"></i>
+                                <span class="text">Đại học Bách Khoa, Đại học Đà Nẵng</span>
                             </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa-solid fa-phone"></i>
+                            <li class="d-flex align-items-center mb-3">
+                                <a href="tel:+23923929210">
+                                    <i class="fa-solid fa-phone me-3"></i>
                                     <span class="text">+2 392 3929 210</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa-solid fa-envelope"></i>
+                            <li class="d-flex align-items-center mb-3">
+                                <a href="mailto:info@yourdomain.com">
+                                    <i class="fa-solid fa-envelope me-3"></i>
                                     <span class="text">info@yourdomain.com</span>
                                 </a>
                             </li>
@@ -126,25 +96,20 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="mb-0">&copy; @DateTime.Now.Year - Dự án từ thiện phi lợi nhuận</p>
+            </div>
+        </div>
     </div>
 </footer>
-<!-- Loader-->
-<div id="ftco-loader" class="show fullscreen">
-    <svg class="circular" width="48px" height="48px">
-        <circle class="path-bg"
-                cx="24"
-                cy="24"
-                r="22"
-                fill="none"
-                stroke-width="4"
-                stroke="#eeeeee" />
-        <circle class="path"
-                cx="24"
-                cy="24"
-                r="22"
-                fill="none"
-                stroke-width="4"
-                stroke-miterlimit="10"
-                stroke="#F96D00" />
-    </svg>
+
+<!-- Loader -->
+<div id="ftco-loader" class="fullscreen">
+    <div class="spinner">
+        <svg class="circular" width="48px" height="48px">
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" />
+        </svg>
+    </div>
 </div>

@@ -2,14 +2,14 @@
 @model Volunteer_website.Models.Event
 @{
     ViewData["Title"] = "Detail_Event";
-    // var role = Context.Session.GetString("UserRole");
-	var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "guest";
+    var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "guest";
     Layout = "_Layout";
     var today = DateOnly.FromDateTime(DateTime.Now);
     bool isEventOver = Model.DayEnd.HasValue && Model.DayEnd < today;
     bool isEventNotStarted = Model.DayBegin.HasValue && Model.DayBegin > today;
-    bool isRegistrationDisabled = isEventOver || isEventNotStarted || (Model.IsActive != 1);
-    bool isDonateDisabled = isEventOver || isEventNotStarted || (Model.IsActive != 1);
+    // Chỉ vô hiệu hóa nếu sự kiện đã kết thúc hoặc không hoạt động
+    bool isRegistrationDisabled = isEventOver || (Model.IsActive != 1);
+    bool isDonateDisabled = isEventOver || (Model.IsActive != 1);
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -73,7 +73,6 @@
                     @{
                         var currentFund = Model.Donations?.Sum(d => d.Amount ?? 0) ?? 0;
                         var targetFund = Model.TargetFunds ?? 1; // Tránh chia cho 0
-                        // var progressPercent = Math.Round(((double)currentFund / (double)targetFund) * 100, 2);
                         var progressPercent = targetFund > 0 ? (int)((double)currentFund / targetFund * 100) : 0;
                     }
                     <div class="progress">
@@ -89,7 +88,7 @@
                     </p>
                     <div class="input-group my-3">
                         <span class="input-group-text">VND</span>
-                        <input type="text" class="form-control" value="@(Model.TargetFunds?.ToString("N0") ?? "0")" readonly />
+                        <input type="text" class="form-control" value="@(Model.TargetFunds?.ToString("N0") ?? "0") VND" readonly />
                     </div>
 
                     @if (role != "3")
@@ -208,7 +207,6 @@
                                 <tr>
                                     <td>@(donation.VolunteerName ?? "Unknown")</td>
                                     <td>@($"{(donation.Amount ?? 0):N0} VND")</td>
-
                                     <td>@(donation.DonationDate?.ToString("HH:mm - dd/MM/yyyy") ?? "N/A")</td>
                                 </tr>
                             }
