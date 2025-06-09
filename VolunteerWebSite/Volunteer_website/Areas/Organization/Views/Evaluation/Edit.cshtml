@@ -1,0 +1,292 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Volunteer_website.Models.Evaluation
+@using System.Security.Claims
+@using Volunteer_website.Models
+@inject Volunteer_website.Models.VolunteerManagementContext _db
+
+@{
+    var orgID = User?.Identity?.IsAuthenticated == true
+        ? User.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "1"
+        : "1";
+
+    ViewData["Title"] = "Chỉnh sửa đánh giá";
+    Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
+}
+
+<div class="container">
+    <h2 class="form-title">Chỉnh sửa đánh giá</h2>
+    <hr />
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Phần biểu mẫu -->
+        <div class="col-md-8 grid-margin stretch-card">
+            <div class="card-vol">
+                <div class="card-vol-body">
+                    <form id="evaluationForm" class="forms-sample" asp-action="Edit" asp-area="Organization" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-group">
+                            <label asp-for="EvaluationId">Mã đánh giá</label>
+                            <input asp-for="EvaluationId" class="form-control" readonly />
+                            <span asp-validation-for="EvaluationId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Reg.VolunteerId">Tình nguyện viên</label>
+                            @if (ViewBag.SelectedVolunteer != null)
+                            {
+                                <input type="text" class="form-control" value="@ViewBag.SelectedVolunteer.Name" readonly />
+                                <input type="hidden" asp-for="Reg.VolunteerId" value="@ViewBag.SelectedVolunteer.VolunteerId" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" value="Chưa chọn tình nguyện viên" readonly />
+                                <input type="hidden" asp-for="Reg.VolunteerId" value="" />
+                            }
+                            <span asp-validation-for="Reg.VolunteerId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RegId">Sự kiện</label>
+                            @if (ViewBag.SelectedEvent != null)
+                            {
+                                <input type="text" class="form-control" value="@ViewBag.SelectedEvent.Name" readonly />
+                                <input type="hidden" asp-for="RegId" value="@ViewBag.SelectedEvent.RegId" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" value="Chưa chọn sự kiện" readonly />
+                                <input type="hidden" asp-for="RegId" value="" />
+                            }
+                            <span asp-validation-for="RegId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IsCompleted">Trạng thái</label>
+                            <select class="form-control" asp-for="IsCompleted" id="statusSelect">
+                                <option value="false">Chưa hoàn thành</option>
+                                <option value="true">Đã hoàn thành</option>
+                            </select>
+                            <span asp-validation-for="IsCompleted" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Feedback">Phản hồi</label>
+                            <textarea class="form-control" asp-for="Feedback" rows="5" placeholder="Nhập phản hồi về tình nguyện viên...">@Model.Feedback</textarea>
+                            <span asp-validation-for="Feedback" class="text-danger"></span>
+                        </div>
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-gradient-primary" name="action" value="save">
+                                <i class="mdi mdi-content-save"></i> Lưu đánh giá
+                            </button>
+                            <a asp-action="Index" asp-area="Organization" class="btn btn-light">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phần thông tin tình nguyện viên -->
+        <div class="col-md-4 grid-margin stretch-card">
+            <div class="card-vol">
+                <div class="card-vol-body">
+                    <h4 class="card-vol-title">Thông tin tình nguyện viên</h4>
+                    <div class="volunteer-details text-center">
+                        <img src="@(ViewBag.SelectedVolunteer != null ? ViewBag.SelectedVolunteer.ImagePath ?? "/OrgLayout/assets/images/pic-1.jpg" : "/OrgLayout/assets/images/pic-1.jpg")" class="img-lg rounded-circle mb-3" alt="Ảnh đại diện" />
+                        <h4>@(ViewBag.SelectedVolunteer?.Name ?? "--")</h4>
+                        <p class="text-muted mb-1">@(ViewBag.SelectedVolunteer?.Email ?? "--")</p>
+                        <p class="text-muted mb-2">@(ViewBag.SelectedVolunteer?.PhoneNumber ?? "--")</p>
+                        <div class="d-flex justify-content-center">
+                            <span class="badge badge-outline-success mr-2">
+                                @(ViewBag.SelectedVolunteer != null
+                                    ? (ViewBag.SelectedVolunteer.Gender == true ? "Nam" : "Nữ")
+                                    : "--")
+                            </span>
+                            <span class="badge badge-outline-primary">
+                                @(ViewBag.SelectedVolunteer != null && ViewBag.SelectedVolunteer.DateOfBirth != null
+                                    ? ViewBag.SelectedVolunteer.DateOfBirth.ToString("dd/MM/yyyy")
+                                    : "--")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusSelect = document.getElementById('statusSelect');
+            statusSelect.value = '@Model.IsCompleted.ToString().ToLower()';
+        });
+    </script>
+    <style>
+        .container {
+            max-width: 100%;
+            margin: 30px auto;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-title {
+            color: #ff6f00;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card-vol {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+
+        .card-vol-body {
+            padding: 20px;
+        }
+
+        .card-vol-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: #ff6f00;
+                outline: none;
+                box-shadow: 0 0 5px rgba(255, 111, 0, 0.3);
+            }
+
+        .volunteer-details {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 2px solid #ff6f00;
+            border-radius: 10px;
+            background: #fff9f0;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+            .volunteer-details img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 3px solid #ff6f00;
+                margin-bottom: 15px;
+            }
+
+            .volunteer-details h4 {
+                font-size: 22px;
+                color: #333;
+                margin-bottom: 8px;
+            }
+
+            .volunteer-details p {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 8px;
+            }
+
+            .volunteer-details .badge {
+                font-size: 14px;
+                padding: 6px 12px;
+                margin: 0 5px;
+            }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-gradient-primary {
+            background: #ff6f00;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            .btn-gradient-primary:hover {
+                background: #e65c00;
+            }
+
+        .btn-light {
+            background: #ddd;
+            color: #333;
+        }
+
+            .btn-light:hover {
+                background: #ccc;
+            }
+
+        .stretch-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .stretch-card > .card {
+                flex: 1;
+            }
+
+        .grid-margin {
+            margin-bottom: 30px;
+        }
+    </style>
+}
