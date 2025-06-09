@@ -1,496 +1,166 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿<link rel="stylesheet" href="~/OrgLayout/Calendar.css" />
+
+@{
+    ViewData["Title"] = "Lịch sự kiện";
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
 }
-@using (Html.BeginForm("UpdateEventDate", "Calendar", FormMethod.Post, new { id = "antiForgeryForm" }))
-{
-    @Html.AntiForgeryToken()
-}
-<style>
-    a {
-        text-decoration: none !important;
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+
+<div class="container mt-5">
+    <h2 class="mb-4">Lịch các sự kiện</h2>
+
+    <!-- Alerts for TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
 
-    .calendar-container {
-        display: flex;
-        max-width: 1200px;
-        margin: 40px auto;
-        gap: 20px;
-        font-family: "Arial", sans-serif;
-    }
-
-    #calendar {
-        flex: 2;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-
-    .fc {
-        background: #fff;
-    }
-
-    .fc-header-toolbar {
-        background: #fff;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .fc-button {
-        background: #f0f0f0;
-        color: #333;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        text-transform: uppercase;
-        font-size: 12px;
-        transition: background 0.2s;
-    }
-
-        .fc-button:hover {
-            background: #e0e0e0;
-        }
-
-        .fc-button.fc-today-button {
-            background: #ffca28;
-            color: #333;
-        }
-
-            .fc-button.fc-today-button:hover {
-                background: #ffb300;
-            }
-
-    .fc-daygrid-day-number {
-        color: #333;
-        font-size: 14px;
-    }
-
-    .fc-daygrid-day {
-        border: 1px solid #ddd;
-    }
-
-    .fc-daygrid-event {
-        white-space: normal !important;
-        background: #42a5f5;
-        border: none;
-        border-radius: 3px;
-        padding: 3px;
-        color: #fff;
-        font-size: 11px;
-        margin: 2px 0;
-        text-decoration: none !important;
-        cursor: move;
-    }
-
-    .fc-daygrid-event-resizer {
-        display: block !important;
-        background: #fff;
-        border: 2px solid #1e88e5;
-        border-radius: 50%;
-        width: 8px;
-        height: 8px;
-        margin-left: -4px;
-        margin-top: -4px;
-    }
-
-    .fc-daygrid-event:hover {
-        background: #1e88e5;
-    }
-
-    .fc-daygrid-more-link {
-        color: #1e88e5;
-        font-size: 11px;
-        text-decoration: none !important;
-    }
-
-        .fc-daygrid-more-link:hover {
-            color: #1565c0;
-        }
-
-    .fc-popover {
-        background: #fff;
-        border: 1px solid #ddd;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-    }
-
-    .fc-popover-title {
-        background: #fff;
-        padding: 5px;
-        border-bottom: 1px solid #ddd;
-        font-size: 12px;
-        color: #333;
-    }
-
-    .fc-popover-body {
-        padding: 5px;
-    }
-
-    .event-list {
-        flex: 1;
-        background: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    }
-
-        .event-list h3 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-    .event-item {
-        margin-bottom: 10px;
-    }
-
-    .event-date {
-        font-size: 14px;
-        color: #333;
-        font-weight: bold;
-        margin-top: 15px;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-    }
-
-    .event-title {
-        position: relative;
-        padding-left: 15px;
-        color: #333;
-        font-size: 13px;
-        display: block;
-        line-height: 1.5;
-        text-decoration: none !important;
-    }
-
-        .event-title::before {
-            content: "•";
-            color: #1e88e5;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-    #eventListContent {
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .event-date {
-        font-size: 14px;
-        font-weight: 600;
-        color: #2563eb;
-        margin-bottom: 4px;
-        position: relative;
-        padding-left: 18px;
-    }
-
-        .event-date::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background-color: #2563eb;
-            border-radius: 50%;
-            position: absolute;
-            left: 0;
-            top: 5px;
-        }
-
-    .event-item {
-        background-color: #f9fafb;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin-bottom: 16px;
-        color: #374151;
-        font-size: 15px;
-        border-left: 3px solid #3b82f6;
-        transition: 0.3s ease;
-    }
-
-        .event-item:hover {
-            background-color: #eef2ff;
-            border-left-color: #2563eb;
-        }
-
-    .event-title {
-        font-weight: 500;
-        font-size: 15px;
-        color: #1f2937;
-    }
-
-    /* CSS cho modern-alert */
-    .modern-alert {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        width: 400px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        font-family: 'Segoe UI', sans-serif;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        animation: slideIn 0.3s ease;
-    }
-
-    #alertContainer {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        z-index: 10000;
-    }
-
-
-        .modern-alert.success {
-            background-color: #e6f4ea;
-            border-left: 4px solid #34c759;
-        }
-
-        .modern-alert.error {
-            background-color: #fdeded;
-            border-left: 4px solid #ff3b30;
-        }
-
-    .alert-icon {
-        margin-right: 15px;
-        font-size: 24px;
-        line-height: 1;
-    }
-
-        .alert-icon span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            color: #fff;
-            font-weight: bold;
-        }
-
-    .modern-alert.success .alert-icon span {
-        background-color: #34c759;
-    }
-
-    .modern-alert.error .alert-icon span {
-        background-color: #ff3b30;
-    }
-
-    .alert-content {
-        flex: 1;
-    }
-
-        .alert-content strong {
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .alert-content p {
-            margin: 0;
-            font-size: 14px;
-            color: #333;
-        }
-
-    .alert-close {
-        margin-left: 15px;
-        font-size: 20px;
-        cursor: pointer;
-        color: #666;
-        transition: color 0.2s;
-    }
-
-        .alert-close:hover {
-            color: #000;
-        }
-
-</style>
-
-<!-- Container để hiển thị thông báo động -->
-<div id="alertContainer"></div>
-
-<!-- HTML nội dung -->
-<div class="calendar-container">
+    <!-- Calendar -->
     <div id="calendar"></div>
-    <div class="event-list">
-        <h3>Events</h3>
-        <div id="eventListContent"></div>
+
+    <!-- Bootstrap Modal for Event Details -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="eventModalLabel">Chi tiết sự kiện</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fa-solid fa-calendar-day me-2"></i>Tiêu đề</h6>
+                        <p id="eventTitle" class="text-muted"></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fa-solid fa-align-left me-2"></i>Mô tả</h6>
+                        <p id="eventDescription" class="text-muted"></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fa-solid fa-clock me-2"></i>Thời gian bắt đầu</h6>
+                        <p id="eventStart" class="text-muted"></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold"><i class="fa-solid fa-clock me-2"></i>Thời gian kết thúc</h6>
+                        <p id="eventEnd" class="text-muted"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Scripts -->
-@section Scripts {
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var eventListContent = document.getElementById('eventListContent');
-            var alertContainer = document.getElementById('alertContainer');
+<!-- FullCalendar & jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS (required for modal) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev today',
-                    center: 'title',
-                    right: 'next'
-                },
-                events: '/Organization/Calendar/GetEventsCalendar',
-                eventDataTransform: function (event) {
-                    return {
-                        id: event.id || event.eventId,
-                        title: event.title,
-                        start: event.start,
-                        end: event.end,
-                        description: event.description
-                    };
-                },
-                editable: true,
-                eventResizable: true,
-                eventDrop: function (info) {
-                    var eventId = info.event.id;
-                    var startDate = info.event.start ? info.event.start.toISOString().split('T')[0] : null;
-                    var endDate = info.event.end ? info.event.end.toISOString().split('T')[0] : null;
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
 
-                    console.log('Event Drop Data:', { eventId, startDate, endDate });
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'vi',
+            timeZone: 'local',
+            editable: true,
+            selectable: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            eventDisplay: 'block',
+            events: '/Organization/Calendar/GetEventsCalendar',
+            eventDrop: function (info) {
+                updateEventDate(info);
+            },
+            eventResize: function (info) {
+                updateEventDate(info);
+            },
+            eventClick: function (info) {
+                // Populate modal with event details
+                document.getElementById('eventTitle').textContent = info.event.title;
+                document.getElementById('eventDescription').textContent = info.event.extendedProps.description || 'Không có';
+                document.getElementById('eventStart').textContent = info.event.start ? info.event.start.toLocaleDateString('vi-VN') : 'Không xác định';
+                document.getElementById('eventEnd').textContent = info.event.end ? info.event.end.toLocaleDateString('vi-VN') : 'Không xác định';
 
-                    if (!eventId || !startDate) {
-                        showAlert('error', 'Lỗi', 'Không thể cập nhật: Thiếu thông tin eventId hoặc startDate');
-                        info.revert();
-                        return;
-                    }
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+                modal.show();
+            }
+        });
 
-                    updateEvent(eventId, startDate, endDate);
-                },
-                eventResize: function (info) {
-                    var eventId = info.event.id;
-                    var startDate = info.event.start ? info.event.start.toISOString().split('T')[0] : null;
-                    var endDate = info.event.end ? info.event.end.toISOString().split('T')[0] : null;
+        calendar.render();
 
-                    console.log('Event Resize Data:', { eventId, startDate, endDate });
+        function updateEventDate(info) {
+            const event = info.event;
+            const start = event.start;
+            const end = event.end || start;
 
-                    if (!eventId || !startDate) {
-                        showAlert('error', 'Lỗi', 'Không thể cập nhật: Thiếu thông tin eventId hoặc startDate');
-                        info.revert();
-                        return;
-                    }
+            const startDate = start.toISOString().split('T')[0];
+            const endDate = end.toISOString().split('T')[0];
 
-                    updateEvent(eventId, startDate, endDate);
-                },
-                eventClick: function (info) {
-                    showAlert('info', 'Event', 'Event: ' + info.event.title + '<br>Description: ' + info.event.extendedProps.description);
-                },
-                firstDay: 0
+            // Debug: Log the event data
+            console.log('Sending data:', {
+                eventId: event.id,
+                startDate: startDate,
+                endDate: endDate
             });
 
-            calendar.render();
+            if (!event.id) {
+                console.error("Lỗi: Không tìm thấy ID sự kiện.");
+                alert("Lỗi: Không tìm thấy ID sự kiện.");
+                info.revert();
+                return;
+            }
 
-                   function showAlert(type, title, message) {
-            // Xóa thông báo cũ nếu có
-            alertContainer.innerHTML = '';
-
-            // Tạo div thông báo
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `modern-alert ${type}`;
-            alertDiv.innerHTML = `
-                <div class="alert-icon">
-                    <span>${type === 'success' ? '✔' : type === 'error' ? '⚠' : 'ℹ'}</span>
-                </div>
-                <div class="alert-content">
-                    <strong>${title}</strong>
-                    <p>${message}</p>
-                </div>
-                <div class="alert-close" onclick="this.parentElement.remove()">×</div>
-            `;
-
-            alertContainer.appendChild(alertDiv);
+            fetch('/Organization/Calendar/UpdateEventDate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                body: JSON.stringify({
+                    eventId: event.id.toString(),
+                    startDate: startDate,
+                    endDate: endDate
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Lỗi khi cập nhật: ' + res.statusText);
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // This will trigger TempData alert in the view
+                } else {
+                    alert("Lỗi: " + data.message);
+                    info.revert();
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi gửi dữ liệu: ", err);
+                alert("Đã xảy ra lỗi khi cập nhật sự kiện: " + err.message);
+                info.revert();
+            });
         }
+    });
+</script>
 
-
-            function updateEvent(eventId, startDate, endDate) {
-                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
-                const params = new URLSearchParams();
-                params.append('eventId', eventId);
-                params.append('startDate', startDate);
-                params.append('endDate', endDate || '');
-
-                console.log('Sending to Server:', params.toString());
-
-                fetch('/Organization/Calendar/UpdateEventDate', {
-                    method: 'POST',
-                    headers: {
-                        'RequestVerificationToken': token
-                    },
-                    body: params
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showAlert('success', 'Thành công', data.message);
-                        updateEventList();
-                    } else {
-                        showAlert('error', 'Lỗi', data.message);
-                        calendar.refetchEvents();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showAlert('error', 'Lỗi', 'Đã xảy ra lỗi khi cập nhật sự kiện');
-                    calendar.refetchEvents();
-                });
-            }
-
-            function updateEventList() {
-                fetch('/Organization/Calendar/GetEventsCalendar')
-                    .then(response => response.json())
-                    .then(events => {
-                        console.log('Fetched Events:', events);
-                        eventListContent.innerHTML = '';
-                        const eventsByDate = {};
-                        events.forEach(event => {
-                            const date = event.start.split('T')[0];
-                            if (!eventsByDate[date]) eventsByDate[date] = [];
-                            eventsByDate[date].push(event);
-                        });
-
-                        for (const date in eventsByDate) {
-                            const dateEvents = eventsByDate[date];
-                            const dateHeader = document.createElement('div');
-                            dateHeader.className = 'event-date';
-                            dateHeader.textContent = new Date(date).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            });
-                            eventListContent.appendChild(dateHeader);
-
-                            dateEvents.forEach(event => {
-                                const eventItem = document.createElement('div');
-                                eventItem.className = 'event-item d-flex';
-                                eventItem.innerHTML = `<span class="event-title">${event.title}</span>`;
-                                eventListContent.appendChild(eventItem);
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Lỗi khi lấy sự kiện:', error);
-                        showAlert('error', 'Lỗi', 'Đã xảy ra lỗi khi lấy danh sách sự kiện');
-                    });
-            }
-
-            updateEventList();
-        });
-    </script>
-}
+@Html.AntiForgeryToken()
