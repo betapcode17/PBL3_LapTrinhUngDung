@@ -5,40 +5,128 @@
     Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
-        <h1 class="text-center my-4 heading-title">Hồ sơ tổ chức</h1>
+<!-- Phần tiêu đề -->
+<div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
+    <h1 class="text-center my-4 heading-title">
+        <i class="mdi mdi-account-circle me-2"></i>Hồ sơ tổ chức
+    </h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle me-2"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-
-        <div class="row">
-            <div class="col-md-4 text-center mb-4">
-                <img src="~/@(Model.ImagePath ?? "https://via.placeholder.com/200")" alt="Ảnh hồ sơ"
-                     class="img-fluid rounded-0 border border-2 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
-            </div>
-            <div class="col-md-8">
-                <div class="profile-details">
-                    <h3>@Model.Name</h3>
-                    <p><strong>Email:</strong> @Model.Email</p>
-                    <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
-                    <p><strong>Địa chỉ:</strong> @Model.Address</p>
-                    <p><strong>Mô tả:</strong> @(Model.Description ?? "Không có mô tả")</p>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <!-- Header với gradient -->
+                <div class="card-header bg-gradient-primary text-white text-center p-4 rounded-top-4">
+                    <div class="position-relative d-inline-block">
+                        <img id="orgAvatar"
+                             src="~/@(Model.ImagePath ?? "https://via.placeholder.com/120")"
+                             alt="Organization Avatar"
+                             class="rounded-circle shadow-lg border border-3 border-white"
+                             style="width: 120px; height: 120px; object-fit: cover;">
+                    </div>
+                    <h3 class="fw-bold mt-3 mb-1">@Model.Name</h3>
+                    <p class="mb-0 opacity-75">
+                        <i class="mdi mdi-domain me-1"></i>Tổ chức
+                    </p>
                 </div>
-                <div class="mt-4 d-flex gap-3">
-                    <a asp-action="EditProfile" class="btn btn-success btn-lg px-4">
-                        <i class="bi bi-pencil me-2"></i> Chỉnh sửa hồ sơ
-                    </a>
-                    <a asp-action="ChangePassword" class="btn btn-outline-secondary btn-lg px-4">
-                        <i class="bi bi-lock me-2"></i> Đổi mật khẩu
-                    </a>
+
+                <!-- Thông tin chi tiết -->
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-email text-primary" style="font-size: 24px;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted d-block">Địa chỉ Email</small>
+                                    <strong class="text-dark">@Model.Email</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-phone text-primary" style="font-size: 24px;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted d-block">Số điện thoại</small>
+                                    <strong class="text-dark">@Model.PhoneNumber</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-map-marker text-primary" style="font-size: 24px;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted d-block">Địa chỉ</small>
+                                    <strong class="text-dark">@Model.Address</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-note-text text-primary" style="font-size: 24px;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted d-block">Mô tả</small>
+                                    <strong class="text-dark">@(Model.Description ?? "Không có mô tả")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="card-footer bg-transparent p-4">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-4">
+                            <a class="btn btn-success w-100 rounded-3 py-2"
+                               asp-controller="Profile"
+                               asp-action="EditProfile"
+                               title="Edit Profile">
+                                <i class="mdi mdi-pencil me-2"></i>
+                                <span class="d-none d-sm-inline">Cập nhật</span>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a class="btn btn-warning w-100 rounded-3 py-2"
+                               asp-controller="Profile"
+                               asp-action="ChangePassword"
+                               title="Change Password">
+                                <i class="mdi mdi-key me-2"></i>
+                                <span class="d-none d-sm-inline">Tài khoản</span>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a asp-controller="Statistics"
+                               asp-action="Index"
+                               class="btn btn-outline-secondary w-100 rounded-3 py-2"
+                               title="Back to Dashboard">
+                                <i class="mdi mdi-arrow-left me-2"></i>
+                                <span class="d-none d-sm-inline">Thống kê</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,10 +134,30 @@
 </div>
 
 <style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%);
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
     .btn-success {
         background-color: #28a745;
         border-color: #28a745;
-        transition: all 0.3s ease;
     }
 
         .btn-success:hover {
@@ -57,15 +165,14 @@
             border-color: #218838;
         }
 
-    .btn-outline-secondary {
-        color: #6c757d;
-        border-color: #6c757d;
-        transition: all 0.3s ease;
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
     }
 
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            color: white;
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
         }
 </style>
 
@@ -73,4 +180,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Animation cho các thẻ thông tin
+        $(document).ready(function () {
+            $('.bg-light').each(function (index) {
+                $(this).css('opacity', '0').delay(index * 100).animate({
+                    opacity: 1
+                }, 500);
+            });
+        });
+    </script>
 }

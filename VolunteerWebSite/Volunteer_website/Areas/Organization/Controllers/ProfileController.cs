@@ -11,6 +11,7 @@ using Volunteer_website.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
+using AutoMapper;
 
 namespace Volunteer_website.Areas.Organization.Controllers
 {
@@ -80,7 +81,7 @@ namespace Volunteer_website.Areas.Organization.Controllers
             var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(orgId))
             {
-                return Unauthorized("User not authenticated.");
+                return Unauthorized("Người dùng chưa được xác thực.");
             }
 
             var profile = await _db.Organizations
@@ -88,25 +89,74 @@ namespace Volunteer_website.Areas.Organization.Controllers
 
             if (profile == null)
             {
-                return NotFound("Organization profile not found.");
+                return NotFound("Không tìm thấy hồ sơ tổ chức.");
             }
 
             // Kiểm tra điều kiện nhập liệu
             if (!InputValidator.IsValidString(model.Name))
             {
-                ModelState.AddModelError("Name", "Name must contain only letters and spaces.");
+                ModelState.AddModelError("Name", "Tên phải chỉ chứa chữ cái và khoảng trắng.");
                 return View(model);
             }
 
             if (!InputValidator.IsValidPhoneNumber(model.PhoneNumber))
             {
-                ModelState.AddModelError("PhoneNumber", "Phone number must be 10-11 digits and may start with +.");
+                ModelState.AddModelError("PhoneNumber", "Số điện thoại phải từ 10-11 chữ số và có thể bắt đầu bằng +.");
                 return View(model);
             }
 
             if (!InputValidator.IsValidEmail(model.Email))
             {
-                ModelState.AddModelError("Email", "Invalid email format.");
+                ModelState.AddModelError("Email", "Định dạng email không hợp lệ.");
+                return View(model);
+            }
+
+            // Kiểm tra trùng số điện thoại với các tổ chức khác
+            var existingPhone = await _db.Organizations
+                .Where(o => o.OrgId != orgId && o.PhoneNumber == model.PhoneNumber)
+                .FirstOrDefaultAsync();
+            if (existingPhone != null)
+            {
+                ModelState.AddModelError("PhoneNumber", "Số điện thoại đã được sử dụng bởi một tổ chức khác.");
+                return View(model);
+            }
+            // Kiểm tra trùng số điện thoại với các tổ chức khác
+            var existingPhoneInVol = await _db.Volunteers
+                .Where(o => o.VolunteerId != orgId && o.PhoneNumber == model.PhoneNumber)
+                .FirstOrDefaultAsync();
+            if (existingPhone != null)
+            {
+                ModelState.AddModelError("PhoneNumber", "Số điện thoại đã được sử dụng ");
+                return View(model);
+            }
+          
+            // Kiểm tra trùng email với các tổ chức khác
+            var existingEmail = await _db.Organizations
+                .Where(o => o.OrgId != orgId && o.Email == model.Email)
+                .FirstOrDefaultAsync();
+            if (existingEmail != null)
+            {
+                ModelState.AddModelError("Email", "Email đã được sử dụng ");
+                return View(model);
+            }
+
+            // Kiểm tra trùng email với các tình nguỵen khác
+            var existingEmailInVol = await _db.Volunteers
+                .Where(o => o.VolunteerId != orgId && o.Email == model.Email)
+                .FirstOrDefaultAsync();
+            if (existingEmailInVol != null)
+            {
+                ModelState.AddModelError("Email", "Email đã được sử dụng ");
+                return View(model);
+            }
+
+            // Kiểm tra trùng email với các tổ chức khác
+            var existingEmailInAdmin = await _db.Admins
+                .Where(o => o.AdminId != orgId && o.Email == model.Email)
+                .FirstOrDefaultAsync();
+            if (existingEmailInAdmin != null)
+            {
+                ModelState.AddModelError("Email", "Email đã được sử dụng ");
                 return View(model);
             }
 
@@ -118,14 +168,14 @@ namespace Volunteer_website.Areas.Organization.Controllers
                 {
                     if (!InputValidator.IsValidImagePath(imagePath))
                     {
-                        ModelState.AddModelError("", "Invalid image format. Only .jpg, .jpeg, .png, or .gif are allowed.");
+                        ModelState.AddModelError("", "Định dạng ảnh không hợp lệ. Chỉ cho phép .jpg, .jpeg, .png, hoặc .gif.");
                         return View(model);
                     }
                     profile.ImagePath = imagePath; // Lưu đường dẫn ảnh
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Failed to upload profile image.");
+                    ModelState.AddModelError("", "Tải lên ảnh đại diện thất bại.");
                     return View(model);
                 }
             }
@@ -137,73 +187,103 @@ namespace Volunteer_website.Areas.Organization.Controllers
             profile.Email = model.Email;
 
             await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Profile updated successfully!";
+            TempData["SuccessMessage"] = "Cập nhật hồ sơ thành công!";
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
+            var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var org = await _db.Organizations.FindAsync(id);
+            if (org == null)
+            {
+                return NotFound();
+            }
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(Change_Password model)
+        public async Task<IActionResult> ChangePassword(string newUsername, string newPassword, string currentPassword, string confirmPassword)
         {
-            if (!ModelState.IsValid)
+            if (newPassword != confirmPassword)
             {
-                return View(model);
+                TempData["ErrorMessage"] = "Mật khẩu mới và xác nhận mật khẩu không trùng khớp!";
+                return View();
+            }
+            if (string.IsNullOrEmpty(newPassword) && string.IsNullOrEmpty(newUsername))
+            {
+                TempData["ErrorMessage"] = "Vui lòng nhập các thông tin muốn cập nhật!";
+                return View();
+            }
+            if (!string.IsNullOrEmpty(newPassword) && newPassword.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu có ít nhất 6 ký tự";
+                return View();
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
+            var orgID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(orgID))
             {
-                return Unauthorized("User not authenticated.");
+                return NotFound("Không tìm thấy thông tin người dùng.");
             }
 
-            var user = await _db.Users
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.Role == 2);
+            var currentUser = await _db.Users.FirstOrDefaultAsync(u => u.UserId == orgID);
+            var currentOrg = await _db.Organizations.FirstOrDefaultAsync(u => u.OrgId == orgID);
 
-            if (user == null)
+            if (currentOrg == null)
             {
-                return NotFound("User not found.");
+                return NotFound("Không tìm thấy thông tin tổ chức.");
             }
 
-            // Kiểm tra điều kiện nhập liệu cho mật khẩu
-            if (!InputValidator.IsValidPassword(model.OldPassword))
+            if (currentUser == null)
             {
-                ModelState.AddModelError("OldPassword", "Old password must be at least 8 characters with uppercase, lowercase, and numbers.");
-                return View(model);
+                return NotFound("Không tìm thấy thông tin người dùng trong hệ thống.");
             }
 
-            if (!InputValidator.IsValidPassword(model.NewPassword))
+            var isNotValidUserNameUsers = await _db.Users
+                .Where(e => e.UserId != currentOrg.OrgId)
+                .AnyAsync(e => e.UserName == newUsername);
+            if (isNotValidUserNameUsers && !string.IsNullOrEmpty(newUsername))
             {
-                ModelState.AddModelError("NewPassword", "New password must be at least 8 characters with uppercase, lowercase, and numbers.");
-                return View(model);
+                TempData["ErrorMessage"] = "UserName đã được sử dụng!";
+                return View();
             }
 
-            string hashedCurrentPassword = model.OldPassword?.ToSHA256Hash(user.RandomKey) ?? string.Empty;
-            if (hashedCurrentPassword != user.Password)
+            if (currentUser.RandomKey == null)
             {
-                ModelState.AddModelError("", "Current password is incorrect.");
-                return View(model);
+                TempData["ErrorMessage"] = "Dữ liệu người dùng không hợp lệ.";
+                return View();
             }
 
-            if (string.IsNullOrEmpty(model.NewPassword))
+            if (currentUser.Password == currentPassword.ToMd5Hash(currentUser.RandomKey))
             {
-                ModelState.AddModelError("", "New password cannot be null or empty.");
-                return View(model);
+                if (!string.IsNullOrEmpty(newPassword))
+                {
+                    currentUser.RandomKey = Util.GenerateRandomkey();
+                    currentUser.Password = newPassword.ToMd5Hash(currentUser.RandomKey);
+                }
+                if (!string.IsNullOrEmpty(newUsername))
+                {
+                    currentUser.UserName = newUsername;
+                }
+
+                _db.Users.Update(currentUser);
+                await _db.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Đã cập nhật thành công!";
+                return RedirectToAction("Index");
             }
-
-            string newRandomKey = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(128 / 8));
-            string newHashedPassword = model.NewPassword.ToSHA256Hash(newRandomKey);
-
-            user.Password = newHashedPassword;
-            user.RandomKey = newRandomKey;
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Password changed successfully!";
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                TempData["ErrorMessage"] = "Mật khẩu hiện tại bạn đã nhập sai. Vui lòng thử lại!";
+            }
+            return View();
         }
 
         #region Logout
