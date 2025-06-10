@@ -5,6 +5,8 @@ using Volunteer_website.Models;
 using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.Entity;
+using System.Security.Cryptography;
+using System.Security.Claims;
 
 namespace Volunteer_website.Areas.Organizations.Controllers
 {
@@ -19,7 +21,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         {
             _db = db;
         }
-
+        #region Danh sách ủng hộ
         public IActionResult Index(int? page, string searchValue)
         {
             int pageSize = 8;
@@ -27,7 +29,14 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
             // Explicitly specify the namespace to resolve ambiguity  
             var query = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking(_db.Donations);
+            // Lọc theo OrgId thông qua Event  
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return RedirectToAction("Login", "Account"); // Hoặc xử lý lỗi khác nếu không có orgId
+            }
+            query = query.Where(d => _db.Events.Any(e => e.EventId == d.EventId && e.OrgId == orgId));
             if (!string.IsNullOrEmpty(searchValue))
             {
                 var matchingEventIds = _db.Events
@@ -64,7 +73,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
             return View(lstDonated);
         }
-
+        #endregion
         [HttpGet]
         public IActionResult GetVolunteerDetails(string id)
         {

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using Volunteer_website.Models;
 
@@ -26,19 +28,28 @@ public class CalendarController : Controller
     public IActionResult GetEventsCalendar()
     {
         var colors = new List<string>
-        {
-            "#2b6cb0", "#e53e3e", "#48bb78", "#ed8936", "#9f7aea",
-            "#f6ad55", "#38b2ac", "#805ad5", "#ecc94b", "#4299e1",
-            "#d69e2e", "#276749", "#c53030", "#6b46c1", "#2d3748"
-        };
+       {
+           "#2b6cb0", "#e53e3e", "#48bb78", "#ed8936", "#9f7aea",
+           "#f6ad55", "#38b2ac", "#805ad5", "#ecc94b", "#4299e1",
+           "#d69e2e", "#276749", "#c53030", "#6b46c1", "#2d3748"
+       };
 
+        var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(orgId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Fix: Ensure filtering by OrgId happens before projecting to anonymous type  
         var eventsData = _db.Events
+            .Where(e => e.OrgId == orgId)
             .Select(e => new
             {
                 title = e.Name ?? "Sự kiện không tên",
                 start = e.DayBegin.HasValue ? e.DayBegin.Value.ToString("yyyy-MM-dd") : null,
                 end = e.DayEnd.HasValue ? e.DayEnd.Value.AddDays(1).ToString("yyyy-MM-dd") : null,
-                id = e.EventId, // EventId is a string
+                id = e.EventId,
                 description = e.Description ?? "Không có mô tả"
             })
             .ToList();
@@ -52,12 +63,6 @@ public class CalendarController : Controller
             color = colors[index % colors.Count],
             description = e.description
         });
-
-        // Debug: Log events
-        foreach (var eventItem in events)
-        {
-            Console.WriteLine($"Event ID: {eventItem.id}, Color: {eventItem.color}");
-        }
 
         return Json(events);
     }

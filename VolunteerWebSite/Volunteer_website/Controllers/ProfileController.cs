@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using MyCommerce.Models;
 
 namespace Volunteer_website.Controllers
 {
@@ -222,14 +223,14 @@ namespace Volunteer_website.Controllers
         [HttpPost]
         public IActionResult Change_PassWord(Change_Password Temp)
         {
-            var userId = HttpContext.Session.GetString("UserId");
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))
             {
                 ViewBag.ErrorMessage = "Bạn chưa đăng nhập.";
-                return RedirectToAction("SignIn", "Account2");
+                return RedirectToAction("Login", "Account");
             }
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
 
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
             if (user == null)
             {
                 ViewBag.ErrorMessage = "Không tìm thấy người dùng.";
@@ -239,27 +240,59 @@ namespace Volunteer_website.Controllers
             Console.WriteLine("UserId: " + userId); // Debugging line
             Console.WriteLine("OldPassword (entered): " + Temp.OldPassword); // Debugging line
 
-            if (!Crypto.VerifyHashedPassword(user.Password, Temp.OldPassword))
+            // Kiểm tra mật khẩu cũ
+            if (string.IsNullOrEmpty(user.Password))
             {
-                ViewBag.ErrorMessage = "Mật khẩu cũ không đúng";
+                ViewBag.ErrorMessage = "Mật khẩu hiện tại không tồn tại trong hệ thống.";
                 return View("Change_PassWord");
             }
 
+            // So sánh mật khẩu cũ bằng cách mã hóa Temp.OldPassword và so với user.Password
+            string hashedOldPassword = Temp.OldPassword.ToMd5Hash(user.RandomKey);
+            if (user.Password != hashedOldPassword)
+            {
+                ViewBag.ErrorMessage = "Mật khẩu cũ không đúng.";
+                return View("Change_PassWord");
+            }
+
+            // Kiểm tra mật khẩu mới và xác nhận
             if (Temp.NewPassword != Temp.ConfirmPassword)
             {
-                ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp";
+                ViewBag.ErrorMessage = "Mật khẩu xác nhận không khớp.";
                 return View("Change_PassWord");
             }
 
-            user.Password = Crypto.HashPassword(Temp.NewPassword);
-            _context.SaveChanges();
-            ViewBag.Message = "Đổi mật khẩu thành công";
+            // Cập nhật mật khẩu trong transaction
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Tạo RandomKey mới
+                    string newRandomKey = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)); // 128-bit random key
+                    user.Password = Temp.NewPassword.ToMd5Hash(newRandomKey);
+                    user.RandomKey = newRandomKey;
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                    ViewBag.Message = "Đổi mật khẩu thành công.";
+                }
+                catch (DbUpdateException ex)
+                {
+                    transaction.Rollback();
+                    ViewBag.ErrorMessage = $"Lỗi cơ sở dữ liệu khi đổi mật khẩu: {ex.InnerException?.Message ?? ex.Message}";
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    ViewBag.ErrorMessage = $"Lỗi hệ thống khi đổi mật khẩu: {ex.Message}";
+                }
+            }
 
             return View("Change_PassWord");
         }
 
 
-       
+
 
         private string GenerateRandomKey()
         {
