@@ -145,6 +145,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
             }
 
             var data = _db.Registrations
+                .Where(r => r.Status == "ACCEPTED")
                 .Where(r => r.RegisterAt.HasValue)
                 .Where(r => r.RegisterAt.Value >= startDateOnly && r.RegisterAt.Value <= endDateOnly)
                 .GroupBy(r => r.RegisterAt.Value)
@@ -191,6 +192,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
             var eventData = _db.Events
                 .Where(e => e.DayBegin.HasValue && e.DayEnd.HasValue)
+                .Where(e => e.Status == "ACCEPTED")
                 .Where(e => e.DayBegin.Value <= endDateOnly && e.DayEnd.Value >= startDateOnly)
                 .GroupBy(e => e.DayBegin.Value)
                 .Select(g => new
@@ -224,14 +226,14 @@ namespace Volunteer_website.Areas.Admins.Controllers
             if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
             {
                 startDateOnly = DateOnly.Parse(startDate);
-                endDateOnly   = DateOnly.Parse(endDate);
+                endDateOnly = DateOnly.Parse(endDate);
             }
             else
             {
-                var endDateTime   = DateTime.Now;
+                var endDateTime = DateTime.Now;
                 var startDateTime = endDateTime.AddDays(-30);
-                startDateOnly     = DateOnly.FromDateTime(startDateTime);
-                endDateOnly       = DateOnly.FromDateTime(endDateTime);
+                startDateOnly = DateOnly.FromDateTime(startDateTime);
+                endDateOnly = DateOnly.FromDateTime(endDateTime);
             }
 
             // Lấy dữ liệu, group theo ngày và tính tổng Amount
@@ -243,7 +245,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 .GroupBy(d => DateOnly.FromDateTime(d.DonationDate.Value))
                 .Select(g => new
                 {
-                    Date        = g.Key,
+                    Date = g.Key,
                     TotalAmount = g.Sum(x => x.Amount)
                 })
                 .ToDictionary(x => x.Date, x => x.TotalAmount);
@@ -254,9 +256,9 @@ namespace Volunteer_website.Areas.Admins.Controllers
             {
                 result.Add(new
                 {
-                    Year        = date.Year,
-                    Month       = date.Month,
-                    Day         = date.Day,
+                    Year = date.Year,
+                    Month = date.Month,
+                    Day = date.Day,
                     TotalAmount = data.ContainsKey(date) ? data[date] : 0
                 });
             }
@@ -265,7 +267,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
         }
         #endregion
 
-      
+
         #region Bảng thống kê tổng quát
         public List<dynamic> StatisticsEventSummary(string searchValue = "", string? startDate = null, string? endDate = null)
         {
@@ -381,6 +383,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
             }
         }
         #endregion
+
         #region Logout
         [HttpGet]
         public async Task<IActionResult> Logout()
