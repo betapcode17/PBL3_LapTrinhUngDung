@@ -11,6 +11,7 @@ using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MyCommerce.Models;
+using Volunteer_website.Helpers;
 
 namespace Volunteer_website.Controllers
 {
@@ -148,7 +149,8 @@ namespace Volunteer_website.Controllers
 
 
         [HttpPost]
-        public IActionResult Contact_Infor(Update_ContactModel updatedVolunteer)
+        [ValidateAntiForgeryToken] // Thêm ValidateAntiForgeryToken để bảo vệ form
+        public async Task<IActionResult> Contact_Infor(Update_ContactModel updatedVolunteer)
         {
             var addressErrors = ModelState["Address"]?.Errors;
             var allErrors = ModelState.Values.SelectMany(v => v.Errors);
@@ -162,43 +164,99 @@ namespace Volunteer_website.Controllers
                 Console.WriteLine("Lỗi Address: " + error.ErrorMessage);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                string VolunteerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrEmpty(VolunteerId))
-                {
-                    return RedirectToAction("Login", "Account");
-                }
-
-                try
-                {
-                    var volunteer = _context.Volunteers.FirstOrDefault(v => v.VolunteerId == VolunteerId);
-                    if (volunteer == null)
-                    {
-                        return NotFound();
-                    }
-
-                    volunteer.Name = updatedVolunteer.Name;
-                    volunteer.Email = updatedVolunteer.Email;
-                    volunteer.PhoneNumber = updatedVolunteer.PhoneNumber;
-                    volunteer.Address = updatedVolunteer.Address;
-
-                    _context.Volunteers.Update(volunteer);
-                    _context.SaveChanges();
-
-                    TempData["SuccessMessage"] = "Cập nhật thông tin thành công!";
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Lỗi khi cập nhật thông tin: " + ex.Message);
-                    TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật.";
-                }
-
-                return RedirectToAction("Contact_Infor", new { id = VolunteerId });
+                return View(updatedVolunteer);
             }
 
-            return View(updatedVolunteer);
+            string volunteerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(volunteerId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            try
+            {
+                var volunteer = await _context.Volunteers.FirstOrDefaultAsync(v => v.VolunteerId == volunteerId);
+                if (volunteer == null)
+                {
+                    return NotFound();
+                }
+
+                // Kiểm tra trùng số điện thoại với các tình nguyện viên khác
+                var existingPhoneInVol = await _context.Volunteers
+                    .Where(v => v.VolunteerId != volunteerId && v.PhoneNumber == updatedVolunteer.PhoneNumber)
+                    .FirstOrDefaultAsync();
+                if (existingPhoneInVol != null)
+                {
+                    ModelState.AddModelError("PhoneNumber", "Số điện thoại đã được sử dụng bởi một tình nguyện viên khác.");
+                    return View(updatedVolunteer);
+                }
+
+                // Kiểm tra trùng số điện thoại với các tổ chức khác
+                var existingPhoneInOrg = await _context.Organizations
+                    .Where(o => o.PhoneNumber == updatedVolunteer.PhoneNumber)
+                    .FirstOrDefaultAsync();
+                if (existingPhoneInOrg != null)
+                {
+                    ModelState.AddModelError("PhoneNumber", "Số điện thoại đã được sử dụng bởi một tổ chức.");
+                    return View(updatedVolunteer);
+                }
+
+                // Kiểm tra trùng email với các tình nguyện viên khác
+                var existingEmailInVol = await _context.Volunteers
+                    .Where(v => v.VolunteerId != volunteerId && v.Email == updatedVolunteer.Email)
+                    .FirstOrDefaultAsync();
+                if (existingEmailInVol != null)
+                {
+                    ModelState.AddModelError("Email", "Email đã được sử dụng bởi một tình nguyện viên khác.");
+                    return View(updatedVolunteer);
+                }
+
+                // Kiểm tra trùng email với các tổ chức khác
+                var existingEmailInOrg = await _context.Organizations
+                    .Where(o => o.Email == updatedVolunteer.Email)
+                    .FirstOrDefaultAsync();
+                if (existingEmailInOrg != null)
+                {
+                    ModelState.AddModelError("Email", "Email đã được sử dụng bởi một tổ chức.");
+                    return View(updatedVolunteer);
+                }
+
+                // Cập nhật thông tin
+                volunteer.Name = updatedVolunteer.Name;
+                volunteer.Email = updatedVolunteer.Email;
+                volunteer.PhoneNumber = updatedVolunteer.PhoneNumber;
+                volunteer.Address = updatedVolunteer.Address;
+
+                // Xử lý ảnh đại diện nếu có
+                if (updatedVolunteer.AvatarFile != null && updatedVolunteer.AvatarFile.Length > 0)
+                {
+                    string imagePath = await UpLoadImgService.UploadImg(updatedVolunteer.AvatarFile, "volunteers");
+                    if (imagePath != null)
+                    {
+                        volunteer.ImagePath = imagePath; // Giả định có trường AvatarPath trong Volunteer model
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Tải lên ảnh đại diện thất bại.");
+                        return View(updatedVolunteer);
+                    }
+                }
+
+                _context.Volunteers.Update(volunteer);
+                await _context.SaveChangesAsync(); // Sử dụng await vì có async operations
+
+                TempData["SuccessMessage"] = "Cập nhật thông tin thành công!";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi cập nhật thông tin: " + ex.Message);
+                TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật.";
+            }
+
+            return RedirectToAction("Contact_Infor", new { id = volunteerId });
         }
 
         private string GetLoggedInUserId()

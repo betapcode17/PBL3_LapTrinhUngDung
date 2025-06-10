@@ -488,7 +488,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                     return RedirectToAction("Index");
                 }
 
-                string toEmail = "quocdat19991712@gmail.com";
+                string toEmail = volunteer.Email;
                 string volunteerName = volunteer.Name ?? "Tình nguyện viên";
                 string feedback = evaluation.Feedback ?? "Không có nhận xét.";
                 string statusText = evaluation.IsCompleted ? "Đã hoàn thành xuất sắc" : "Đã tham gia";

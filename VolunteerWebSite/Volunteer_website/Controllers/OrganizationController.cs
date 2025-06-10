@@ -55,12 +55,12 @@ public class OrganizationController : Controller
                 .OrderByDescending(o => o.OrgId)
                 .FirstOrDefaultAsync();
 
-            string nextOrgId = "ORG001";
+            string nextOrgId = "ORG0001";
             if (lastOrg != null)
             {
                 if (int.TryParse(lastOrg.OrgId.Substring(3), out int lastId))
                 {
-                    nextOrgId = $"ORG{(lastId + 1):D3}";
+                    nextOrgId = $"ORG{(lastId + 1):D4}";
                 }
                 else
                 {

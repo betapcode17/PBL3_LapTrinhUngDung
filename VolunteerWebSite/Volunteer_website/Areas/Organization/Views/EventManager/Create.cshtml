@@ -23,12 +23,12 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="Name" class="form-label">Tên sự kiện</label>
-                    <input asp-for="Name" class="form-control" name="Name" value="@Model.Name" />
+                    <input asp-for="Name" class="form-control" name="Name" value="@Model.Name" placeholder="Nhập tên sự kiện" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="TargetMember" class="form-label">Số người tham gia mục tiêu</label>
-                    <input asp-for="TargetMember" class="form-control" type="number" name="TargetMember" value="@Model.TargetMember" />
+                    <input asp-for="TargetMember" class="form-control" type="number" name="TargetMember" value="@Model.TargetMember" placeholder="Người" />
                     <span asp-validation-for="TargetMember" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 form-group">
@@ -82,12 +82,12 @@
             <div class="row mb-3">
                 <div class="col-md-3 form-group">
                     <label asp-for="Location" class="form-label">Địa điểm</label>
-                    <input asp-for="Location" class="form-control" name="Location" value="@Model.Location" />
+                    <input asp-for="Location" class="form-control" name="Location" value="@Model.Location" placeholder="Địa điểm" />
                     <span asp-validation-for="Location" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 form-group">
                     <label asp-for="TargetFunds" class="form-label">Số tiền quyên góp mục tiêu</label>
-                    <input asp-for="TargetFunds" class="form-control" type="number" name="TargetFunds" value="@Model.TargetFunds" />
+                    <input asp-for="TargetFunds" class="form-control" type="number" name="TargetFunds" value="@Model.TargetFunds" placeholder="VND" />
                     <span asp-validation-for="TargetFunds" class="text-danger"></span>
                 </div>
                 <div class="col-md-3 form-group">
@@ -110,7 +110,7 @@
             <div class="row mb-3">
                 <div class="col-12 form-group">
                     <label asp-for="Description" class="form-label">Mô tả</label>
-                    <textarea asp-for="Description" class="form-control" rows="5" name="Description">@Model.Description</textarea>
+                    <textarea asp-for="Description" class="form-control" rows="5" name="Description" placeholder="Nội dung">@Model.Description</textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
             </div>
