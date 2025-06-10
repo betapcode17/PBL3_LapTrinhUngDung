@@ -100,9 +100,8 @@ namespace Volunteer_website.Controllers
                     var user = new User();
 
                     // Tạo UserId với tiền tố "VOL"
-                    var lastUser = await _db.Users
-                        .Where(u => u.UserId.StartsWith("VOL"))
-                        .OrderByDescending(u => u.UserId)
+                    var lastUser = await _db.Volunteers
+                        .OrderByDescending(u => u.VolunteerId)
                         .FirstOrDefaultAsync();
                     if (lastUser == null)
                     {
@@ -111,7 +110,7 @@ namespace Volunteer_website.Controllers
                     else
                     {
                         // Trích xuất phần số từ "VOLXXXX" (ví dụ: "VOL0007" -> "0007")
-                        string numericPart = lastUser.UserId.Substring(3); // Lấy "0007"
+                        string numericPart = lastUser.VolunteerId.Substring(3); // Lấy "0007"
                         if (int.TryParse(numericPart, out int temp))
                         {
                             temp++;
@@ -119,7 +118,7 @@ namespace Volunteer_website.Controllers
                         }
                         else
                         {
-                            throw new FormatException($"Invalid numeric part in UserId: {lastUser.UserId}");
+                            throw new FormatException($"Invalid numeric part in UserId: {lastUser.VolunteerId}");
                         }
                     }
 
