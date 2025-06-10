@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang Chủ";
     var role = Context.Session.GetInt32("UserRole");
     Layout = role == 1 ? "~/Views/Shared/_AdminLayout.cshtml" :
              role == 0 ? "~/Views/Shared/User_Layout.cshtml" :
@@ -12,29 +12,13 @@
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
+           
             <div class="col-md-7 ftco-animate text-center"
                  data-scrollax="properties: { translateY: '70%' }">
-                <h1 class="mb-4"
-                    data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                    Giving to Receive
-                </h1>
+             
                 <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
                     <a href="https://vimeo.com/45830194"
-                       class="btn btn-white btn-outline-white px-4 py-3 mt-4 popup-vimeo"><span class="icon-play mr-2"></span>Watch Video</a>
+                       class="btn btn-white btn-outline-white px-4 py-3 mt-4 popup-vimeo"><span class="icon-play mr-2"></span>Xem Video</a>
                 </p>
             </div>
         </div>
@@ -47,22 +31,21 @@
             <div class="col-md-5 d-flex justify-content-center counter-wrap ftco-animate">
                 <div class="block-18 color-1 align-items-stretch">
                     <div class="text">
-                        <span>Served Over</span>
+                        <span>Đã Phục Vụ Hơn</span>
                         <strong class="number" data-number="1432805">0</strong>
-                        <span>Children in 190 countries in the world</span>
+                        <span>Trẻ em tại 190 quốc gia trên thế giới</span>
                     </div>
                 </div>
             </div>
             <div class="col-md d-flex justify-content-center counter-wrap ftco-animate">
                 <div class="block-18 color-2 align-items-stretch">
                     <div class="text">
-                        <h3 class="mb-4">Donate Money</h3>
+                        <h3 class="mb-4">Đóng Góp Tài Chính</h3>
                         <p>
-                            Even the all-powerful Pointing has no control about the blind
-                            texts.
+                            Ngay cả việc chỉ tay đầy quyền lực cũng không thể kiểm soát được những văn bản vô nghĩa.
                         </p>
                         <p>
-                            <a href="#" class="btn btn-white px-3 py-2 mt-2">Donate Now</a>
+                            <a href="#" class="btn btn-white px-3 py-2 mt-2">Đóng Góp Ngay</a>
                         </p>
                     </div>
                 </div>
@@ -70,13 +53,12 @@
             <div class="col-md d-flex justify-content-center counter-wrap ftco-animate">
                 <div class="block-18 color-3 align-items-stretch">
                     <div class="text">
-                        <h3 class="mb-4">Be a Organization</h3>
+                        <h3 class="mb-4">Trở Thành Tổ Chức</h3>
                         <p>
-                            Even the all-powerful Pointing has no control about the blind
-                            texts.
+                            Ngay cả việc chỉ tay đầy quyền lực cũng không thể kiểm soát được những văn bản vô nghĩa.
                         </p>
                         <p>
-                            <a asp-controller="Organization" asp-action="RegisterOrganization" class="btn btn-white px-3 py-2 mt-2">Be a Organization</a>
+                            <a asp-controller="Organization" asp-action="RegisterOrganization" class="btn btn-white px-3 py-2 mt-2">Trở Thành Tổ Chức</a>
                         </p>
                     </div>
                 </div>
@@ -94,10 +76,9 @@
                         <span class="flaticon-donation-1"></span>
                     </div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Make Donation</h3>
+                        <h3 class="heading">Thực Hiện Đóng Góp</h3>
                         <p>
-                            Even the all-powerful Pointing has no control about the blind
-                            texts it is an almost unorthographic.
+                            Ngay cả việc chỉ tay đầy quyền lực cũng không thể kiểm soát được những văn bản vô nghĩa.
                         </p>
                     </div>
                 </div>
@@ -108,10 +89,9 @@
                         <span class="flaticon-charity"></span>
                     </div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Become A Volunteer</h3>
+                        <h3 class="heading">Trở Thành Tình Nguyện Viên</h3>
                         <p>
-                            Even the all-powerful Pointing has no control about the blind
-                            texts it is an almost unorthographic.
+                            Ngay cả việc chỉ tay đầy quyền lực cũng không thể kiểm soát được những văn bản vô nghĩa.
                         </p>
                     </div>
                 </div>
@@ -122,10 +102,9 @@
                         <span class="flaticon-donation"></span>
                     </div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Sponsorship</h3>
+                        <h3 class="heading">Tài Trợ</h3>
                         <p>
-                            Even the all-powerful Pointing has no control about the blind
-                            texts it is an almost unorthographic.
+                            Ngay cả việc chỉ tay đầy quyền lực cũng không thể kiểm soát được những văn bản vô nghĩa.
                         </p>
                     </div>
                 </div>
@@ -138,10 +117,9 @@
     <div class="container-fluid">
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-md-5 heading-section ftco-animate text-center">
-                <h2 class="mb-4">Our Causes</h2>
+                <h2 class="mb-4">Các Dự Án Của Chúng Tôi</h2>
                 <p>
-                    Far far away, behind the word mountains, far from the countries
-                    Vokalia and Consonantia, there live the blind texts.
+                    Xa xa, sau những ngọn núi chữ, xa các quốc gia Vokalia và Consonantia, là nơi sinh sống của những văn bản vô nghĩa.
                 </p>
             </div>
         </div>
@@ -155,8 +133,8 @@
                             var currentFunds = cause.Donations != null ? cause.Donations.Sum(d => d.Amount ?? 0) : 0;
                             var percentFund = cause.TargetFunds.HasValue && cause.TargetFunds > 0 ? (int)((double)currentFunds / cause.TargetFunds.Value * 100) : 0;
                             var lastDonationText = cause.Donations != null && cause.Donations.Any()
-                            ? $"Last donation {(DateTime.Now - cause.Donations.Max(d => d.DonationDate ?? DateTime.Now)).Days / 7}w ago"
-                            : "No donations yet";
+                            ? $"Lần đóng góp cuối cách đây {(DateTime.Now - cause.Donations.Max(d => d.DonationDate ?? DateTime.Now)).Days / 7} tuần"
+                            : "Chưa có đóng góp";
 
                             <div class="item">
                                 <div class="cause-entry">
@@ -175,7 +153,7 @@
                                                  aria-valuemin="0"
                                                  aria-valuemax="100"></div>
                                         </div>
-                                        <span class="fund-raised d-block">@currentFunds.ToString("N0") raised of @(cause.TargetFunds.HasValue ? cause.TargetFunds.Value.ToString("N0") : "0")</span>
+                                        <span class="fund-raised d-block">@currentFunds.ToString("N0") đã quyên góp trong số @(cause.TargetFunds.HasValue ? cause.TargetFunds.Value.ToString("N0") : "0")</span>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +162,7 @@
                 }
                 else
                 {
-                    <p class="text-center">No causes available at the moment.</p>
+                    <p class="text-center">Hiện tại chưa có dự án nào.</p>
                 }
             </div>
         </div>
@@ -195,10 +173,9 @@
     <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2 class="mb-4">Latest Donations</h2>
+                <h2 class="mb-4">Các Khoản Đóng Góp Gần Đây</h2>
                 <p>
-                    Far far away, behind the word mountains, far from the countries
-                    Vokalia and Consonantia, there live the blind texts.
+                    Xa xa, sau những ngọn núi chữ, xa các quốc gia Vokalia và Consonantia, là nơi sinh sống của những văn bản vô nghĩa.
                 </p>
             </div>
         </div>
@@ -208,10 +185,10 @@
                 @foreach (dynamic action in ViewBag.LatestDonations as IList<object>)
                 {
                     var timeAgo = (DateTime.Now - action.ActionTime).TotalMinutes < 60
-                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalMinutes} minutes ago"
+                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalMinutes} phút trước"
                     : (DateTime.Now - action.ActionTime).TotalHours < 24
-                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalHours} hours ago"
-                    : $"{(int)(DateTime.Now - action.ActionTime).TotalDays} days ago";
+                    ? $"{(int)(DateTime.Now - action.ActionTime).TotalHours} giờ trước"
+                    : $"{(int)(DateTime.Now - action.ActionTime).TotalDays} ngày trước";
 
                     <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
                         <div class="staff">
@@ -225,14 +202,14 @@
                                         @if (action.Type == "Donation")
                                         {
                                             <p>
-                                                Donated <span>@action.Amount?.ToString("N0")</span> for
+                                                Đã đóng góp <span>@action.Amount?.ToString("N0")</span> cho
                                                 <a href="#">@action.EventName</a>
                                             </p>
                                         }
                                         else
                                         {
                                             <p>
-                                                Joined as a volunteer for
+                                                Tham gia làm tình nguyện viên cho
                                                 <a href="#">@action.EventName</a>
                                             </p>
                                         }
@@ -245,7 +222,7 @@
             }
             else
             {
-                <p class="text-center">No recent donations or volunteer actions at the moment.</p>
+                <p class="text-center">Hiện tại chưa có khoản đóng góp hoặc hoạt động tình nguyện nào gần đây.</p>
             }
         </div>
     </div>
@@ -314,99 +291,13 @@
     </div>
 </section>
 
-<section class="ftco-section">
-    <div class="container">
-        <div class="row justify-content-center mb-5 pb-3">
-            <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2 class="mb-4">Recent from blog</h2>
-                <p>
-                    Far far away, behind the word mountains, far from the countries
-                    Vokalia and Consonantia, there live the blind texts.
-                </p>
-            </div>
-        </div>
-        <div class="row d-flex">
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/image_1.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sept 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-3">
-                            <a href="#">Hurricane Irma has devastated Florida</a>
-                        </h3>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/image_2.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sept 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-3">
-                            <a href="#">Hurricane Irma has devastated Florida</a>
-                        </h3>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex ftco-animate">
-                <div class="blog-entry align-self-stretch">
-                    <a href="blog-single.html"
-                       class="block-20"
-                       style="background-image: url('images/image_3.jpg')">
-                    </a>
-                    <div class="text p-4 d-block">
-                        <div class="meta mb-3">
-                            <div><a href="#">Sept 10, 2018</a></div>
-                            <div><a href="#">Admin</a></div>
-                            <div>
-                                <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                            </div>
-                        </div>
-                        <h3 class="heading mt-3">
-                            <a href="#">Hurricane Irma has devastated Florida</a>
-                        </h3>
-                        <p>
-                            A small river named Duden flows by their place and supplies it
-                            with the necessary regelialia.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2 class="mb-4">Our Latest Events</h2>
+                <h2 class="mb-4">Các Sự Kiện Gần Đây</h2>
             </div>
         </div>
         <div class="row">
@@ -422,8 +313,8 @@
                             </a>
                             <div class="text p-4 d-block">
                                 <div class="meta mb-3">
-                                    <div><a href="#">@ev.DayBegin?.ToString("MMM dd, yyyy")</a></div>
-                                    <div><a href="#">Admin</a></div>
+                                    <div><a href="#">@ev.DayBegin?.ToString("dd MMM, yyyy")</a></div>
+                                    <div><a href="#">Quản Trị Viên</a></div>
                                     <div>
                                         <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
                                     </div>
@@ -438,7 +329,7 @@
                                 <p>@(ev.Description ?? "Không có mô tả")</p>
                                 <p>
                                     <a href="@Url.Action("Detail_Event", "Home", new { id = ev.EventId })">
-                                        Join Event <i class="ion-ios-arrow-forward"></i>
+                                        Tham Gia Sự Kiện <i class="ion-ios-arrow-forward"></i>
                                     </a>
                                 </p>
                             </div>
@@ -448,7 +339,7 @@
             }
             else
             {
-                <p class="text-center">No upcoming events at the moment.</p>
+                <p class="text-center">Hiện tại chưa có sự kiện sắp tới.</p>
             }
         </div>
     </div>

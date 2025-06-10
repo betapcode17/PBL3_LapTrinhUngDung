@@ -45,7 +45,12 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == EventId);
                 if (existingEvent == null)
                 {
-                    return Json(new { success = false, message = "Event not found" });
+                    return Json(new { success = false, message = "Không tìm thấy sự kiện!" });
+                }
+                
+                if (existingEvent.DayBegin <= DateOnly.FromDateTime(DateTime.Now))
+                {
+                    return Json(new { success = false, message = "Sự kiện đã qua thời gian bắt đầu ,không thể chấp nhận!" });
                 }
 
                 // chuyển trạng thái status
@@ -72,7 +77,7 @@ namespace Volunteer_website.Areas.Admins.Controllers
                 var existingEvent = _db.Events.FirstOrDefault(ev => ev.EventId == request.EventId);
                 if (existingEvent == null)
                 {
-                    return Json(new { success = false, message = "Event not found" });
+                    return Json(new { success = false, message = "Không tìm thấy sự kiện!" });
                 }
 
                 var registrated = _db.Registrations.Where(e=>e.EventId == request.EventId)
@@ -119,14 +124,14 @@ namespace Volunteer_website.Areas.Admins.Controllers
 
                 if (eventDetail == null)
                 {
-                    return NotFound("Event not found.");
+                    return NotFound("Không tìm thấy sự kiện!");
                 }
 
 
                 var orgName = await _db.Organizations
                     .Where(o => o.OrgId == eventDetail.OrgId)
                     .Select(o => o.Name)
-                    .FirstOrDefaultAsync() ?? "Tổ chức không xác định";
+                    .FirstOrDefaultAsync() ?? "Tổ chức không xác định!";
                 var org = await _db.Organizations
                     .Where(o => o.OrgId == eventDetail.OrgId)
                     .FirstOrDefaultAsync();
@@ -177,8 +182,8 @@ namespace Volunteer_website.Areas.Admins.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR: " + ex);
-                return StatusCode(500, "An error occurred while fetching event details.");
+                Console.WriteLine("Lỗi: " + ex);
+                return StatusCode(500, "Đã có lỗi");
             }
         }
         #endregion

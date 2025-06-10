@@ -24,19 +24,30 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
 
         #region Hiển thị sự kiện
-       
+
         public IActionResult Index(int? page, string searchValue)
         {
             int pageSize = 8;
             int pageNumber = page ?? 1;
-            var query = _db.Events.AsNoTracking();
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return RedirectToAction("Login", "Account"); // Hoặc xử lý lỗi khác nếu không có orgId
+            }
+
+            var query = _db.Events
+                .Where(e => e.OrgId == orgId)
+                .AsNoTracking();
+
             if (!string.IsNullOrEmpty(searchValue))
             {
-                query = query.Where(e => e.Name != null && e.Name.Contains(searchValue)); 
+                query = query.Where(e => e.Name != null && e.Name.Contains(searchValue));
             }
 
             var lstEvent = query.OrderBy(x => x.EventId)
                                 .ToPagedList(pageNumber, pageSize);
+
             ViewBag.SearchValue = searchValue;
 
             return View(lstEvent);
@@ -420,8 +431,8 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
         #region Xóa sự kiện
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(string id)
+      
+        public IActionResult Delete( string id)
         {
             try
             {

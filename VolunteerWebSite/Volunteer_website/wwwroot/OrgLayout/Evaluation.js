@@ -20,7 +20,9 @@ $(document).ready(function () {
         // Cập nhật ảnh
         $("#volunteerImage").attr(
           "src",
-          data.imagePath || "/OrgLayout/assets/images/pic-1.jpg"
+          data.imagePath
+            ? "~/" + data.imagePath
+            : "~/images/DefaultImg/default-person.jpg"
         );
 
         // Cập nhật giới tính và tuổi

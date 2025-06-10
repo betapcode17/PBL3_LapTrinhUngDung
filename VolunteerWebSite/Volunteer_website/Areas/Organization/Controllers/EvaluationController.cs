@@ -28,44 +28,61 @@ namespace Volunteer_website.Areas.Organizations.Controllers
         }
 
         #region Xem danh sách đánh giá
+
         public IActionResult Index(int? page, string searchValue)
         {
             int pageSize = 8;
             int pageNumber = page ?? 1;
+            var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(orgId))
+            {
+                return RedirectToAction("Login", "Account"); // Hoặc xử lý lỗi khác nếu không có orgId
+            }
+
             var query = _db.Evaluations
                            .Include(e => e.Reg)
                            .AsNoTracking();
+
+            // Lọc theo OrgId thông qua RegId và Event
+            query = query.Where(e => _db.Registrations
+                                       .Any(r => r.RegId == e.RegId &&
+                                                 _db.Events.Any(ev => ev.EventId == r.EventId && ev.OrgId == orgId)));
+
             if (!string.IsNullOrEmpty(searchValue))
             {
                 var matchedEventIds = _db.Events
-                                         .Where(ev => ev.Name.Contains(searchValue))
-                                         .Select(ev => ev.EventId)
-                                         .ToList();
+                                        .Where(ev => ev.Name != null && ev.Name.Contains(searchValue))
+                                        .Select(ev => ev.EventId)
+                                        .ToList();
                 var matchedVolunteerIds = _db.Volunteers
-                                             .Where(v => v.Name.Contains(searchValue))
-                                             .Select(v => v.VolunteerId)
-                                             .ToList();
+                                            .Where(v => v.Name != null && v.Name.Contains(searchValue))
+                                            .Select(v => v.VolunteerId)
+                                            .ToList();
                 var matchedRegIds = _db.Registrations
-                                       .Where(r =>
-                                            matchedEventIds.Contains(r.EventId) ||
-                                            matchedVolunteerIds.Contains(r.VolunteerId))
+                                       .Where(r => matchedEventIds.Contains(r.EventId) ||
+                                                   matchedVolunteerIds.Contains(r.VolunteerId))
                                        .Select(r => r.RegId)
                                        .ToList();
                 query = query.Where(e => matchedRegIds.Contains(e.RegId));
             }
+
             var evaluations = query
                               .OrderBy(e => e.EvaluationId)
                               .ToPagedList(pageNumber, pageSize);
 
+            // Lấy danh sách RegId từ evaluations đã phân trang
             var regIds = evaluations.Select(e => e.RegId).Distinct().ToList();
             var registrations = _db.Registrations
-                                   .Where(r => regIds.Contains(r.RegId))
-                                   .AsNoTracking()
-                                   .ToList();
+                                  .Where(r => regIds.Contains(r.RegId))
+                                  .AsNoTracking()
+                                  .ToList();
 
+            // Lấy danh sách VolunteerId và EventId từ registrations
             var volunteerIds = registrations.Select(r => r.VolunteerId).Distinct().ToList();
             var eventIds = registrations.Select(r => r.EventId).Distinct().ToList();
 
+            // Lấy thông tin Volunteers và Events dưới dạng Dictionary
             var volunteers = _db.Volunteers
                                 .Where(v => volunteerIds.Contains(v.VolunteerId))
                                 .AsNoTracking()
@@ -82,6 +99,7 @@ namespace Volunteer_website.Areas.Organizations.Controllers
 
             return View(evaluations);
         }
+
         #endregion
 
         #region Lấy thông tin tình nguyện viên
@@ -181,6 +199,14 @@ namespace Volunteer_website.Areas.Organizations.Controllers
                 if (_db.Evaluations.Any(e => e.EvaluationId == model.EvaluationId))
                 {
                     TempData["Error"] = "Mã đánh giá đã tồn tại.";
+                    ReloadVolunteers();
+                    return View(model);
+                }
+
+                // Kiểm tra xem RegId đã tồn tại trong bảng Evaluations chưa
+                if (await _db.Evaluations.AnyAsync(e => e.RegId == model.RegId))
+                {
+                    TempData["Error"] = "Bạn đã đánh giá đơn đăng ký của tình nguyện viên này rồi.";
                     ReloadVolunteers();
                     return View(model);
                 }

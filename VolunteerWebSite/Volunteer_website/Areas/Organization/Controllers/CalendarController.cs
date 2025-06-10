@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
+using System.Text.Json;
 using Volunteer_website.Models;
+
 [Area("Organization")]
-[Route("[area]/[controller]/[action]")] // Sửa lại route template
+[Route("[area]/[controller]/[action]")]
 [Authorize("Org")]
 public class CalendarController : Controller
 {
@@ -23,48 +27,86 @@ public class CalendarController : Controller
     [HttpGet]
     public IActionResult GetEventsCalendar()
     {
-      
-        var today = DateOnly.FromDateTime(DateTime.Now);
-        var events = _db.Events
-            .Where(e => e.DayBegin.HasValue && e.DayBegin.Value >= today)
+        var colors = new List<string>
+       {
+           "#2b6cb0", "#e53e3e", "#48bb78", "#ed8936", "#9f7aea",
+           "#f6ad55", "#38b2ac", "#805ad5", "#ecc94b", "#4299e1",
+           "#d69e2e", "#276749", "#c53030", "#6b46c1", "#2d3748"
+       };
+
+        var orgId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(orgId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Fix: Ensure filtering by OrgId happens before projecting to anonymous type  
+        var eventsData = _db.Events
+            .Where(e => e.OrgId == orgId)
             .Select(e => new
             {
                 title = e.Name ?? "Sự kiện không tên",
                 start = e.DayBegin.HasValue ? e.DayBegin.Value.ToString("yyyy-MM-dd") : null,
-                end = e.DayEnd.HasValue ? e.DayEnd.Value.AddDays(1).ToString("yyyy-MM-dd") : null, 
+                end = e.DayEnd.HasValue ? e.DayEnd.Value.AddDays(1).ToString("yyyy-MM-dd") : null,
                 id = e.EventId,
-                color = "#2b6cb0", 
-                description = e.Description ?? "Không có mô tả" 
+                description = e.Description ?? "Không có mô tả"
             })
             .ToList();
+
+        var events = eventsData.Select((e, index) => new
+        {
+            title = e.title,
+            start = e.start,
+            end = e.end,
+            id = e.id,
+            color = colors[index % colors.Count],
+            description = e.description
+        });
 
         return Json(events);
     }
 
-  
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult UpdateEventDate(string eventId, string startDate, string endDate)
+    public IActionResult UpdateEventDate([FromBody] JsonElement request)
     {
         try
         {
+            // Extract values from JsonElement
+            string eventId = request.TryGetProperty("eventId", out JsonElement eventIdElement)
+                ? eventIdElement.GetString()
+                : null;
+            string startDate = request.TryGetProperty("startDate", out JsonElement startDateElement)
+                ? startDateElement.GetString()
+                : null;
+            string endDate = request.TryGetProperty("endDate", out JsonElement endDateElement)
+                ? endDateElement.GetString()
+                : null;
+
+            // Debug: Log received values
+            Console.WriteLine($"Received: eventId={eventId}, startDate={startDate}, endDate={endDate}");
+
             // Validate input
             if (string.IsNullOrEmpty(eventId) || string.IsNullOrEmpty(startDate))
             {
-                return Json(new { success = false, message = "Thiếu thông tin bắt buộc (eventId hoặc startDate)" });
+                TempData["ErrorMessage"] = "Thiếu thông tin bắt buộc (eventId hoặc startDate)";
+                return Json(new { success = false, message = TempData["ErrorMessage"] });
             }
 
-            // Find the event
-            var eventToUpdate = _db.Events.FirstOrDefault(e => e.EventId == eventId); // Assuming Id is the property name
+            // Find the event (EventId is a string)
+            var eventToUpdate = _db.Events.FirstOrDefault(e => e.EventId == eventId);
             if (eventToUpdate == null)
             {
-                return Json(new { success = false, message = "Sự kiện không tồn tại" });
+                TempData["ErrorMessage"] = "Sự kiện không tồn tại";
+                return Json(new { success = false, message = TempData["ErrorMessage"] });
             }
 
             // Parse and validate start date
             if (!DateOnly.TryParse(startDate, out DateOnly parsedStartDate))
             {
-                return Json(new { success = false, message = "Định dạng ngày bắt đầu không hợp lệ" });
+                TempData["ErrorMessage"] = "Định dạng ngày bắt đầu không hợp lệ";
+                return Json(new { success = false, message = TempData["ErrorMessage"] });
             }
 
             // Parse end date if provided
@@ -73,33 +115,35 @@ public class CalendarController : Controller
             {
                 if (!DateOnly.TryParse(endDate, out DateOnly tempEndDate))
                 {
-                    return Json(new { success = false, message = "Định dạng ngày kết thúc không hợp lệ" });
+                    TempData["ErrorMessage"] = "Định dạng ngày kết thúc không hợp lệ";
+                    return Json(new { success = false, message = TempData["ErrorMessage"] });
                 }
                 parsedEndDate = tempEndDate;
 
                 // Validate that end date is not before start date
                 if (parsedEndDate < parsedStartDate)
                 {
-                    return Json(new { success = false, message = "Ngày kết thúc phải sau ngày bắt đầu" });
+                    TempData["ErrorMessage"] = "Ngày kết thúc phải sau ngày bắt đầu";
+                    return Json(new { success = false, message = TempData["ErrorMessage"] });
                 }
             }
 
             // Update the event
             eventToUpdate.DayBegin = parsedStartDate;
-            eventToUpdate.DayEnd = parsedEndDate; // This assumes DayEnd is nullable DateOnly?
+            eventToUpdate.DayEnd = parsedEndDate;
 
             // Save changes to the database
-            _db.Events.Update(eventToUpdate); // Use Update method directly
+            _db.Events.Update(eventToUpdate);
             _db.SaveChanges();
 
-            return Json(new { success = true, message = "Cập nhật sự kiện thành công" });
+            TempData["SuccessMessage"] = "Cập nhật sự kiện thành công";
+            return Json(new { success = true, message = TempData["SuccessMessage"] });
         }
         catch (Exception ex)
         {
-            // Log the exception (e.g., using a logging framework like Serilog or ILogger)
-            // _logger.LogError(ex, "Error updating event with ID: {EventId}", eventId);
-            Console.WriteLine("ERROR: " + ex);
-            return Json(new { success = false, message = "Đã xảy ra lỗi khi cập nhật sự kiện. Vui lòng thử lại." });
+            Console.WriteLine($"ERROR: {ex}");
+            TempData["ErrorMessage"] = "Đã xảy ra lỗi khi cập nhật sự kiện. Vui lòng thử lại.";
+            return Json(new { success = false, message = TempData["ErrorMessage"] });
         }
     }
 }

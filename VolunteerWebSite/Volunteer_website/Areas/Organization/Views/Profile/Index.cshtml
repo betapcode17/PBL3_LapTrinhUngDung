@@ -1,0 +1,76 @@
+﻿@model Volunteer_website.Models.Organization
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Hồ sơ tổ chức";
+    Layout = "~/Areas/Organization/Views/OrgLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="header-section border rounded p-4 mb-4" style="background-color: #ffffff;">
+        <h1 class="text-center my-4 heading-title">Hồ sơ tổ chức</h1>
+    </div>
+
+    <div class="body-section border rounded p-4" style="background-color: #ffffff;">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <img src="~/@(Model.ImagePath ?? "https://via.placeholder.com/200")" alt="Ảnh hồ sơ"
+                     class="img-fluid rounded-0 border border-2 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
+            </div>
+            <div class="col-md-8">
+                <div class="profile-details">
+                    <h3>@Model.Name</h3>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Địa chỉ:</strong> @Model.Address</p>
+                    <p><strong>Mô tả:</strong> @(Model.Description ?? "Không có mô tả")</p>
+                </div>
+                <div class="mt-4 d-flex gap-3">
+                    <a asp-action="EditProfile" class="btn btn-success btn-lg px-4">
+                        <i class="bi bi-pencil me-2"></i> Chỉnh sửa hồ sơ
+                    </a>
+                    <a asp-action="ChangePassword" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-lock me-2"></i> Đổi mật khẩu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        transition: all 0.3s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+        }
+
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
