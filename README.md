@@ -52,7 +52,6 @@ Volunteers have a user-friendly interface to find and engage with meaningful opp
 ## Program Demo
 1. Guest Interface
 
-<img width="945" height="452" alt="image" src="https://github.com/user-attachments/assets/dc31338e-b00c-4a6f-8736-83647470b6eb" />
 
 
   1.1: Landing Page
