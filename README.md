@@ -11,7 +11,6 @@ This project also serves as a valuable learning experience for our team to pract
 ## ✨ Features
 
 Our platform is designed with three distinct user roles, each with a specialized set of tools to streamline the volunteering and charity management process.
-<img width="945" height="452" alt="image" src="https://github.com/user-attachments/assets/da86ec8a-c52a-47b6-922d-54e1a0939150" />
 
 
 
